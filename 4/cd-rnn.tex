@@ -1,0 +1,205 @@
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+
+%: ----------------------- name of chapter  -------------------------
+\chapter{An End-to-end Recurrent Neural Network Approach}\label{cp:endtoend} % top level followed by section, subsection
+
+%: ----------------------- paths to graphics ------------------------
+
+% change according to folder and file names
+\ifpdf
+    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
+\else
+    \graphicspath{{X/figures/EPS/}{X/figures/}}
+\fi
+
+As recapped in Section~\ref{sec:2-rnnpm} that by now there are basically three deep learning approaches for ACE:
+\begin{itemize}
+\item local classification - global smoothing \cite{humphrey2012rethinking};
+\item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
+\item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
+\end{itemize}
+All of these approaches incorporate a ``global smoothing'' stage after classification. This is a step that requires prior domain knowledge which does not belong to the deep learning approach itself. This chapter is going to study on an ``end-to-end'' approach that tries to employ a new neural network training scheme to on one hand achieve a more balanced performance on both ordinary and long-tail chords, and on the other hand eliminate the need of ``global smoothing'' altogether. The system presented here belongs to the ``local feature extraction - global classification'' category.
+
+
+%: ----------------------- contents from here ------------------------
+\section{System Overview}\label{sec:4-sysover}
+Figure \ref{fig:4-sysover} shows the system overview, which mainly contains a feature extraction module and a BLSTM-RNN sequence decoding module. The former is the same as the bass-treble chromagram (-ch level) extraction process presented at Chapter~\ref{cp:ghmm}.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.4\columnwidth]{4/figures/sys-chordino-like.pdf}
+\caption{BLSTM-RNN end-to-end ACE System Overview. The raw audio is transformed by a chordino-like feature extraction frontend into a piece of chromagram, and then decoded by a BLSTM-RNN into chord sequence.}
+\label{fig:4-sysover}
+\end{figure}
+
+\section{Implementation}\label{sec:4-blstm}
+The key module in this system is the BLSTM-RNN. This section will first briefly discuss the concerns of RNN variable-length sequence training, and then elaborate on the implementation of the BLSTM-RNN.
+
+\subsection{RNN}
+A RNN can model the conditional probability of a label sequence $l$ given its corresponding input feature sequence $x$. Define the label alphabet as $L$, and let both $x$ and $l$ have the same length $T$ in the unit of time. The conditional probability modeled by the RNN can be written as:
+
+\begin{equation}\label{eq:4-rnnprob}
+p(l|x) = \prod_{t=1}^T y_{l_t}^t  \quad\quad l\in L \quad and \quad |l| = |x|
+\end{equation}
+
+where $l_t$ is the $t^{th}$ element of $l$ and $y_{l_t}^t$ is the probability of predicting label $l_t$ at time $t $given $x$. At time $t$, $y_{l_t}^t$ can also be written as $p(l_t|x)$, which is the value of the $l^{th}$ slot of RNN prediction at time $t$. This RNN can be trained using a maximum likelihood approach by updating the network weights towards a direction that increases the conditional probability of ground truth sequences given their input representation sequences. Thus the cost function will simply be equation \ref{eq:4-rnnprob} (or the logarithm of it) given both $l$ and $x$ are in the training set.
+
+Note that unlike ASR, training an ACE RNN using a connectionist temporal classification (CTC) cost function \cite{graves2006connectionist} is problematic and theoretically may not yield better results. This is because ACE emphasizes segmentation quality, but ASR does not. The necessity of CTC's forward and backward algorithm stems from the fact that there could be many paths that lead to the same label sequence, and this in turn is based on the fact that the length of a path could be longer than that of the label sequence. However, using CTC for transduction between two sequences of the same length will inevitably reduce the CTC cost function back to equation \ref{eq:4-rnnprob}. But this does not rule out other possible novel applications of CTC cost function to ACE, especially in combination of sequence force alignment techniques \cite{sheh2003chord,mauch2010lyrics}.
+
+\subsection{Implementation of BLSTM-RNN}
+Figure \ref{fig:4-blstm} shows the graphical model of the BLSTM-RNN, which has a forward and a backward hidden layer both with 800 LSTM units. The output layer is a \#-chord-way softmax layer, corresponding to the posterior probabilities of all classes in SeventhsBass. The input layer has 24 nodes with continuous values, corresponding to an input chroma.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\columnwidth]{4/figures/blstm.pdf}
+\caption{The BLSTM-RNN. Both the forward and backward hidden layers contain 800 LSTM units}
+\label{fig:4-blstm}
+\end{figure}
+
+\subsection{Data Augmentation}
+The training/validation datasets used in this system are the same as those in Chapter~\ref{cp:ghmm}. To generate training data, firstly all raw audios are transformed to bass-treble chromagram representations. The original segment-wise ground truth annotations are upsampled to become frame-wise annotations that have 1-to-1 mappings to their input representations. Due to the absence of phase information in chromagram, all data can be circularly transposed to all 12 keys in order to have 12 times data augmentation.
+
+\subsection{Training Schemes}
+A random split of 80\% of them are used as training set, and the other 20\% split as validation set. During each iteration, there two different training schemes are applied:
+\begin{itemize}
+\item completely random: one random training case is fed into an Adadelta optimizer \cite{zeiler2012adadelta} to update the network connections. Each training case contains 500 frames (subject to the end-of-track boundary condition) of audio content with ground truth labels.
+\item even chance: this is a more delegated training method for imbalanced dataset \cite{chawla2004editorial}, which will be described below
+\end{itemize}
+Considering the skewed distribution of chord classes in the training datasets \cite{burgoyne2011expert}, a randomly sampling scheme will inevitably draw cases based on that same distribution, which probably causes lack of exposure to long-tail chords. Therefore, scheme 2 is invented to let each class has an equal chance to be seen during the training process. Concretely, the scheme is formalized as follows:
+\begin{algorithm}[h]
+	\caption{Even Chance Training for RNN}
+	\label{alg:4-ectrain}
+	\begin{algorithmic}
+	\REQUIRE
+	training data set - $(X,y)$;
+	number of chord classes - $ydim$
+	\STATE $od$ = balancedOrderedDict($y$, $ydim$)
+	\STATE $iteration$ = $0$
+	\WHILE {stopping criteria == \FALSE}
+	\IF {mod($iteration$, $ydim$) is $0$}
+	\STATE $classorderidx$ = random\_shuffle($0$:$ydim$-$1$)
+	\ENDIF
+	\STATE $bcidx$ = batch indexes drawn from $od$ using $classorderidx$
+	\STATE update network using Adadelta optimizer with $(X,y)$ indexed by $bcidx$
+	\STATE $iteration$++
+	\ENDWHILE
+	\end{algorithmic}
+\end{algorithm}
+The core of this procedure is the computation of $od$, which is a dictionary of (track index, chord change position) indexed by chord classes:
+\begin{algorithm}[h]
+	\caption{balancedOrderedDict}
+	\label{alg:4-bod}
+	\begin{algorithmic}
+	\REQUIRE
+	labels of training data set - $y$;
+	number of chord classes - $ydim$
+	\FOR {each class $i$ from $0$ to $ydim-1$}
+	\STATE initialize an empty $od[i]$
+	\ENDFOR
+	\FOR {each track index $j$ in $y$}
+	\FOR {each frame poistion $k$ in $y[j]$} 
+	\IF {$k$ is a chord change position}
+	\STATE append ($j$,$k$) to $od[y[j][k]]$
+	\ENDIF
+	\ENDFOR
+	\ENDFOR
+	\RETURN
+		$od$
+	\end{algorithmic}
+\end{algorithm}
+Each entry of $od$ contain a list of (track index, chord change position). When drawn from the list, a random item is returned. Therefore, the $bcidx$ in Algorithm~\ref{alg:4-ectrain} contains for each class a random case in a random track starting right from the chord change position. Each case also lasts for 500 frames (subject to the end-of-track boundary condition). This scheme guarantees a even chance of training for each class, give that each has at least one example in the training set.
+
+The training is regularized by dropout with 0.5 probability, and further regularized by early stopping when there is no improvement after 10 validations, with 1000 iterations per validation. The BLSTM-RNN is implemented and trained under the framework of Theano. The model with the best validation score will be saved for testing. For reproducible research, the implementation of the whole system is made available online\footnote{\url{https://github.com/tangkk/tangkk-mirex-ace/}}.
+
+\section{Results and Discussion}\label{sec:4-eval}
+This section presents evaluation results of several proposed system variants in terms of the current MIREX. The test set is still the benchmarking TheBeatles180. First of all there will be a intra-comparison among variants with different configurations (Table~\ref{tab:4-varexplore}), then a baseline comparison with Chordino will be discussed.
+
+\begin{table}
+\caption{Variations considered in this study.}
+\centering
+\footnotesize
+\begin{tabular}{|c|c|c|} \hline
+Dimension & Configurations \\ \hline
+training scheme & completely random (CR); even chance (EC) \\ \hline
+training data size & J; CJ; CJK; CJKU; CJKUR \\ \hline
+\end{tabular}
+\label{tab:4-varexplore}
+\end{table}
+
+\subsection{Results}
+Table~\ref{tab:4-overallres} shows the test results of all system variants in 7 categories of SeventhsBass evaluation \cite{pauwels2013evaluating}. In these categories: SB is the most fine-grain and restricted metric that considers each chord in SeventhsBass (see Table~\ref{tab:4-detailres} for a list of chord types) as a unique different class; S metric does not differentiate root positions from inversions by mapping labels to their maj, min, maj7, 7 and min7 forms (for example, maps min/b3 to min, 7/b7 to 7); MmB metric does not differentiate tetrads from triads by mapping labels to their maj, maj/3, maj/5, min, min/b3 and min/5 forms (for example, maps 7 to maj, maj7/5 to maj/5); finally Mm metric does not differentiate root position triads from both of their inversions and sevenths extensions by mapping labels to their maj and min forms (for example, maps maj7/7 to maj, 7/b7 to maj).
+\begin{table}[htb]
+\caption{Overall WCSR scores. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality;}
+\label{tab:4-overallres}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
+System & B & Mm & MmB & R & S & SB & Seg & SOSB \\ \hline
+chordino & 76.41 & 74.30 & 71.40 & 77.19 & 52.99 & 50.60 & 83.87 & 299.01\\ \hline
+J& 67.66 & 65.38 & 61.80 & 69.06 & 54.21 & \textbf{50.86} & 71.72 & 230.30 \\ \hline
+J* & & & & & & & & \\ \hline
+CJ & 72.59 & 68.93 & 65.49 & 72.91 & 58.33 & \textbf{55.24} & 74.20 & 288.73 \\ \hline
+CJ* & 71.29 & 66.43 & 62.77 & 71.65 & 52.13 & 48.97 & 70.57 & \textbf{320.10} \\ \hline
+CJK & 74.25 & 70.63 & 69.00 & 73.88 & 59.53 & \textbf{58.04} & 77.63 & 244.78 \\ \hline
+CJK* & 72.05 & 67.59 & 64.70 & 72.24 & 55.29 & 53.05 & 72.21& \textbf{301.62} \\ \hline
+CJKU & 74.48 & 71.04 & 69.52 & 74.16 & 61.00 & \textbf{59.65} & 76.91 & 213.67 \\ \hline
+CJKU* & 72.10 & 68.93 & 67.27 & 71.68 & 57.10 & 55.63 & 74.48 & 248.65 \\ \hline
+CJKUR & & & & & & & & \\ \hline
+CJKUR* & 74.24 & 70.74 & 68.44 & 74.32 & 58.94 & 56.88 & 73.34 & \textbf{327.81} \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Overall Performance}
+Generally speaking, the best two variants, CJK and CJKU, significantly outperform chordino in SB and S, and are fairly compared with chordino in Mm and MmB, though they significantly fall short in terms of segmentation quality. In the SB column, from J to CJKU the scores increase in a diminishing way as the amount of training data increase. Such increase is understandable since more training data leads to better generalization ability in an unknown test set drawn from a similar population. But the diminishing return is undesirable, especially for the small improvement from CJK to CJKU, where the latter actually adds 195 more tracks to the former. With a detail look into the per chord type results comparison between CJK and CJKU in Table~\ref{tab:4-detailres}, it seems not so pessimistic. Actually there is a small deficiency (1\%) of CJKU than CJK in terms of recognizing the dominating major triads (M), which overshadows huge improvement in minor triads (m) and dominant sevenths (7). A further discussion of the confusions and inconsistency issue may shed more light on the diminishing return.
+\begin{landscape}
+\begin{table*}[h]
+\scriptsize
+\caption{Detail SeventhsBass WCSR scores. M = Major, m = minor, N = no chord. The \%B row shows the composition of chords in the test dataset.}
+\label{tab:4-detailres}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+\%B & 2.01 & 0.95 & 63.31 & 0.02 & 0.17 & 0.27 & 0.82 & 0.08 & 0.06 & 0.39 & 8.33 & 0.61 & 0.44 & 14.99 & 0.01 & 0.06 & 0.41 & 2.37 & 4.63\\ \hline
+ & M/5 & M/3 & M & M7/5 & M7/3 & M7/7 & M7 & 7/5 & 7/3 & 7/b7 & 7 & m/5 & m/b3 & m & m7/5 & m7/b3 & m7/b7 & m7 & N\\ \hline
+chordino & 19.9 & 17.1 & 54.4 & 0.0 & 0.0 & 0.0 & 55.6 & 0.0 & 0.0 & 5.7 & 41.0 & 0.0 & 0.0 & 54.3 & 0.0 & 0.0 & 0.0 & 51.0 & 2.2\\ \hline
+J & 11.9 & 31.7 & 62.0 & 0.0 & 0.0 & 0.0 & 22.3 & 0.0 & 0.9 & 16.9 & 2.8 & 0.9 & 0.1 & 42.2 & 0.0 & 0.0 & 0.0 & 38.6 & 3.2\\ \hline
+CJ & 18.9 & 34.4 & 65.8 & 0.0 & 0.0 & 0.0 & 37.6 & 0.0 & 0.6 & 31.2 & 3.6 & 0.3 & 0.0 & 52.8 & 0.0 & 0.0 & 0.0 & 43.5 & 3.0\\ \hline
+CJ* & 17.2 & 24.0 & 55.3 & 0.0 & 0.0 & 1.1 & 45.2 & 0.0 & 33.0 & 44.5 & 9.8 & 3.6 & 10.5 & 56.5 & 0.0 & 0.0 & 0.0 & 19.5& 2.8\\ \hline
+CJK & 9.8 & 24.4 & 72.5 & 0.0 & 0.0 & 0.0 & 25.0 & 0.0 & 0.0 & 20.4 & 2.5 & 0.0 & 0.0 & 42.5 & 0.0 & 0.0 & 0.0 & 47.7 & 3.5\\ \hline
+CJK* & 14.8 & 25.1 & 61.0 & 13.1 & 0.0 & 0.4 & 41.3 & 0.0 & 0.0 & 34.0 & 14.0 & 2.1 & 4.4 & 53.8 & 0.0 & 0.0 & 5.5 & 32.0 & 3.2\\ \hline
+CJKU & 9.8 & 20.5 & 71.5 & 0.0 & 0.0 & 0.0 & 9.4 & 0.0 & 0.0 & 0.0 & 21.5 & 0.1 & 0.0 & 56.0 & 0.0 & 0.0 & 0.0 & 24.9 & 3.0\\ \hline
+CJKU* & 12.5 & 22.6 & 69.1 & 0.0 & 0.0 & 1.8 & 10.5 & 0.0 & 2.9 & 18.7 & 15.8 & 4.9 & 1.5 & 43.6 & 0.0 & 0.0 & 4.7 & 40.1 & 2.3\\ \hline
+CJKUR* & 15.1 & 29.0 & 65.6 & 0.0 & 0.0 & 3.9 & 41.0 & 0.0 & 7.9 & 25.9 & 23.4 & 4.1 & 5.9 & 57.2 & 0.0 & 0.0 & 18.5 & 30.4 & 2.8\\ \hline
+\end{tabular}
+\end{table*}
+\end{landscape}
+
+\subsection{Confusions and Inconsistencies}
+First of all there are some grounds for confusion analysis. Within each evaluation entry: SB score is the lowest one and reflects the true LV score; the difference between S and SB reflects the amount of confusions between root positions and inversions; the difference between MmB and SB reflects the amount of confusions between triads and tetrads; and the difference between Mm and SB reflects the sum of all these confusions.
+
+From J to CJKU, the differences between S and SB decrease (from 4.6\% to 1.4\%), while the difference between MmB and SB remains a certain level (around 10\%). That means there are fewer and fewer confusions between root positions and inversions, but roughly the same amount of confusions between triads and tetrads. Specifically, whenever an inversion gets misclassified, it is easier to be misclassified as a chord in a different root.
+
+As the amount of training data increase, the inversions are getting marginalized by the dominating root position chords. The small classification hyperplanes that originally taken by inversions are encroached by the ever enlarging hyperplanes of the dominating classes. This is truly reflected in Table~\ref{tab:4-detailres}, where the original good classification rates of M/5, M/3 and 7/b7 by CJ (both C and J alone contain around 20\% portion of chord inversions), are actually destroyed by the union of K and U.
+
+There shouldn't have been such encroachment given that the affected classes all have distinguishable unique definitions and all their instances are consistently and labeled. Therefore unfortunately we believe C,J,K and U are not consistently labeled, which is very plausible. Actually, both C and J are annotated by the first author of this paper, K and B (TheBeatles180) are annotated in C4DM\footnote{\url{http://www.isophonics.net/}}, and U is annotated in NYU. As Humphrey et al. \cite{humphreyfour} pointed out, multiple annotators may have annotation inconsistency. This is demonstrated originally with two annotators labeling the same dataset. But this phenomenon logically also holds for multiple annotators labeling different datasets from the same population. We estimate this is the reason behind the downgrading of M/5, M/3 and 7/b7. Specifically, it is human annotators' disagreement on whether or not to label chord inversions, as in some scenarios, a human annotator tends to label a chord as root position regardless of the non-salient bass note (e.g., inconsistency of C v.s. C/E), or in some other scenarios, to put a chord in root position on the bass regardless of the chord structure (e.g., inconsistency of C/E v.s. Em (this is a wrong annotation) or Em(b6), notably in the dynamic context of F-C/E-Dm or Dm-C/E-F).
+
+This also explains the up and down irregularities in the WCSR trend of M7 and m7. But there is only one source of ground truth inconsistency: whether or not to label a seventh extension, which is not related to the root. That is why the amount of confusions between MmB and SB remains the same level.
+
+\subsection{About Dominant 7th}
+Special attention is given to dominant 7th WCSR in Table~\ref{tab:4-detailres}, where chordino scores as high as 41\%, CJKU scores 21.5\% and all others score less than 5\%. This paragraph tries to provide one possible insight into this. Chordino is originally specially tuned to fit TheBeatles180 dataset, and that's why it gets the score. This test set contain various song styles, including a lot of bluesy songs with progressions of dominant 7th. And many of these progressions are rendered in a way with dynamic bass line rather than static bass line. But the population of 7s in CJK, or at least in CJ, is mostly static, so that the system does not learn much about dynamic 7s. By adding dataset U, which contains more examples of dynamic 7s, the system learns them and makes better prediction of dynamic 7s in the test set.
+
+\subsection{Segmentation Quality}
+All variants underperform chordino in segmentation quality in a significant range. Though it improves with increasing size of training data. Chordino segments chords by applying a very high self-transition weight in its HMM's state transition matrix. The BLSTM-RNN does not have this prior knowledge. It learns segmentation by looking at segmentation examples in the training data. Unlike chord labels, segmentation information is implicit. Every training case contains 500 frames, which is about 23 seconds under our feature extraction settings. This corresponds to approximately 10-30 chord changes. And the BLSTM-RNN model has to learn to segment and label all at once. An above 77\% score is very promising indeed, but we still need to figure out ways to BLSTM-RNN's improve segmentation quality in the future.
+
+\section{Summary}\label{sec:4-concln}
+This paper starts off by a review of the existing deep learning based ACE literatures, and a reexamination of controversies over ACE vocabulary. We spot a research gap asking for a deep learning based ACE system that supports large vocabulary with chord inversions. In pursuit of fixing this gap, we propose a BLSTM-RNN based system that supports SeventhsBass vocabulary. This system has a chordino-like feature extraction frontend, and can be compared with chordino in a statistically fair way. Several variants of the system are trained and implemented. Evaluation results show that variants CJK and CJKU significantly outperform chordino in terms of SB and S, and they are almost as good as chordino in terms of Mm and MmB, though still have a long way to go in terms of segmentation quality. The evaluation results conclusively demonstrate a well structured and trained BLSTM-RNN is better than a dedicated handcrafted Gaussian-HMM in terms of sequence modeling capability. But the specific BLSTM-RNN presented in this paper still has great deficiency in terms of sequence segmentation.
+
+Moreover, through detail analyzing the results, we found a plausible issue of annotation inconsistency, which partially coincides with a finding in \cite{humphreyfour}. As suggested by this reference, we need to figure out ways to deal with inconsistency and try to redefine what is the ``gold standard'' in ACE. A workaround would be to always use annotations provided by one single source/annotator, or, to the other extreme, always use multiple annotators and apply majority vote or data fusion. But this is not practical. A better solution is to embrace subjectivity and try to incorporate it into objective evaluations. But all in all, the ultimate evaluation tool remains a fully subjective evaluation, that user experience matters the most.
+
+For future work, the most crucial thing to be done is to improve RNN's segmentation quality, since it determines an upperbound of system performance, and the scores of all other metrics scale in proportion to segmentation quality. This can possibly be done through a deeper RNN model, a RNN separated trained for sequence segmentation only, or combination of a segmentation-RNN with a labeling-RNN in a hierarchical way.
+
+
+
+
+% ---------------------------------------------------------------------------
+%: ----------------------- end of thesis sub-document ------------------------
+% ---------------------------------------------------------------------------
+
