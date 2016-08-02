@@ -762,15 +762,71 @@ At last some best system representatives are compared with the baseline approach
 As shown, these systems all outperform Chordino by a large range in S and SB, and they are fairly comparable with Chordino in Mm and MmB. In terms of versatility, Chordino is not bad at all, outperforming both MLPs and DBN's representatives. But the most well-rounded system is based on BLSTM-RNN, outscoring Chordino by huge amount.
 
 \section{MIREX 2016 Results}
+TBW...
+\begin{table*}[h]
+\centering
+\scriptsize
+\caption{MIREX 2016 Results. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}
+\label{tab:3-mirex2016}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
+Algorithm & R & Mm & MmB & S & SB & Seg & UnderSeg & OverSeg \\ \hline
+Isophonics 2009\\ \hline
+CM1 & 78.56 & 75.41 & 72.48 & 54.67 & 52.26 & 85.90 & 87.17 & 86.09\\ \hline
+DK1 & 79.21 & 76.19 & 74.00 & 66.02 & 64.15 & 85.71 & 82.62 & 91.23\\ \hline
+DK2 & 77.84 & 74.49 & 71.93 & 61.61 & 59.47 & 85.82 & 82.72 & 91.28\\ \hline
+DK3 & 80.03 & 77.55 & 74.79 & 68.40 & 65.88 & 85.81 & 82.50 & 91.53\\ \hline
+DK4 & 76.05 & 72.96 & 71.41 & 62.77 & 61.44 & 78.19 & 87.97 & 72.43\\ \hline
+FK2 & 86.09 & 85.53 & 82.24 & 74.42 & 71.54 & 87.76 & 85.79 & 90.73\\ \hline
+FK4 & 82.28 & 80.93 & 78.03 & 70.91 & 68.26 & 85.62 & 82.40 & 90.89\\ \hline
+KO1 & 82.93 & 82.19 & 79.61 & 76.04 & 73.43 & 87.69 & 85.66 & 91.24\\ \hline
+Billboard 2012 \\ \hline
+CM1 & 74.15 & 72.22 & 70.21 & 55.35 & 53.40 & 83.64 & 85.31 & 83.39\\ \hline
+DK1 & 75.28 & 73.57 & 71.87 & 59.98 & 58.53 & 83.35 & 80.26 & 88.52\\ \hline
+DK2 & 73.77 & 71.69 & 69.86 & 58.66 & 57.00 & 83.57 & 80.40 & 88.70\\ \hline
+DK3 & 75.92 & 74.75 & 72.69 & 53.42 & 51.67 & 83.39 & 79.97 & 88.92\\ \hline
+DK4 & 72.59 & 70.85 & 69.78 & 56.29 & 55.36 & 76.13 & 87.72 & 70.05\\ \hline
+FK2 & 85.64 & 85.38 & 82.55 & 60.70 & 58.38 & 87.62 & 86.09 & 90.13\\ \hline
+FK4 & 79.23 & 78.62 & 76.20 & 56.53 & 54.51 & 85.09 & 81.98 & 89.94\\ \hline
+KO1 & 77.45 & 75.58 & 73.51 & 57.68 & 55.82 & 84.16 & 82.80 & 87.44\\ \hline
+Billboard 2013 \\ \hline
+CM1 & 71.16 & 67.28 & 65.20 & 48.99 & 47.17 & 81.54 & 83.11 & 82.63\\ \hline
+DK1 & 72.06 & 68.69 & 67.26 & 54.54 & 53.29 & 80.82 & 77.58 & 88.06\\ \hline
+DK2 & 70.18 & 66.54 & 64.66 & 52.97 & 51.41 & 80.85 & 77.68 & 88.02\\ \hline
+DK3 & 72.39 & 68.53 & 66.55 & 48.99 & 47.28 & 80.76 & 77.26 & 88.30\\ \hline
+DK4 & 69.56 & 65.83 & 64.78 & 51.81 & 50.93 & 74.55 & 86.31 & 69.18\\ \hline
+FK2 & 80.07 & 77.89 & 75.42 & 55.41 & 53.22 & 82.94 & 82.43 & 86.80\\ \hline
+FK4 & 74.66 & 71.85 & 69.44 & 51.93 & 49.80 & 80.61 & 77.19 & 88.70\\ \hline
+KO1 & 75.36 & 71.39 & 69.43 & 53.57 & 51.78 & 81.63 & 79.61 & 87.75\\ \hline
+JayChou 2015 \\ \hline
+CM1 & 72.75 & 72.08 & 65.48 & 54.39 & 48.98 & 86.60 & 86.89 & 86.91\\ \hline
+DK1 & 74.70 & 73.87 & 70.33 & 54.98 & 52.25 & 86.76 & 82.78 & 91.79\\ \hline
+DK2 & 72.19 & 72.55 & 69.10 & 54.09 & 51.46 & 87.09 & 83.35 & 91.75\\ \hline
+DK3 & 75.01 & 74.75 & 63.56 & 49.27 & 40.24 & 86.76 & 82.54 & 92.08\\ \hline
+DK4 & 71.51 & 69.03 & 65.93 & 50.07 & 47.45 & 78.11 & 87.87 & 70.56\\ \hline
+FK2 & 79.51 & 78.66 & 68.15 & 50.69 & 42.34 & 86.81 & 85.43 & 88.56\\ \hline
+FK4 & 76.13 & 75.44 & 64.36 & 49.69 & 40.74 & 84.55 & 81.22 & 88.95\\ \hline
+KO1 & 78.73 & 77.69 & 66.87 & 54.16 & 44.55 & 88.46 & 87.12 & 90.11\\ \hline
+RobbieWilliams 2016 \\ \hline
+CM1 & 81.90 & 78.25 & 76.05 & 57.92 & 55.90 & 87.96 & 88.96 & 87.45\\ \hline
+DK1 & 81.50 & 77.77 & 76.10 & 68.88 & 67.34 & 87.03 & 83.22 & 92.11\\ \hline
+DK2 & 79.01 & 75.97 & 73.57 & 65.26 & 62.98 & 87.20 & 83.40 & 92.23\\ \hline
+DK3 & 81.85 & 78.56 & 76.16 & 74.71 & 72.55 & 86.98 & 82.95 & 92.34\\ \hline
+DK4 & 78.92 & 75.15 & 73.66 & 66.72 & 65.34 & 81.82 & 88.44 & 76.88\\ \hline
+FK2 & 88.53 & 87.23 & 84.19 & 82.57 & 79.88 & 90.04 & 88.62 & 91.88\\ \hline
+FK4 & 83.37 & 80.96 & 78.42 & 77.04 & 74.76 & 87.22 & 84.50 & 91.02\\ \hline
+KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
+\end{tabular}
+\end{table*}
+
 
 \section{On Smaller Vocabulary}
+This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a minor comparison between the proposed system framework and other approaches, a set of experiments are conducted using two other smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (mentioned in Section~\ref{sec:2-largevocab}). For MajMin system implementation, each label in the training set will be first mapped to its MajMin form following a normal scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy is followed.
 
 \subsection{On MajMin}
-
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Overall WCSR scores. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality; All systems are trained with CJKUR-(800,800), with only MajMin vocabulary support.}
+\caption{Overall WCSR scores; All systems are trained with CJKUR-(800,800), with only MajMin vocabulary support.}
 \label{tab:3-overallres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
 System & B & Mm & MmB & R & S & SB & Seg & SOSB \\ \hline
@@ -782,8 +838,11 @@ MLP-ns & 72.65 & 70.00 & 68.14 & 73.35 & 62.72 & 60.98 & 83.59 & 140.57\\ \hline
 DBN-ns & 72.91 & 70.96 & 69.14 & 73.66 & 63.33 & 61.66 & 83.44 & 144.89\\ \hline
 BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 153.63\\ \hline
 \end{tabular}
-
 \end{table}
+
+Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, while on the other hand the SOSB of these systems are all much lower because of a much smaller vocabulary than Chordino.
+
+Table~\ref{tab:3-detailres} shows the SeventhsBass categorical breakdown. Take DBN-ch as representative, since it only supports MajMin, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the data set population, that's why it has a much higher SB score. However, by relaxing the evaluation strength from SB to Mm, the performance difference between DBN-ch and Chordino becomes lesser and lesser.
 
 \begin{landscape}
 \thispagestyle{plain}
@@ -807,19 +866,46 @@ BLSTM-RNN-ns & 0.0 & 0.0 & 79.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 
 
 \subsection{On Full121}
 
-\begin{table}
+\begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 WCSR results. All systems are trained with CJKUR-(800,800)-ch, with Full121 vocabulary support.}
+\caption{Full121 WCSR scores. Tested on TheBeatles180 dataset (180 tracks out of the 216 tracks isophonic 2009) All systems are trained with CJKUR-(800,800)-ch, with Full121 vocabulary support.}
 \label{tab:3-full}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
-System & WCSR & Seg \\ \hline
+\begin{tabular}{|c|c|c|}\hline
+System & Full121 WCSR & Seg \\ \hline
 MLP & 73.43 & 83.77 \\ \hline
 DBN & 75.46 & 83.92 \\ \hline
 BLSTM-RNN & 73.63 & 83.80 \\ \hline
 \end{tabular}
-
 \end{table}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\caption{Full121 scores. Tested on isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
+\label{tab:3-fullhp}
+\begin{tabular}{|c|c|c|}\hline
+System & Full121 Chord Precision (CP) & Seg \\ \hline
+CH(Chordino) & 50.31 & N/A \\ \hline
+HP(Harmonic Analyzer) & 70.26 & N/A\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\caption{Full121 scores. Tested on isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
+\label{tab:3-fullmbk}
+\begin{tabular}{|c|c|c|}\hline
+System & Full121 Relative Correct Overlap (RCO) & Seg \\ \hline
+trained MBK & 41.8 & N/A \\ \hline
+MBK & 56.7 & 77.9 \\ \hline
+MBK-NNLS & 61.8 & N/A \\ \hline
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:3-full} shows results of Full121 vocabulary with the same test set. Table~\ref{tab:3-fullhp} and ~\ref{tab:3-fullmbk} shows Full121 scores by other systems using a slightly larger 216-track test set, which includes the 180-track test set used throughout this chapter. Table~\ref{tab:3-fullhp} is reported in a 3-fold cross-validation manner, while Table~\ref{tab:3-fullhp} is in 5-fold. According to the descriptions \cite{ni2012end,mauch2010automatic}, the computation processes of both CP and RCO metrics are essentially similar to that of WCSR, and they only accept ``exact chord match'' under the vocabulary.
+
 
 \section{Summary} \label{sec:3-concln}
 This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in large vocabulary ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable large vocabulary segmentation-informed ACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify chords of the segmented features. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.

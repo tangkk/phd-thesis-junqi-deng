@@ -88,9 +88,9 @@ Feature level & tuned notegrame(-ns), chromagram (-ch) \\ \hline
 \end{table}
 
 \subsection{Experimental Setup}
-Two studies are conducted for this experiments. In the first study, 99 pieces of jazz chord comping + soloing dataset extracted from a jazz guitar book\cite{jazzguitarbook} (JazzGuitar99) are used as training/validation dataset, and 7 pieces from Gary Burton's on-line course\cite{garyburtoncourse} (GaryBurton7) are used as test dataset. JazzGuitar99's annotations are taken directly from the book, and GaryBurton7's annotations are taken from the leadsheets provided along with the course. The vocabulary has 36 types\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$, $ maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$ and $N$}.
+In this study, 99 pieces of jazz chord comping + soloing dataset extracted from a jazz guitar book\cite{jazzguitarbook} (JazzGuitar99) are used as training/validation dataset, and 7 pieces from Gary Burton's on-line course\cite{garyburtoncourse} (GaryBurton7) are used as test dataset. JazzGuitar99's annotations are taken directly from the book, and GaryBurton7's annotations are taken from the leadsheets provided along with the course. The vocabulary has 36 types\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$, $ maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$ and $N$}.
 
-In the second study, the training/validation dataset is extracted from the CDs of a jazz guitar improvisation tutorial \cite{jazzguitarimpro} (JazzImpro96) and a practical jazz guide \cite{pracjazz} (PracJazz76). Totally they contain 172 tracks. All annotations are taken from the leadsheets in the books. The datasets of the previous study is used for testing. The vocabulary has 60 types\footnote{$maj7$, $min7$, $7$, $maj7\#11$, $min9$, $9sus4$, $7sus4$, $maj$, $7b9$, $9$, $13$, $9\#11$, $7\#9$, $min7b5$, $min$, $minmaj7$, $min6$, $7b13$, $7(9, \#11, 13)$, $7\#5$, $6$, $maj9$, $7(b9, \#9, b13)$, $7(b9, b13)$, $7(\#9, b13)$, $7(\#9, b9)$, $7\#11$, $9(b9, b13)$, $69$, $13b9$, $9b13$, $7(9, \#11)$, $7(13)$, $9(13)$, $7(alt)$, $dim7$, $min7(11)$, $7(b9, 13)$, $7(\#11, 13)$, $min7b9$, $7(9, 13)$, $7(9)$, $min7b5(11)$, $7\#5(\#9)$, $min7(11, 13)$, $9(6)$, $aug7$, $7b5$, $maj13$, $min11$, $7\#5\#9$, $11$, $min13$, $7\#5b9$, $maj7\#5$, $min11b5$, $maj7b5$, $min7\#5$, $7b5b9$ and $N$}.
+%In the second study, the training/validation dataset is extracted from the CDs of a jazz guitar improvisation tutorial \cite{jazzguitarimpro} (JazzImpro96) and a practical jazz guide \cite{pracjazz} (PracJazz76). Totally they contain 172 tracks. All annotations are taken from the leadsheets in the books. The datasets of the previous study is used for testing. The vocabulary has 60 types\footnote{$maj7$, $min7$, $7$, $maj7\#11$, $min9$, $9sus4$, $7sus4$, $maj$, $7b9$, $9$, $13$, $9\#11$, $7\#9$, $min7b5$, $min$, $minmaj7$, $min6$, $7b13$, $7(9, \#11, 13)$, $7\#5$, $6$, $maj9$, $7(b9, \#9, b13)$, $7(b9, b13)$, $7(\#9, b13)$, $7(\#9, b9)$, $7\#11$, $9(b9, b13)$, $69$, $13b9$, $9b13$, $7(9, \#11)$, $7(13)$, $9(13)$, $7(alt)$, $dim7$, $min7(11)$, $7(b9, 13)$, $7(\#11, 13)$, $min7b9$, $7(9, 13)$, $7(9)$, $min7b5(11)$, $7\#5(\#9)$, $min7(11, 13)$, $9(6)$, $aug7$, $7b5$, $maj13$, $min11$, $7\#5\#9$, $11$, $min13$, $7\#5b9$, $maj7\#5$, $min11b5$, $maj7b5$, $min7\#5$, $7b5b9$ and $N$}.
 
 All training data are to be used at either tuned notegram (-ns) or chromagram (-ch) level, which does not contain phase information. Assuming well temperament, they can be augmented by pitch shifting with zero padding (for -ns), or circular pitch shifting (for -ch) to all 12 keys. Adjusting the chord labels accordingly, this results in 12 times of training data.
 
@@ -113,7 +113,7 @@ Neither bass nor treble & 0 & 0.2 \\ \hline
 \label{tab:5-jcgau}
 \end{table}
 
-\subsubsection{Study 1}
+%\subsubsection{Study 1}
 %The jazz vocabulary systems have the same system framework as the SeventhsBass systems, but their deep learning models are trained using JazzGuitar99 dataset.
 All systems are tested using GaryBurton7 dataset\footnote{Composition of chords in GaryBurton7: maj:0.09; min7:0.13; 7:0.22; min7b5:0.12; 7b9:0.06; min:0.1; maj:0.14; others:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to SeventhsBass', but the results are in a sense more convincing, since the test set is not dominated by chords like major and minor. In fact the composition of chords in GaryBurton7 is relatively balanced, though rare chords are still rare. Therefore these results clearly demonstrate the advantage of the proposed system framework for very large chord vocabulary.
 
@@ -136,8 +136,8 @@ Jazz-BLSTM-ch & 63.72 & 82.22\\ \hline
 \label{tab:5-jazz-wcsr}
 \end{table}
 
-\subsubsection{Study 2}
-All systems are tested using the combination of GaryBurton7 and JazzGuitar99 dataset.
+%\subsubsection{Study 2}
+%All systems are tested using the combination of GaryBurton7 and JazzGuitar99 dataset.
 
 \subsection{Extension - Jazz Scale Estimation}
 The above preliminary ACE work can be extended to cover jazz scale estimation, thereby achieving a unified chord-scale estimation approach. As reviewed in Section~\ref{sec:5-jazzfund}, the scales are chosen based on the harmonic functional group, which establishes a temporary tonal center, or a key. Consequently, a natural approach to do jazz scale estimation is by imitating local key estimation.
