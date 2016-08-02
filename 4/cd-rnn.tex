@@ -127,46 +127,48 @@ training data size & J; CJ; CJK; CJKU; CJKUR \\ \hline
 \label{tab:4-varexplore}
 \end{table}
 
-\subsection{Results}
-Table~\ref{tab:4-overallres} shows the test results of all system variants in 7 categories of SeventhsBass evaluation \cite{pauwels2013evaluating}. In these categories: SB is the most fine-grain and restricted metric that considers each chord in SeventhsBass (see Table~\ref{tab:4-detailres} for a list of chord types) as a unique different class; S metric does not differentiate root positions from inversions by mapping labels to their maj, min, maj7, 7 and min7 forms (for example, maps min/b3 to min, 7/b7 to 7); MmB metric does not differentiate tetrads from triads by mapping labels to their maj, maj/3, maj/5, min, min/b3 and min/5 forms (for example, maps 7 to maj, maj7/5 to maj/5); finally Mm metric does not differentiate root position triads from both of their inversions and sevenths extensions by mapping labels to their maj and min forms (for example, maps maj7/7 to maj, 7/b7 to maj).
 \begin{table}[htb]
-\caption{Overall WCSR scores. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality;}
+\caption{Overall WCSR scores. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality; The asterisks indicate systems with even chance training.}
 \label{tab:4-overallres}
 \centering
+\footnotesize
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
 System & B & Mm & MmB & R & S & SB & Seg & SOSB \\ \hline
 chordino & 76.41 & 74.30 & 71.40 & 77.19 & 52.99 & 50.60 & 83.87 & 299.01\\ \hline
 J& 67.66 & 65.38 & 61.80 & 69.06 & 54.21 & \textbf{50.86} & 71.72 & 230.30 \\ \hline
-J* & & & & & & & & \\ \hline
+J* & 68.48 & 65.05 & 61.90 & 68.96 & 53.94 & 51.10 & 71.85 & 298.42 \\ \hline
 CJ & 72.59 & 68.93 & 65.49 & 72.91 & 58.33 & \textbf{55.24} & 74.20 & 288.73 \\ \hline
 CJ* & 71.29 & 66.43 & 62.77 & 71.65 & 52.13 & 48.97 & 70.57 & \textbf{320.10} \\ \hline
 CJK & 74.25 & 70.63 & 69.00 & 73.88 & 59.53 & \textbf{58.04} & 77.63 & 244.78 \\ \hline
 CJK* & 72.05 & 67.59 & 64.70 & 72.24 & 55.29 & 53.05 & 72.21& \textbf{301.62} \\ \hline
 CJKU & 74.48 & 71.04 & 69.52 & 74.16 & 61.00 & \textbf{59.65} & 76.91 & 213.67 \\ \hline
 CJKU* & 72.10 & 68.93 & 67.27 & 71.68 & 57.10 & 55.63 & 74.48 & 248.65 \\ \hline
-CJKUR & & & & & & & & \\ \hline
+CJKUR & 76.46 & 70.33 & 68.71 & 75.98 & 60.35 & 58.92 & 76.88 & 262.48 \\ \hline
 CJKUR* & 74.24 & 70.74 & 68.44 & 74.32 & 58.94 & 56.88 & 73.34 & \textbf{327.81} \\ \hline
 \end{tabular}
 \end{table}
 
 \subsection{Overall Performance}
-Generally speaking, the best two variants, CJK and CJKU, significantly outperform chordino in SB and S, and are fairly compared with chordino in Mm and MmB, though they significantly fall short in terms of segmentation quality. In the SB column, from J to CJKU the scores increase in a diminishing way as the amount of training data increase. Such increase is understandable since more training data leads to better generalization ability in an unknown test set drawn from a similar population. But the diminishing return is undesirable, especially for the small improvement from CJK to CJKU, where the latter actually adds 195 more tracks to the former. With a detail look into the per chord type results comparison between CJK and CJKU in Table~\ref{tab:4-detailres}, it seems not so pessimistic. Actually there is a small deficiency (1\%) of CJKU than CJK in terms of recognizing the dominating major triads (M), which overshadows huge improvement in minor triads (m) and dominant sevenths (7). A further discussion of the confusions and inconsistency issue may shed more light on the diminishing return.
+Table~\ref{tab:4-overallres} shows the overall  results in SeventhsBass evaluation. Generally speaking, the best two variants, CJK and CJKU, significantly outperform chordino in SB and S, and are fairly compared with chordino in Mm and MmB, though they significantly fall short in terms of segmentation quality. In the SB column, from J to CJKU the scores increase in a diminishing way as the amount of training data increase. Such increase is understandable since more training data leads to better generalization ability in an unknown test set drawn from a similar population. But the diminishing return is undesirable, especially for the small improvement from CJK to CJKU, where the latter actually adds 195 more tracks to the former. With a detail look into the per chord type results comparison between CJK and CJKU in Table~\ref{tab:4-detailres}, it seems not so pessimistic. Actually there is a small deficiency (1\%) of CJKU than CJK in terms of recognizing the dominating major triads (M), which overshadows huge improvement in minor triads (m) and dominant sevenths (7). A further discussion of the confusions and inconsistency issue may shed more light on the diminishing return.
 \begin{landscape}
+\thispagestyle{plain}
 \begin{table*}[h]
 \scriptsize
-\caption{Detail SeventhsBass WCSR scores. M = Major, m = minor, N = no chord. The \%B row shows the composition of chords in the test dataset.}
+\caption{Detail SeventhsBass WCSR scores. M = Major, m = minor, N = no chord. The \%B row shows the composition of chords in the test dataset. The asterisks indicate systems with even chance training.}
 \label{tab:4-detailres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
 \%B & 2.01 & 0.95 & 63.31 & 0.02 & 0.17 & 0.27 & 0.82 & 0.08 & 0.06 & 0.39 & 8.33 & 0.61 & 0.44 & 14.99 & 0.01 & 0.06 & 0.41 & 2.37 & 4.63\\ \hline
  & M/5 & M/3 & M & M7/5 & M7/3 & M7/7 & M7 & 7/5 & 7/3 & 7/b7 & 7 & m/5 & m/b3 & m & m7/5 & m7/b3 & m7/b7 & m7 & N\\ \hline
 chordino & 19.9 & 17.1 & 54.4 & 0.0 & 0.0 & 0.0 & 55.6 & 0.0 & 0.0 & 5.7 & 41.0 & 0.0 & 0.0 & 54.3 & 0.0 & 0.0 & 0.0 & 51.0 & 2.2\\ \hline
 J & 11.9 & 31.7 & 62.0 & 0.0 & 0.0 & 0.0 & 22.3 & 0.0 & 0.9 & 16.9 & 2.8 & 0.9 & 0.1 & 42.2 & 0.0 & 0.0 & 0.0 & 38.6 & 3.2\\ \hline
+J* & 17.5 & 30.6 & 61.1 & 7.8 & 0.0 & 0.0 & 31.8 & 0.0 & 8.7 & 39.1 & 7.6 & 2.5 & 3.6 & 40.5 & 0.0 & 0.0 & 2.7 & 44.8 & 3.4 \\ \hline
 CJ & 18.9 & 34.4 & 65.8 & 0.0 & 0.0 & 0.0 & 37.6 & 0.0 & 0.6 & 31.2 & 3.6 & 0.3 & 0.0 & 52.8 & 0.0 & 0.0 & 0.0 & 43.5 & 3.0\\ \hline
 CJ* & 17.2 & 24.0 & 55.3 & 0.0 & 0.0 & 1.1 & 45.2 & 0.0 & 33.0 & 44.5 & 9.8 & 3.6 & 10.5 & 56.5 & 0.0 & 0.0 & 0.0 & 19.5& 2.8\\ \hline
 CJK & 9.8 & 24.4 & 72.5 & 0.0 & 0.0 & 0.0 & 25.0 & 0.0 & 0.0 & 20.4 & 2.5 & 0.0 & 0.0 & 42.5 & 0.0 & 0.0 & 0.0 & 47.7 & 3.5\\ \hline
 CJK* & 14.8 & 25.1 & 61.0 & 13.1 & 0.0 & 0.4 & 41.3 & 0.0 & 0.0 & 34.0 & 14.0 & 2.1 & 4.4 & 53.8 & 0.0 & 0.0 & 5.5 & 32.0 & 3.2\\ \hline
 CJKU & 9.8 & 20.5 & 71.5 & 0.0 & 0.0 & 0.0 & 9.4 & 0.0 & 0.0 & 0.0 & 21.5 & 0.1 & 0.0 & 56.0 & 0.0 & 0.0 & 0.0 & 24.9 & 3.0\\ \hline
 CJKU* & 12.5 & 22.6 & 69.1 & 0.0 & 0.0 & 1.8 & 10.5 & 0.0 & 2.9 & 18.7 & 15.8 & 4.9 & 1.5 & 43.6 & 0.0 & 0.0 & 4.7 & 40.1 & 2.3\\ \hline
+CJKUR & 9.6 & 25.3 & 69.8 & 0.0 & 0.0 & 0.0 & 18.1 & 0.0 & 2.3 & 18.8 & 19.4 & 0.0 & 1.7 & 59.3 & 0.0 & 0.0 & 0.0 & 38.1 & 2.5 \\ \hline
 CJKUR* & 15.1 & 29.0 & 65.6 & 0.0 & 0.0 & 3.9 & 41.0 & 0.0 & 7.9 & 25.9 & 23.4 & 4.1 & 5.9 & 57.2 & 0.0 & 0.0 & 18.5 & 30.4 & 2.8\\ \hline
 \end{tabular}
 \end{table*}

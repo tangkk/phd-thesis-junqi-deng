@@ -761,6 +761,66 @@ At last some best system representatives are compared with the baseline approach
 
 As shown, these systems all outperform Chordino by a large range in S and SB, and they are fairly comparable with Chordino in Mm and MmB. In terms of versatility, Chordino is not bad at all, outperforming both MLPs and DBN's representatives. But the most well-rounded system is based on BLSTM-RNN, outscoring Chordino by huge amount.
 
+\section{MIREX 2016 Results}
+
+\section{On Smaller Vocabulary}
+
+\subsection{On MajMin}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\caption{Overall WCSR scores. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality; All systems are trained with CJKUR-(800,800), with only MajMin vocabulary support.}
+\label{tab:3-overallres}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
+System & B & Mm & MmB & R & S & SB & Seg & SOSB \\ \hline
+chordino & 76.41 & 74.30 & 71.40 & 77.19 & 52.99 & 50.60 & 83.87 & 299.01\\ \hline
+MLP-ch & 74.71 & 73.25 & 71.22 & 75.74 & 65.08 & 63.18 & 83.57 & 151.57\\ \hline
+DBN-ch & 77.04 & 75.50 & 73.39 & 78.10 & 67.26 & 65.30 & 83.78 & 156.80\\ \hline
+BLSTM-RNN-ch & 76.88 & 75.05 & 72.84 & 78.11 & 66.58 & 64.50 & 83.74 & 157.46\\ \hline
+MLP-ns & 72.65 & 70.00 & 68.14 & 73.35 & 62.72 & 60.98 & 83.59 & 140.57\\ \hline
+DBN-ns & 72.91 & 70.96 & 69.14 & 73.66 & 63.33 & 61.66 & 83.44 & 144.89\\ \hline
+BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 153.63\\ \hline
+\end{tabular}
+
+\end{table}
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{table*}[h]
+\scriptsize
+\caption{Detail SeventhsBass WCSR scores. All systems are trained with CJKUR-(800,800), with only MajMin vocabulary support. M = Major, m = minor, N = no chord. The \%B row shows the composition of chords in the test dataset.}
+\label{tab:3-detailres}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+\%B & 2.01 & 0.95 & 63.31 & 0.02 & 0.17 & 0.27 & 0.82 & 0.08 & 0.06 & 0.39 & 8.33 & 0.61 & 0.44 & 14.99 & 0.01 & 0.06 & 0.41 & 2.37 & 4.63\\ \hline
+ & M/5 & M/3 & M & M7/5 & M7/3 & M7/7 & M7 & 7/5 & 7/3 & 7/b7 & 7 & m/5 & m/b3 & m & m7/5 & m7/b3 & m7/b7 & m7 & N\\ \hline
+chordino & 19.9 & 17.1 & 54.4 & 0.0 & 0.0 & 0.0 & 55.6 & 0.0 & 0.0 & 5.7 & 41.0 & 0.0 & 0.0 & 54.3 & 0.0 & 0.0 & 0.0 & 51.0 & 2.2\\ \hline
+MLP-ch & 0.0 & 0.0 & 77.6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 74.0 & 0.0 & 0.0 & 0.0 & 0.0 & 2.8\\ \hline
+DBN-ch & 0.0 & 0.0 & 80.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 76.8 & 0.0 & 0.0 & 0.0 & 0.0 & 3.0\\ \hline
+BLSTM-RNN-ch & 0.0 & 0.0 & 79.3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 78.2 & 0.0 & 0.0 & 0.0 & 0.0 & 2.5\\ \hline
+MLP-ns & 0.0 & 0.0 & 76.4 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 64.2 & 0.0 & 0.0 & 0.0 & 0.0 & 2.9\\ \hline
+DBN-ns & 0.0 & 0.0 & 76.3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 68.6 & 0.0 & 0.0 & 0.0 & 0.0 & 2.9\\ \hline
+BLSTM-RNN-ns & 0.0 & 0.0 & 79.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 74.7 & 0.0 & 0.0 & 0.0 & 0.0 & 2.7\\ \hline
+\end{tabular}
+\end{table*}
+\end{landscape}
+
+\subsection{On Full121}
+
+\begin{table}
+\footnotesize
+\centering
+\caption{Full121 WCSR results. All systems are trained with CJKUR-(800,800)-ch, with Full121 vocabulary support.}
+\label{tab:3-full}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
+System & WCSR & Seg \\ \hline
+MLP & 73.43 & 83.77 \\ \hline
+DBN & 75.46 & 83.92 \\ \hline
+BLSTM-RNN & 73.63 & 83.80 \\ \hline
+\end{tabular}
+
+\end{table}
+
 \section{Summary} \label{sec:3-concln}
 This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in large vocabulary ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable large vocabulary segmentation-informed ACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify chords of the segmented features. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
 
