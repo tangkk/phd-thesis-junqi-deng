@@ -3,7 +3,7 @@
 % content in this file will be fed into the main document
 
 %: ----------------------- introduction file header -----------------------
-\chapter{Introduction}
+\chapter{Introduction}\label{cp:intro}
 
 \ifpdf
     \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
@@ -25,19 +25,69 @@
 %    \subsubsection{} = level 4
 % note that everything after the percentage sign is hidden from output
 
+This chapter introduces the problem of automatic chord estimation (ACE) by defining the problem in Section~\ref{sec:1-problemdef} and motivating the problem in Section~\ref{sec:1-moti}. Then the thesis structure will be analyzed in Section~\ref{sec:1-outline}, followed by the thesis contribution and the author's publications in Section~\ref{sec:1-contribution}.
+
+\section{Problem Definition} \label{sec:1-problemdef}
+ACE, within the context of this thesis, refers to a task that estimates, recognizes, or transcribes the chord sequence from a piece of audio (i.e., a song or a musical instrumental) that contains such sequence under equal-temperament tonal music constraint (see Chapter~\ref{cp:background} for more definitions of these musical terms). In this definition, the verb ``estimate'', ``recognize'' or ``transcribe'' all mean the same process. This process analyzes the input audio and uncovers the underlying chord progression within it. The task also asks for a classification of chord material and no-chord material (i.e., silence, natural sound, environmental noise, etc.), and the algorithms that solve this task should be able to label both.
+
+\section{Motivation} \label{sec:1-moti}
+ACE has been one of the most important problems in music information retrieval (MIR). The motivation of an ACE research is three-fold:
+
+\subsection{ACE as submodule to other tasks}
+ACE is a subproblem in other tasks such as cover song identification \cite{bello2007audio,lee2006identifying,serra2010audio} (which make use of the chord sequence similarity), music structural segmentation \cite{bello2005robust} (where the repetition of chord sequence is a structural cue), and genre classification \cite{cheng2008automatic,perez2009genre}. It also has a critical role in problems such as audio key detection \cite{papadopoulos2012modeling,pauwels2010integrating} and downbeat estimation \cite{papadopoulos2008simultaneous,mauch2010simultaneous}, where in the former problem the estimated chord sequence often serves as a lower level harmonic information to infer the key or key sequence, while in the latter the chord and downbeat estimation are sometimes a dual problem within one single algorithmic framework.
+
+\subsection{ACE's own merit as chord transcription engine}
+For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish between similar chords (e.g., $C7$ and $C13$), is a common way to demonstrate sophisticate musicianship. People with chord transcription abilities help power the popular chords/tabs websites such as UltimateGuitar\footnote{ultimate-guitar.com}, E-chords\footnote{e-chords.com} and many others\footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance), those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. But such human musical sophistication is not a resource that is easily replicable, and thus at some point the need for chord annotations will be overwhelming the annotation workforce. With the ever increasing music production speed, it is foreseeable that these chord services will gradually rely more on ACE technologies. Consequently, regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE (LVACE) is absolutely a significant part of the machine.
+
+\subsection{ACE inspires scientific researches on human audition and mind}
+Furthermore, ACE research, in an algorithmic level, could shed light on the working mechanism of the human auditory system or human mind towards music harmony at certain level. This similar motivation is shared by many other artificial intelligent tasks\cite{lecun1995convolutional,hinton1995wake}, where the exploration of algorithmic or machine learning solution itself inspires the scientific research on human mind.
+
+\section{Thesis Structure} \label{sec:1-outline}
+This thesis focuses on deep learning based implementations of ACE and its extension to chord-scale estimation. The main contribution of this thesis can be found in Chapter~\ref{cp:ghmm}--\ref{cp:jazz}, where Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} are parallel sections presenting two different deep learning based LVACE systems, and Chapter~\ref{cp:jazz} takes the two approaches and build ACE systems for jazz vocabulary. Particularly, the following summarizes each chapter:
+
+\Hsection{Chapter~\ref{cp:intro}} is an introduction to the whole thesis. It defines the problem of ACE, motivates the need for LVACE from different perspectives, sketches the thesis outline and contributions.
+
+\Hsection{Chapter~\ref{cp:background}} is the literature review. The chapter first lays down the musical fundamentals that are necessary for a good understandings of ACE. Then it looks back into ACE's past development and tries to come up with a storyline which investigates different modules in ACE and different approaches to these modules. Finally it examines different preferences on ACE evaluation, especially some issues and arguments around LVACE evaluation and human annotation subjectivity.
+
+\Hsection{Chapter~\ref{cp:ghmm}} describes the implementation of a segmentation-informed LVACE system. It addresses the concrete design of the feature extraction and the pattern matching module, where the latter is realized through three deep learning models. The chapter also explores common variations in designing a segmentation-informed ACE system, and concludes with insights pointing to possible design guidelines.
+
+\Hsection{Chapter~\ref{cp:endtoend}} demonstrates an end-to-end LVACE system, where the sequence segmentation and classification are all done by a single recurrent neural network. To accommodate large vocabulary (LV) implementation, a skewed class oriented training scheme is proposed and used. This scheme is shown to be very effective in improving a system's vocabulary versatility.
+
+\Hsection{Chapter~\ref{cp:jazz}} extends the application of LVACE to jazz music. The chapter first introduces fundamentals for jazz. Then it extends the approaches in the previous two chapters to implement a jazz ACE system. It further adds on the system an extra ``scale'' estimation pass to enable the ``chord-scale'' (see Section~\ref{sec:5-jazzfund} for more details in these musical terms) recognition. Combining with some existing jazz improvisation musical interfaces, the chord-scale estimation engine can allow novice users to make good improvisations out of jazz backings.
+
+\Hsection{Chapter~\ref{cp:conclude}} concludes the thesis with pointers to possible future directions of ACE.
 
 
-\section{Problem Definition} % section headings are printed smaller than chapter names
+\section{Contributions and Publications by the Author} \label{sec:1-contribution}
+The major contributions of this thesis are mainly on the deep learning methods for ACE. Particularly, this thesis proposes and tests the following new ACE architectures:
+\begin{enumerate}
+\item a segmentation-informed deep learning based ACE system framework;
+\item an end-to-end recurrent neural network based ACE approach with even chance training scheme.
+\end{enumerate}
 
-\section{Motivation}
+The thesis also has minor contribution in the application of ACE technologies to jazz domain via some automated improvisation platforms:
+\begin{enumerate}
+\item a jazz chord-scale estimation approach that extends the previously proposed ACE framework with local key tracking process.
+\item two jazz improvisation platforms that enable users to intuitively create melodies based on the chord-scale tracking.
+\end{enumerate}
 
-\section{Thesis Outline}
+In correspond to the thesis contributions, the author has published the following articles:
+\begin{itemize}
+\item Deng, J., Kwok, Y. K. A Hybrid Gaussian-HMM-Deep-Learning Approach For Automatic Chord Estimation with Very Large Vocabulary, In Proceedings of the 17th International Society for Music Information Retrieval Conference, New York City, USA, 2016
+\item Deng, J., Kwok, Y. K., Automatic Chord Estimation on SeventhsBass Chord Vocabulary Using Deep Neural Network, In Proceedings of the 41st International Conference on Acoustics, Speech, and Signal Processing, Shanghai, China, 2016
+\item Hu, X., Deng, J., Zhao, J., Hu, W., Ngai, E. C. H., Wang, R., ... and Kwok, Y. K., SAfeDJ: A Crowd-Cloud Codesign Approach to Situation-Aware Music Delivery for Drivers. ACM Transactions on Multimedia Computing, Communications, and Applications (TOMM), 12(1s), 21.(2015)
+\item Deng, J., Lau, F. C. M., and Kwok, Y. K., ArmKeyBoard: A Mobile Keyboard Instrument Based on Chord-Scale System and Tonal Hierarchy. In Proceedings of 40th International Computer Music Conference, Athens, Greece, 2016.
+\item Deng, J., Lau, F. C. M., Ng, H. C., Kwok, Y. K., Chen, H. K., and Liu, Y. H., WIJAM: A Mobile Collaborative Improvisation Platform under Master-Players Paradigm. In Proceedings of the 2014 International Conference on New Interfaces for Musical Expression, London, UK., 2014
+\end{itemize}
 
-\section{Contributions}
+There are currently two articles under review:
+\begin{itemize}
+\item Deng, J., Kwok, Y. K., Large Vocabulary Automatic Chord Estimation Using Deep Learning: Design Framework and Efficient System Configurations, submitted to IEEE/ACM Transactions on Audio, Speech and Language Processing, 2016 (under review)
+\item Deng, J., Kwok, Y. K., End-to-end Large Vocabulary Automatic Chord Estimation Using Bidirectional Long-Short-Term-Memory Recurrent Neural Network with Even Chance Training, submitted to Journal of New Music Research, 2016 (under review)
+\end{itemize}
+The most part of the thesis are derived from these papers.
 
-\section{Publications by the Author}
-
-
+So far, this introduction chapter has already briefly summarized the general idea of this thesis. In a word, this thesis is mainly dedicated to large vocabulary automatic chord estimation, so as to approach the ultimate human-like machine chord transcription goal, that tries to recover every subtle flavours of the original recordings.
 
 %\subsection{Name your subsection} % subsection headings are again smaller than section names
 % lead
