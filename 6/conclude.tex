@@ -4,6 +4,20 @@
 
 \chapter{Conclusion}\label{cp:conclude} % top level followed by section, subsection
 
+% conclusion outline:
+% summary of major contributions (the major takeaways)
+%	- large vocabulary with inversions
+%	- the gmm-hmm-dl system: lstm based handle long-tail chords nicely, others overfit chords
+%	- the end-to-end blstm-rnn system: segmentation quality not good enough, even-chance training work
+%	- the auto jazz improvisation: jazz chord segmentation good, chord-scale system still in preliminary stage, but very possible to improve in the future
+%
+% future directions
+%	- combine with Filip's work (feature learning, new chroma)
+%	- hierarchical blstm-rnn to better segmentation quality
+%	- data collection, ground-truth subjectivity issue, subjective test as the most objective goal
+%	- jazz functional ground tracking (evaluation part)
+%	- RNN-DBN based jazz lick generation
+
 
 % ----------------------- paths to graphics ------------------------
 
@@ -16,7 +30,36 @@
 
 % ----------------------- contents from here ------------------------
 
+This chapter servers to conclude the thesis with some final remarks of the contributions and pointers to future directions in ACE related MIR researchers. Chapter~\ref{cp:ghmm} to ~\ref{cp:endtoend} each has its own contributions in terms of approaches to large vocabulary ACE. Chapter~\ref{cp:jazz} has contribution on the application of ACE technology to jazz domain and its extension to other jazz related issues. Section~\ref{sec:6-recap} will first review all these contributions briefly, and Section~\ref{sec:6-future} will suggest some possible future works that can follow up the current state of works.
 
+\section{Major Findings Recap} \label{sec:6-recap}
+The major research target of this thesis is large vocabulary automatic chord estimation, or LVACE. The motivation of this research originates from the way musicians approach towards chord annotation, which is well described in Chapter~\ref{cp:intro}, that:
+\begin{quote}
+...those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations.
+\end{quote}
+Therefore it is necessary for an ACE system to also incorporate such large vocabulary as a presumption to pass the \textit{Turing test}, which is the ultimate goal of any kind of artificial intelligence.
+
+However, most of the ACE approaches to date do not consider large vocabulary. Instead, they normally take a shortcut \textit{majmin} vocabulary due to various reasons, including the lack of training data for long-tail chords, and the pursuing for higher evaluation scores. In view of this, the thesis tries to devise some novel ways to deal with large vocabulary issues in ACE in order to make up for this gap.
+
+\Hsection{Chapter~\ref{cp:ghmm}} proposes a hybrid GMM-HMM-DNN system framework to solve LVACE problem. According to the ACE system taxonomy in this thesis, this belongs to the ``local feature extraction - global segmentation - local classification'' class. Particularly, this approach assigns the segmentation and classification into two different processes. The rationale behind this separation is an obvious observation that most MIREX ACE submissions are with very similar segmentation scores across various test datasets. In this approach, the GMM-HMM is used to perform segmentation, and the DNN is to classify segments into chord labels.
+
+There are three different DNN models under discussion: MLP, DBN and BLSTM-RNN. The major takeaway from the experiment results is that the BLSTM-RNN implementation has the highest score in terms of versatility metrics, and has the greatest potential to handle both ordinary and long-tail chord in a well balanced way, while the MLP and DBN both tend to overfit on popular/dominating chords.
+
+\Hsection{Chapter~\ref{cp:endtoend}} puts forwards an end-to-end BLSTM-RNN approach with even chance training scheme as a solution to LVACE. This approach belongs to the ``local feature extraction - global classification'' category. Specifically, frame-wise features are extracted using a set of well known transformations. These features are then segmented and classified at the same time by a BLSTM-RNN.
+
+To cater to long-tail chords, an even chance training scheme is proposed. This scheme tries to give the network equal attention to each target category. Two versions of BLSTM-RNN, with and without the scheme, are compared. Results convincingly demonstrate that the scheme has positive effect on more balanced performance, while sacrificing scores in large population chords as a major drawback.
+
+\Hsection{Chapter~\ref{cp:jazz}} applies the approaches presented in the previous two chapters to jazz, which is very different from the original common ACE target styles (i.e., pop and rock) in terms of not only chord vocabulary, but also harmonic structures, instrumental rendering styles, and rhythm sessions. Specially, jazz is unique in the way of bass walking and foreground instrument improvisation/soloing.
+
+Surprisingly, the preliminary experiment in this Chapter found that the classical GMM-HMM way of segmentation still works very well in jazz. Together with the DNN segment-based classification, the system annotate chords much better than the baseline approach, which performs segmentation and classification in a single pass. Note that this preliminary experiment is conducted using a test dataset of 7 pure jazz backings.
+
+The jazz ACE system is then extended to become a chord-scale estimator. Concretely, a template-based scale tracking algorithm is implemented on top of the ACE system. The estimation results of this algorithm are also tested against the same jazz dataset as the ACE task. % FIXME: results missing
+
+Two jazz improvisation platforms are introduced and implemented. Both platforms use the idea of chord-scale for jazz soloing. Combined with the chord-scale estimator, these platforms can let users with no musical training to improvise jazz melodies along with the backings.
+
+Finally, a note sequence generator is implemented through a trained Markov model. An auto jazz improviser can then be achieved by combining this with the chord-scale estimator. Preliminary demo tracks have shown great musical potential of this unified system.
+
+\section{Future Directions} \label{sec:6-future}
 
 
  
