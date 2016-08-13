@@ -762,9 +762,27 @@ At last some best system representatives are compared with the baseline approach
 As shown, these systems all outperform Chordino by a large range in S and SB, and they are fairly comparable with Chordino in Mm and MmB. In terms of versatility, Chordino is not bad at all, outperforming both MLPs and DBN's representatives. But the most well-rounded system is based on BLSTM-RNN, outscoring Chordino by huge amount.
 
 \section{MIREX 2016 Results}
-% FIXME: to be written
-TBW...
-\begin{table*}[h]
+MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
+\begin{itemize}
+\item CM1: Chordino, from Queen Mary University of London;
+\item DK*: features three variants of the ACE approach proposed in this chapter (note that DK4, which is from another design approach, is skipped in the following discussion);
+\item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two previous papers \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
+\item KO1: shineChords, a time-frequency reassign approach proposed by Khadkevich and Omologo \cite{khadkevich2011time}.
+\end{itemize}
+
+\subsection{Dataset and Vocabulary}
+It should be noted that except CM3, whose model parameters are all manually specified, all other systems all involve extensive training:
+\begin{itemize}
+\item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has a too high SB score in isophonic, while not as high in other test sets.
+
+\item FK* are trained with the Isophonic, Robbie Williams\footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard\footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
+
+\item DK* are trained with USPop dataset and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016.
+\end{itemize}
+
+And in terms of chord vocabulary, both DK3, FK* and KO1 only support majmin, CM1 support a large vocabulary including most chord types in SeventhsBass, and DK1-2 support exactly the SeventhsBass.
+
+\begin{table*}[htb]
 \centering
 \scriptsize
 \caption{MIREX 2016 Results. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}
@@ -818,12 +836,23 @@ FK4 & 83.37 & 80.96 & 78.42 & 77.04 & 74.76 & 87.22 & 84.50 & 91.02\\ \hline
 KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 \end{tabular}
 \end{table*}
+\subsection{Results and Discussions}
+Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016. Within the context of this thesis, the main focus of this set of results is the SeventhsBass column.
 
+In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores a much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this dataset is not statistically valid to deduce any reasonable conclusions regarding these systems.
+
+In Billboard 2012 and 2013 tests, the best performances are both from DK1. Although FK* learn from part of the test set, they somehow does not outperform DK1. Moreover, DK1 outscore KO1 by about 3 points in both tests, which demonstrates a better generalization capability in DK1 system.
+
+JayChou 2015 test is probably the most convincing one, since on one had none of the systems are learning this set, and on the other hand it has more than 20\% of chords other than maj, min and sevenths, much more than other test sets. The performance on this test could well demonstrate the system's vocabulary versatility. This can be noticed by making comparison within the DK* systems, where DK1 and DK2 perform much better than DK3 in SB. The best two systems in this test are DK1 and DK2, outscoring the FK* systems by around 10 points, and the KO1 system by about 8 points.
+
+Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of maj, min and sevenths (probably >90\%), which is very similar to the chord composition of the Isophonic set, and therefore systems with ordinary chord vocabulary only will have a huge advantage by not being able to have confusions on long-tail chords.
 
 \section{On Smaller Vocabulary}
 This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a minor comparison between the proposed system framework and other approaches, a set of experiments are conducted using two other smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (mentioned in Section~\ref{sec:2-largevocab}). For MajMin system implementation, each label in the training set will be first mapped to its MajMin form following a normal scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy is followed.
 
 \subsection{On MajMin}
+
+Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, while on the other hand the SOSB of these systems are all much lower because of a much smaller vocabulary than Chordino.
 \begin{table}[h]
 \footnotesize
 \centering
@@ -840,8 +869,6 @@ DBN-ns & 72.91 & 70.96 & 69.14 & 73.66 & 63.33 & 61.66 & 83.44 & 144.89\\ \hline
 BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 153.63\\ \hline
 \end{tabular}
 \end{table}
-
-Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, while on the other hand the SOSB of these systems are all much lower because of a much smaller vocabulary than Chordino.
 
 Table~\ref{tab:3-detailres} shows the SeventhsBass categorical breakdown. Take DBN-ch as representative, since it only supports MajMin, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the data set population, that's why it has a much higher SB score. However, by relaxing the evaluation strength from SB to Mm, the performance difference between DBN-ch and Chordino becomes lesser and lesser.
 
