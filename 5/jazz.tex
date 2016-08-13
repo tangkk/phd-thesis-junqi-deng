@@ -136,8 +136,6 @@ Jazz-BLSTM-ch & 63.72 & 82.22\\ \hline
 \label{tab:5-jazz-wcsr}
 \end{table}
 
-%\subsubsection{Study 2}
-%All systems are tested using the combination of GaryBurton7 and JazzGuitar99 dataset.
 
 \subsection{Extension - Jazz Scale Estimation}
 The above preliminary ACE work can be extended to cover jazz scale estimation, thereby achieving a unified chord-scale estimation approach. As reviewed in Section~\ref{sec:5-jazzfund}, the scales are chosen based on the harmonic functional group, which establishes a temporary tonal center, or a key. Consequently, a natural approach to do jazz scale estimation is by imitating local key estimation.
@@ -156,7 +154,15 @@ For each segment (chord position), the system will decide a list of scale candid
 \begin{equation}
 scale = \max_k \text{fit}_k.
 \end{equation}
-The template-based local scale estimation has been implemented during the Hackathon of ISMIR 2016 \footnote{https://github.com/tangkk/chordscale/blob/master/chordscale.py}. However since this is a relatively new direction in MIR, there is not any well-established labelled dataset available for performance testing. Therefore this module has not been formally evaluated under any objective measure yet.
+The template-based local scale estimation has been implemented during the Hackathon of ISMIR 2016 \footnote{https://github.com/tangkk/chordscale/blob/master/chordscale.py}. Figure~\ref{fig:5-chordscale} shows a demo of the output of this process with ``Olhos de Gato'', where the labels in red indicate the estimated scales.
+\begin{figure}[h]
+    \centering
+        \includegraphics[width=0.6\columnwidth]{5/figures/chordscale-demo.pdf}
+    \caption{Chord-scale tracking demo output from a leadsheet}
+    \label{fig:5-chordscale}
+\end{figure}
+
+However, since this is a relatively new direction in MIR, there is not any well-established labeled dataset available for performance testing. Therefore this module has not been formally evaluated under any objective measure yet.
 
 The research of jazz chord-scale estimation has its straightforward application in new musical expression interfaces. Two mobile devices based jazz improvisation platforms will be introduced in Section~\ref{sec:5-wijam} and ~\ref{sec:5-akb}. And Section~\ref{sec:5-puttogether} will seek to put the chord-scale estimation system and jazz improvisation platforms together.
 
@@ -423,18 +429,30 @@ The simplest form would be to only provide the platform with timed chord-scale s
 \subsection{Markov model note sequence generation}
 A more intelligent approach is to generate note sequence within a chord-scale context using a Markov model. This model has two sets of parameters: the note prior probability matrix and the note transition matrix. These matrices can be trained from existing jazz solo MIDI datasets such as the Weimar Jazz Dataset\footnote{http://jazzomat.hfm-weimar.de/dbformat/dboverview.html}\cite{abesser2013introducing}.
 
-There is a preliminary implementation of this Markov model based note generator during the monthly ``Science of Music Hackathon'' in August 2016 \footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. In this implementation, a simplified version of the model is built to generate sequence of ``pitches'' instead of ``notes'', where the former do not have duration information but the latter do. The code base of this project is available on-line \footnote{https://github.com/tangkk/chordscale}. It depends on the \textit{pretty-midi} \cite{raffel2014intuitive} library to do MIDI interfacing and perform simple sound synthesis. Several preliminary demos can also be found in the code base, showcasing simple chord-melody outputs from the system.
+There is a preliminary implementation of this Markov model based note generator together with the template-based scale tracker during the ``Science of Music Hackathon'' in August 2016 \footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. In this implementation (Figure~\ref{fig:5-hmm1}), a simplified version of the model is built to generate sequence of ``pitches'' instead of ``notes'', where the former do not have duration information but the latter do. The note sequence generation of the Markov chain is constraint by the chord-scale context, namely, only pitches indicated in the chord-scale are allowed.
 
-% FIXME:missing a figure here (probably figure for the Markov model)
+\begin{figure}[htb]
+    \centering
+        \includegraphics[width=0.6\columnwidth]{5/figures/hmm1.pdf}
+    \caption{The Markov model for pitch sequence generation}
+    \label{fig:5-hmm1}
+\end{figure}
+
+The code base of this project is available on-line \footnote{https://github.com/tangkk/chordscale}. It depends on the \textit{pretty-midi} \cite{raffel2014intuitive} library to do MIDI interfacing and perform simple sound synthesis. Several preliminary demos can also be found in the code base, showcasing simple chord-melody outputs from the system.
 
 \subsection{RNN-DBN automatic note sequence generation}
-To the other extreme, it could be a fully artistically automatic improvisation process if the ``patterns of choices'' from real jazz practice \cite{jazzguitarimpro,pracjazz} are modelled and learned. These are sequences of notes (each of them with both pitch and duration) within the context of chords or chord progressions. They can be well captured by sequential models such as an RNN using the chordal context as the starting cue, with the discriminative objective being whether the sequence of notes are artistically ``acceptable'' or not. This is the discriminative part of the model, and it is similar to the LSTM semantic analysis model by Maas et al.\cite{maas2011learning}. Note that this discriminative model cannot capture generative details. Hence there should be a generative model inserted into it, and thus it becomes a discriminative-generative model. Referring Boulanger's RNN-RBM based symbolic music generation system \cite{boulanger2012modeling}, if an instance of DBN (instead of RBM) is inserted between the output layer and the LSTM layer of the previous discriminative model, the resulting network will be able to both classify sequence to labels and generate sequence based on the prior labels.
-% FIXME: figures are missing
+To the other extreme, it could be a fully artistically automatic improvisation process if the ``patterns of choices'' from real jazz practice \cite{jazzguitarimpro,pracjazz} are modeled and learned. These are sequences of notes (each of them with both pitch and duration) within the context of chords or chord progressions. They can be well captured by sequential models such as an RNN using the chordal context as the starting cue, with the discriminative objective being whether the sequence of notes are artistically ``acceptable'' or not. This is the discriminative part of the model, and it is similar to the LSTM semantic analysis model by Maas et al.\cite{maas2011learning}. Note that this discriminative model cannot capture generative details. Hence there should be a generative model inserted into it, and thus it becomes a discriminative-generative model. Referring Boulanger's RNN-RBM based symbolic music generation system \cite{boulanger2012modeling}, if an instance of DBN (instead of RBM) is inserted between the output layer and the LSTM layer of the previous discriminative model, the resulting network will be able to both classify a sequence to labels and generate a sequence based on the prior labels (Figure~\ref{fig:5-rnndbn}).
 
-In this case, there needs to be a set of training cases that are ``acceptable'' and another set that is ``not acceptable''. By training such model of jazz lick patterns, a sequence of ``acceptable'' notes could hopefully be automatically generated by the chord-scale changes estimated from the backing track.
+\begin{figure}[htb]
+    \centering
+        \includegraphics[width=0.6\columnwidth]{5/figures/rnndbn.pdf}
+    \caption{The RNN-DBN for note sequence generation}
+    \label{fig:5-rnndbn}
+\end{figure}
 
-% FIXME: here it's better to show some examples of chord-scale estimated lead sheets from GaryBurton's backings, for example..
-% use the result of the hackathon
+
+In this case, there needs to be a set of training cases for every chord-scale. By training the model with jazz lick patterns, a sequence of ``acceptable'' notes could hopefully be automatically generated by the chord-scale changes estimated from the backing track.
+
 
 % ---------------------------------------------------------------------------
 %: ----------------------- end of thesis sub-document ------------------------

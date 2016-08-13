@@ -15,6 +15,7 @@
 *.dvi
 *.ppt
 *.pptx
+*.key
 *.eps
 *-converted-to.*
 # these rules might exclude image files for figures etc.
