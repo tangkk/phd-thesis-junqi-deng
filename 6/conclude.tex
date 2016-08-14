@@ -63,9 +63,30 @@ Finally, a note sequence generator is implemented through a trained Markov model
 % deeper ACE models?
 % ground-truth subjectivity issues
 % long-tail issues
-% jazz improvisation issues
-% lyrics-audio alignment for chord-lyrics generation?
- 
+
+Extrapolating from this thesis, the future directions of ACE, in a deep learning oriented point of view, should focus on at least the following three aspects/challenges:
+\begin{itemize}
+\item implement deeper models
+\item embrace ground-truth subjectivity
+\item improve accuracy on long-tail chords
+\end{itemize}
+
+\Hsection{Deeper Models}
+The first aspect considers using a deeper model for sequence modeling. This is rather a challenge motivated by pure scientific interest than practical interest. Chapter~\ref{cp:endtoend} describes a BLSTM-RNN that models sequence transformation from a tuned notegram level to segmented chord labels level. But as we all know, the promise of deep learning is to extract useful features from raw input, and to learn better transformations than those engineered manually. Thus this challenge asks for a deep learning model in a truly ``end-to-end'' sense, that captures every transformation from waveform level all the way to chord sequence level. Such model might not outperform the state-of-the-art at the beginning, but might show some promising potentials to achieve the optimal performance when certain computation or data requirements are met.
+
+\Hsection{Subjectivity Issue}
+The second challenges are fundamental to all kinds of machine learning researches, and it is especially important in ACE research, since the human chord annotations sometimes may disagree a lot, especially in long-tail chords, as reviewed in Section~\ref{sec:2-subjectivity}. Some ACE authors hence doubt the necessity to estimate long-tail chords. Such opinion may have its merit under practical consideration, especially when someone is trying to build an ACE software for chord learning beginners. But it is definitely a fallacy in an academic perspective, especially when the ultimate goal of ACE is to facilitate a machine musicianship, as introduced in Section~\ref{sec:1-moti}.
+
+Therefore the annotation subjectivity issue needs to be embraced, or resolved, rather than neglected or abandoned. This is a difficult topic that may demand a lot work and intelligence from data science, statistics, and machine learning. One key observation is that human learns to annotate chords (including long-tail ones) not by multiple examples of the same pieces, but by reading and listening to a lot of different examples, regardless of the annotators of those examples. When this person reaches a certain level, s/he may be able to correct the wrong annotations. The more advanced s/he is, the more long-tail chords s/he is able to annotate, spot and correct.
+
+But as emphasized in Section~\ref{sec:2-subjectivity}, this issue should not overrule another equally important issue: to build a machine that ``learns well''. A 100\% ``golden standard'' ground truth should not be a necessary premise for building any machine learning system. Should their be any chaos, the research community can always regress to use annotations from one single annotator.
+
+\Hsection{Long-tail Chords Accuracy}
+The long-tail chords accuracy is always involved with subjectivity issue. But it should be noted that not all instances of all long-tail chords are easily subjected to the subjectivity. There is currently not any statistics showing the exact relationship between them, but musical experience told us that some long-tail chord instances are much easier to be recognized than the others, thus they receive less disagreement among annotators.
+
+This serves as a key argument for LVACE, despite the subjectivity issue has not come to a solution. On the other hand, this is also supported by a Turing test argument, that ACE needs to support a vocabulary that is used by human annotators in order to pass the test.
+
+Both Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} point to some possible directions towards building more long-tail friendly systems, by either leveraging LSTM-RNN architecture to model temporal relationship within chord regions, or using an even chance training scheme for all classes. All in all, the future ACE researches should on one hand gradually increase the vocabulary, and on the other hand improve the accuracy of every class.
 
 % ---------------------------------------------------------------------------
 %: ----------------------- end of thesis sub-document ------------------------
