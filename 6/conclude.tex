@@ -53,15 +53,18 @@ To cater to long-tail chords, an even chance training scheme is proposed. This s
 
 Surprisingly, the preliminary experiment in this Chapter found that the classical GMM-HMM way of segmentation still works very well in jazz. Together with the DNN segment-based classification, the system annotate chords much better than the baseline approach, which performs segmentation and classification in a single pass. Note that this preliminary experiment is conducted using a test dataset of 7 pure jazz backings.
 
-The jazz ACE system is then extended to become a chord-scale estimator. Concretely, a template-based scale tracking algorithm is implemented on top of the ACE system. The estimation results of this algorithm are also tested against the same jazz dataset as the ACE task. % FIXME: results missing
-
-Two jazz improvisation platforms are introduced and implemented. Both platforms use the idea of chord-scale for jazz soloing. Combined with the chord-scale estimator, these platforms can let users with no musical training to improvise jazz melodies along with the backings.
+The jazz ACE system is then extended to become a chord-scale estimator. Concretely, a template-based scale tracking algorithm is implemented on top of the ACE system. Two jazz improvisation platforms are introduced and implemented. Both platforms use the idea of chord-scale for jazz soloing. Combined with the chord-scale estimator, these platforms can let users with no musical training to improvise jazz melodies along with the backings.
 
 Finally, a note sequence generator is implemented through a trained Markov model. An auto jazz improviser can then be achieved by combining this with the chord-scale estimator. Preliminary demo tracks have shown great musical potential of this unified system.
 
 \section{Future Directions} \label{sec:6-future}
 
-
+% better ACE systems
+% deeper ACE models?
+% ground-truth subjectivity issues
+% long-tail issues
+% jazz improvisation issues
+% lyrics-audio alignment for chord-lyrics generation?
  
 
 % ---------------------------------------------------------------------------

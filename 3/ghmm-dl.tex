@@ -944,6 +944,8 @@ It extends naturally from this study that ACE systems should try to focus more o
 
 It should be pointed out that the ultimate goal of ACE is to device a computer program that comes as close as possible to human musician's ability to chord transcription. Differentiating between long-tail chords and ordinary chords is undoubtedly what differentiates a musician from an amateur. Now that there are already good systems that match an amateur level \cite{ni2013understanding}, it is a good moment to start to pursuit systems that match musician level.
 
+Finally, a piece timed chord sequence output can be combined with the \textit{.lrc} file of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. Such combination process is also implemented\footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Note that in this case the lyrics might not be perfectly aligned with chords, since an \textit{.lrc} file only has information on the start and end time of each lyrics line, rather than each word. A more sophisticated solution would be to use audio-lyrics alignment tool \cite{mauch2010lyrics} as a preprocessing stage before matching the lyrics and chords.
+
 \begin{comment}
 Inevitably, due to difference in musical training, human annotators sometimes disagree, especially on long-tail chords \cite{humphreyfour}. In a very strict sense, there is not any ``gold standard'' if human might disagree with each other. But in a loose sense, theoretically there could be a ``gold standard'' if:
 \begin{itemize}

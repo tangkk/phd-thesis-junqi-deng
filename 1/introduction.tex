@@ -28,16 +28,49 @@
 This chapter introduces the problem of automatic chord estimation (ACE) by defining the problem in Section~\ref{sec:1-problemdef} and motivating the problem in Section~\ref{sec:1-moti}. Then the thesis structure will be analyzed in Section~\ref{sec:1-outline}, followed by the thesis contribution and the author's publications in Section~\ref{sec:1-contribution}.
 
 \section{Problem Definition} \label{sec:1-problemdef}
-ACE, within the context of this thesis, refers to a task that estimates, recognizes, or transcribes the chord sequence from a piece of audio (i.e., a song or a musical instrumental) that contains such sequence under equal-temperament tonal music constraint (see Chapter~\ref{cp:background} for more definitions of these musical terms). In this definition, the verb ``estimate'', ``recognize'' or ``transcribe'' all mean the same process. This process analyzes the input audio and uncovers the underlying chord progression within it. The task also asks for a classification of chord material and no-chord material (i.e., silence, natural sound, environmental noise, etc.), and the algorithms that solve this task should be able to label both.
+ACE, within the context of this thesis, refers to a task that estimates, recognizes, or transcribes the segmented chord sequence from a piece of audio (i.e., a song or a musical instrumental) that contains such sequence under equal-temperament tonal music constraint (see Chapter~\ref{cp:background} for more definitions of these musical terms). In this definition, the verb ``estimate'', ``recognize'' or ``transcribe'' all mean the same process. This process analyzes the input audio, uncovers the underlying chord progression, and segments the input in terms of these chords. The task also asks for a classification of chord material and no-chord material (i.e., silence, natural sound, environmental noise, etc.), and the algorithms that solve this task should be able to label both. Figure~\ref{fig:1-acemir} illustrates ACE as a task in music information retrieval (MIR).
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\columnwidth]{1/figures/acemir.PNG}
+\caption{ACE as an MIR task}
+\label{fig:1-acemir}
+\end{figure}
 
 \section{Motivation} \label{sec:1-moti}
-ACE has been one of the most important problems in music information retrieval (MIR). The motivation of an ACE research is three-fold:
+ACE has been one of the most important problems in MIR. The motivation of an ACE research is three-fold:
 
 \subsection{ACE as submodule to other tasks}
 ACE is a subproblem in other tasks such as cover song identification \cite{bello2007audio,lee2006identifying,serra2010audio} (which make use of the chord sequence similarity), music structural segmentation \cite{bello2005robust} (where the repetition of chord sequence is a structural cue), and genre classification \cite{cheng2008automatic,perez2009genre}. It also has a critical role in problems such as audio key detection \cite{papadopoulos2012modeling,pauwels2010integrating} and downbeat estimation \cite{papadopoulos2008simultaneous,mauch2010simultaneous}, where in the former problem the estimated chord sequence often serves as a lower level harmonic information to infer the key or key sequence, while in the latter the chord and downbeat estimation are sometimes a dual problem within one single algorithmic framework.
 
 \subsection{ACE's own merit as chord transcription engine}
-For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish between similar chords (e.g., $C7$ and $C13$), is a common way to demonstrate sophisticate musicianship. People with chord transcription abilities help power the popular chords/tabs websites such as UltimateGuitar\footnote{ultimate-guitar.com}, E-chords\footnote{e-chords.com} and many others\footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance), those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. But such human musical sophistication is not a resource that is easily replicable, and thus at some point the need for chord annotations will be overwhelming the annotation workforce. With the ever increasing music production speed, it is foreseeable that these chord services will gradually rely more on ACE technologies. Consequently, regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE (LVACE) is absolutely a significant part of the machine.
+For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish between similar chords (e.g., $C7$ and $C13$), is a common way to demonstrate sophisticate musicianship. People with chord transcription abilities help power the popular chords/tabs websites such as UltimateGuitar\footnote{ultimate-guitar.com}, E-chords\footnote{e-chords.com} and many others\footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance), those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. Figure~\ref{fig:1-humanchord} showcases some of the human chord annotation examples from the above mentioned websites.
+\begin{figure}
+\centering
+\includegraphics[width=0.8\columnwidth]{1/figures/humanchord.PNG}
+\caption{Human chord transcriptions}
+\label{fig:1-humanchord}
+\end{figure}
+
+But such human musical sophistication is not a resource that is easily replicable, and thus at some point the need for chord annotations will be overwhelming the annotation workforce. With the ever increasing music production speed, it is foreseeable that these chord services will gradually rely more on ACE technologies. Consequently, regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE (LVACE) is absolutely a significant part of the machine.
+
+\subsection{ACE as part of artificial musicianship}
+Human musicianship requires as least one of the four kinds of trainings: ear training, sight-reading, composition and improvisation, as captured in Figure~\ref{fig:1-musictraining}. MIR researches mostly consider ``ear training'' and ``sight-reading''. The ability to transcribe ``chords'' obviously belong to the category of ``ear training'
+\begin{figure}
+\centering
+\includegraphics[width=0.6\columnwidth]{1/figures/musictraining.PNG}
+\caption{Human music training}
+\label{fig:1-musictraining}
+\end{figure}
+
+Ear training, as elaborated in Figure~\ref{fig:1-eartraining}, include several sub-trainings. The ``identification of chords'' is one of these.
+\begin{figure}
+\centering
+\includegraphics[width=0.6\columnwidth]{1/figures/eartraining.PNG}
+\caption{Human ear training}
+\label{fig:1-eartraining}
+\end{figure}
+
+Therefore, in building artificial musicianship, ACE plays a key function in the artificial musical ``ear''.
 
 \subsection{ACE inspires scientific researches on human audition and mind}
 Furthermore, ACE research, in an algorithmic level, could shed light on the working mechanism of the human auditory system or human mind towards music harmony at certain level. This similar motivation is shared by many other artificial intelligent tasks\cite{lecun1995convolutional,hinton1995wake}, where the exploration of algorithmic or machine learning solution itself inspires the scientific research on human mind.
