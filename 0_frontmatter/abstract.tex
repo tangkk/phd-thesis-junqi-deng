@@ -4,7 +4,15 @@
 
 %\begin{abstractslong}    %uncommenting this line, gives a different abstract heading
 \begin{abstracts}        %this creates the heading for the abstract page
+This thesis presents two novel ways of solving the large vocabulary (LV) automatic chord estimation (ACE) problem with deep learning technologies, and tries to apply these solutions within an automatic jazz improvisation context.
 
+Being well aware of the annotation subjectivity issue, this thesis asks for the necessity of LV with a joint argument of machine musicianship and Turing test. Built upon this premise, it proposes two system frameworks that lead to practical LVACE implementations.
+
+The first system framework introduces the separation of segmentation and classification during ACE, while all previous literatures combine the two processes in one single pass. Three types of deep learning models are proposed for classification. Under large vocabulary evaluation, two of them are over-fitting chords with large populations, while the other model shows great potential in balanced performance. This framework has already proved its successfulness in the music information retrieval evaluation exchange (MIREX) ACE 2016 tasks.
+
+The second systems considers an end-to-end neural network approach, and employ an ``even chance'' training technique to make up for the lack of examples of chords with much less populations. As revealed in the evaluation, the main drawback of this system is the low segmentation quality, which inevitably lower the upper-bound of chord recognition accuracy. Nevertheless, it demonstrates a preliminary successfulness of a fully end-to-end approach without any post-processing stages, and also proves the even chance training scheme to be effective for long-tail chords recognition.
+
+Finally, as a preliminary study, a jazz chord estimation system is built from the first framework. Then a chord-scale estimation system is built with a template-based scale tracking algorithm. Some semi-automatic or fully automatic jazz improvisation demos are created out of the combination of this chord-scale tracker, two jazz improvisation musical interfaces, and a Markov model based note generator.
 
 
 \end{abstracts}
