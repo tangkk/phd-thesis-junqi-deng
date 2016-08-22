@@ -776,7 +776,7 @@ In terms of chord vocabulary, both DK3, FK* and KO1 only support majmin, CM1 sup
 \begin{table*}[htb]
 \centering
 \scriptsize
-\caption{MIREX 2016 Results. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}
+\caption{MIREX 2016 Results}
 \label{tab:3-mirex2016}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
 Algorithm & R & Mm & MmB & S & SB & Seg & UnderSeg & OverSeg \\ \hline
@@ -828,7 +828,7 @@ KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 \end{tabular}
 \end{table*}
 \subsection{Results and Discussions}
-Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016. Within the context of this thesis, the main focus of the results is the SeventhsBass column.
+Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016\footnote{B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}. Within the context of this thesis, the main focus of the results is the SeventhsBass column.
 
 In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this test is not statistically valid to deduce any reasonable conclusions regarding these systems.
 
@@ -939,7 +939,7 @@ It should be pointed out that the ultimate goal of ACE is to device a computer p
 Finally, a piece of timed chord sequence output can be combined with the \textit{.lrc} file\footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. This combination process is implemented\footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output.
 \begin{figure}[h]
     \centering
-        \includegraphics[width=0.8\columnwidth]{3/figures/aihenjiandan.pdf}
+        \includegraphics[trim={0 6cm 0 0},clip,width=1.2\columnwidth]{3/figures/aihenjiandan.pdf}
     \caption{Chord-lyrics output of \textit{Aihenjiandan} (by Taiwan singer-songwriter David Tao)}
     \label{fig:3-aihenjiandan}
 \end{figure}

@@ -1528,7 +1528,7 @@
 	\vspace*{1in}
 	\singlespace
 	\begin{tabular}{rl}     
-	Signed&$\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_$\\
+	Signed&$\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_$\\
 	&{\@author} \\
 	\end{tabular}}
 \def\enddeclaration{\par\vfil\newpage}
