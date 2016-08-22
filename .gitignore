@@ -26,7 +26,7 @@
 *.png
 *.fig
 *.mscz
-
+*.rtf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl

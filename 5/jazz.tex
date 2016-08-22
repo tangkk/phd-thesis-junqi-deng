@@ -7,32 +7,26 @@
 
 % ----------------------- paths to graphics ------------------------
 
-% change according to folder and file names
-\ifpdf
-    \graphicspath{{8/figures/PNG/}{8/figures/PDF/}{8/figures/}}
-\else
-    \graphicspath{{8/figures/EPS/}{8/figures/}}
-\fi
 
-Previous chapters have explored ACE in SeventhsBass vocabulary, which contains a limited amount of sevenths and inversions. This vocabulary is most used in modern music styles such as pop, rock, and folk songs. But chord types such as sevenths extensions, suspensions and alternations are not included in SeventhsBass. This chapter, following the original large vocabulary spirit of Fujishima \cite{fujishima1999realtime} and Sheh and Ellis \cite{sheh2003chord}, tries a preliminary ACE solution that covers a much larger vocabulary, and beyond that, put together a ``chord-scale'' estimation system that could be deployed in an automated jazz improvisation platform.
+Previous chapters have explored ACE in SeventhsBass vocabulary, which contains a limited amount of sevenths and inversions. This vocabulary is most used in music styles such as pop, rock, and folk songs. But chord types such as sevenths extensions, suspensions and alternations are not included in SeventhsBass. This chapter, following the original large vocabulary spirit of Fujishima \cite{fujishima1999realtime} and Sheh \cite{sheh2003chord}, tries a preliminary ACE solution that covers a much larger vocabulary, and beyond that, puts together a ``chord-scale'' estimation system that could be deployed in an automated jazz improvisation platform.
 
 % ----------------------- contents from here ------------------------
 \section{Jazz Fundamentals} \label{sec:5-jazzfund}
-This chapter focuses on a much larger vocabulary, including triads, sixths, sevenths and their extensions, suspensions, and alternations. In particular, it targets at jazz style, which is a improvisation based style with complex harmonic structures \cite{hojnackijazz}:
+This chapter focuses on a much larger vocabulary, including triads, sixths, sevenths and their extensions, suspensions, and alternations. In particular, it targets at jazz, which is a improvisation based style with complex harmonic structures \cite{hojnackijazz}:
 \begin{quote}
 One thing that distinguishes mainstream jazz harmony from other tonal styles is the tremendous amount of harmonic color that arises due to the pervasive use of tertian extensions of the basic chord types.
 \end{quote}
-Different from pop, rock and folk music, which usually have long chord progressions within the same key and only modulate at most a few times during a piece, jazz music often contains a lot of such key modulations. A {\it modulation} is \cite{randel1999harvard}:
+Different from pop, rock and folk music, which usually have long chord progressions within the same key and only modulate at most a few times during a piece, jazz music often contains a lot of key modulations. A {\it modulation} is \cite{randel1999harvard}:
 \begin{quote}
 in tonal music, the process of changing from one key to another, or the result of such change.
 \end{quote}
-Musical key and chord progression are closely related to each other. Many automatic systems \cite{catteau2007probabilistic,noland2009influences,mauch2010simultaneous} have been attempted to extract both at the same time. But these works are basically all experimented under low modulation rate contexts. While under a jazz context, where modulation rate is much higher, these classical approaches may or may not apply. Hence besides ACE, this chapter will investigate on a different key tracking algorithm in order to also capture the modulations. It should be noted that in {\it modal jazz}, where a piece is constructed horizontally around the melody instead of vertically around the harmonics, the functional role of ``chord progression'' is weaken or eliminated, but there are still underlying harmonic movements, regardless of keys or chords, to support the melody lines.
+Musical key and chord progression are closely related to each other. Many MIR systems \cite{catteau2007probabilistic,noland2009influences,mauch2010simultaneous,papadopoulos2012modeling} have been attempt to extract both at the same time. But these works are basically all experimented under low modulation rate contexts. While under a jazz context, where modulation rate is much higher, these classical approaches may or may not apply. Hence besides ACE, this chapter will investigate on a different key tracking algorithm in order to also capture the modulations. It should be noted that in {\it modal jazz}, where a piece is constructed horizontally around the melody instead of vertically around the harmonics, the functional role of ``chord progression'' is weaken or eliminated, but there are still harmonic movements, regardless of keys or chords, to support the melody lines.
 
 As jazz is an improvisation based music style, extracting chord progressions and key modulations could help determine/imply {\it chord-scale} candidates to improvise over a given harmonic segment. A {\it chord-scale} is \cite{hojnackijazz}:
 \begin{quote}
 a linear rendering of a complex chord - an extended chord structure, with tensions and non-chord tones arrayed within an octave.
 \end{quote}
-Each chord-scale is constructed by a root and a scale, where the root is similar to the root of a chord. As for the scale, there are seven commonly used scales in jazz that are derived from the major scale, each of those called a {\it mode} or {\it modal scale}. They are:
+Each chord-scale is constructed by a root and a scale, where the root is similar to the root of a chord. As for the scale, there are seven commonly used scales in jazz that are derived from the major scale, each of those is called a {\it mode} or {\it modal scale}. They are:
 \begin{enumerate}
 \item Ionian: $WWHWWWH$
 \item Dorian: $WHWWWHW$
@@ -42,7 +36,9 @@ Each chord-scale is constructed by a root and a scale, where the root is similar
 \item Aeolian: $WHWWHWW$
 \item Locrian: $HWWHWWW$
 \end{enumerate}
-The ``W'' and ``H'' indicate the seven sequential whole/half step intervals within the scale (note that $W$ = $2*H$). These modes, from 1 to 7, can be memorized as left-circular shifting the major scale ($WWHWWWH$) one note at a time. Similarly, modes can also be built based on {\it harmonic minor scale} ($WHWWHW^+H$) or {\it melodic minor scale} ($WHWWWWH$). Alternatively, there could be other scales out of this construction method, such as the {\it whole-half diminished scale} ($WHWHWHWH$), {\it half-whole diminished scale} ($HWHWHWHW$), {\it whole-tone scale} ($WWWWWW$) or {\it chromatic scale} ($HHHHHHHHHHHH$). Normally, a chord-scale is chosen based on the current musical key context, which is determined by the underlying {\it harmonic functional group} \cite{hojnackijazz,levine2011jazztheory}. Table~\ref{tab:5-chordscale} show some choices suggested by a jazz guitar tutorial book \cite{jazzguitarbook}. For a specific chord type, there could be multiple choices of scales, but the best picks will be determined by the musical key context, where the scale of choice cannot strongly indicate otherwise.
+The ``W'' and ``H'' indicate the seven sequential whole/half step intervals within the scale (note that $W$ = $2*H$). These modes, from 1 to 7, can be memorized as left-circular shifting the major scale ($WWHWWWH$) one note at a time. Similarly, modes can also be built based on {\it harmonic minor scale} ($WHWWHW^+H$) or {\it melodic minor scale} ($WHWWWWH$). Alternatively, there could be other scales out of this construction methodology, such as the {\it whole-half diminished scale} ($WHWHWHWH$), {\it half-whole diminished scale} ($HWHWHWHW$), {\it whole-tone scale} ($WWWWWW$) or {\it chromatic scale} ($HHHHHHHHHHHH$).
+
+Normally, a chord-scale is chosen based on the current musical key context, which is determined by the underlying {\it harmonic functional group} \cite{hojnackijazz,levine2011jazztheory}. Table~\ref{tab:5-chordscale} show some choices suggested by a jazz guitar tutorial book \cite{jazzguitarbook}. For a specific chord type, there could be multiple choices of scales, but the best picks will be determined by the musical key context, where the scale of choice cannot strongly indicate otherwise.
 \begin{table}
 \centering
 \footnotesize
@@ -61,18 +57,18 @@ dim7 & Whole-half Diminished \\ \hline
 \label{tab:5-chordscale}
 \end{table}
 
-Chord-scale system is a good way to analyze jazz harmony and melody. But in real improvisation, jazz musicians actually seldom think of the chord-scale system. Instead, they memorize all these by heart and improvise using the variations of melody passages and patterns they learn through extensive exercises \cite{jazzguitarimpro}. To be precise, instead of generating notes from the scales, they generate phrases that belong to the chord-scale. Infinity number of note sequences can be created  out of the chord-scale, but those phrases, within all these sequences, are among the most acceptable ones to human musical aesthetics. In addition to create phrases within a single harmonic region, they also pay much attention to the coherence along all different phrases so as to make as much musical sense as possible.
+Chord-scale system is a good way to analyze jazz harmony and melody. But in real improvisation, jazz musicians seldom think of the chord-scale system. Instead, they memorize all these by heart and improvise using the variations of melody passages and patterns they learn through extensive exercises \cite{jazzguitarimpro}. To be precise, instead of generating notes from the scales, they generate phrases that belong to the chord-scale. Infinity number of note sequences can be created out of the chord-scale, but those phrases, within all these sequences, are among the most acceptable ones to human musical aesthetics. In addition to creating phrases within a single harmonic region, they also pay much attention to the coherence along all different phrases so as to make as much musical sense as possible.
 
 \section{Automatic Jazz Chord Estimation} \label{sec:5-jazzace}
-To do ACE for jazz, the system framework in Chapter~\ref{cp:ghmm} is used. It is a segmentation-informed approach to ACE. Assuming the segmentation pass can achieve a high output quality, the remaining task is to classify chords independently in each segment. Figure~\ref{fig:5-jazzsys} is a succinct version of the system framework, where the segment tiling process is absorbed in the chord classifier module.
+To do ACE for jazz, the system framework in Chapter~\ref{cp:ghmm} is used. Assuming the segmentation pass can achieve a high output quality, the remaining task is to classify chords independently in each segment. Figure~\ref{fig:5-jazzsys} is a succinct version of the system framework, where the segment tiling process is absorbed in the chord classifier module.
 \begin{figure}[htb]
     \centering
         \includegraphics[width=0.8\columnwidth]{5/figures/sys.pdf}
-    \caption{The Jazz ACE system.}
+    \caption{The Jazz ACE system. It is equivalent to the system in Figure~\ref{fig:3-sysover}}
     \label{fig:5-jazzsys}
 \end{figure}
 
-Table~\ref{tab:5-aceconfig} shows all ACE configurations considered in the experiment. These are chosen based on the results in Chapter~\ref{cp:ghmm}.
+Table~\ref{tab:5-aceconfig} shows all ACE configurations considered in the experiment. They are chosen based on the results in Chapter~\ref{cp:ghmm}.
 \begin{table}
 \centering
 \footnotesize
@@ -88,18 +84,17 @@ Feature level & tuned notegrame(-ns), chromagram (-ch) \\ \hline
 \end{table}
 
 \subsection{Experimental Setup}
-In this study, 99 pieces of jazz chord comping + soloing dataset extracted from a jazz guitar book\cite{jazzguitarbook} (JazzGuitar99) are used as training/validation dataset, and 7 pieces from Gary Burton's on-line course\cite{garyburtoncourse} (GaryBurton7) are used as test dataset. JazzGuitar99's annotations are taken directly from the book, and GaryBurton7's annotations are taken from the leadsheets provided along with the course. The vocabulary has 36 types\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$, $ maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$ and $N$}.
+In this study, 99 pieces of jazz chord comping + soloing dataset extracted from a jazz guitar book \cite{jazzguitarbook} (JazzGuitar99) are used as training/validation dataset, and 7 pieces from Gary Burton's on-line course \cite{garyburtoncourse} (GaryBurton7) are used as test dataset. JazzGuitar99's annotations are taken directly from the book, and GaryBurton7's annotations are taken from the leadsheets provided along with the course. The vocabulary has 36 types\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$, $ maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$ and $N$}.
 
 %In the second study, the training/validation dataset is extracted from the CDs of a jazz guitar improvisation tutorial \cite{jazzguitarimpro} (JazzImpro96) and a practical jazz guide \cite{pracjazz} (PracJazz76). Totally they contain 172 tracks. All annotations are taken from the leadsheets in the books. The datasets of the previous study is used for testing. The vocabulary has 60 types\footnote{$maj7$, $min7$, $7$, $maj7\#11$, $min9$, $9sus4$, $7sus4$, $maj$, $7b9$, $9$, $13$, $9\#11$, $7\#9$, $min7b5$, $min$, $minmaj7$, $min6$, $7b13$, $7(9, \#11, 13)$, $7\#5$, $6$, $maj9$, $7(b9, \#9, b13)$, $7(b9, b13)$, $7(\#9, b13)$, $7(\#9, b9)$, $7\#11$, $9(b9, b13)$, $69$, $13b9$, $9b13$, $7(9, \#11)$, $7(13)$, $9(13)$, $7(alt)$, $dim7$, $min7(11)$, $7(b9, 13)$, $7(\#11, 13)$, $min7b9$, $7(9, 13)$, $7(9)$, $min7b5(11)$, $7\#5(\#9)$, $min7(11, 13)$, $9(6)$, $aug7$, $7b5$, $maj13$, $min11$, $7\#5\#9$, $11$, $min13$, $7\#5b9$, $maj7\#5$, $min11b5$, $maj7b5$, $min7\#5$, $7b5b9$ and $N$}.
 
-All training data are to be used at either tuned notegram (-ns) or chromagram (-ch) level, which does not contain phase information. Assuming well temperament, they can be augmented by pitch shifting with zero padding (for -ns), or circular pitch shifting (for -ch) to all 12 keys. Adjusting the chord labels accordingly, this results in 12 times of training data.
+All training data are to be used at either tuned notegram (-ns) or chromagram (-ch) level, which does not contain phase information. Assuming 12-tone equal temperament, they can be augmented by pitch shifting with zero padding (for -ns), or circular pitch shifting (for -ch) to all 12 keys. Adjusting the chord labels accordingly, this results in 12 times of training data.
 
 Note that inversions are not considered in this preliminary jazz ACE study because: 1. there are very few inversion notations in the currently used datasets; 2. it results in a huge number of classes.
 
 \subsection{Results and Discussion}
-Following the MIREX ACE convention, system performance on jazz chord vocabulary should also be evaluated based on WCSR. The WCSR score computing procedure in its fairest/strictest sense should count each chord as it is without applying any sort of mapping scheme, as happens to SeventhsBass. In the following each system is evaluated in this way. The baseline is an augmented Chordino with jazz vocabulary extension (Jazz-Chordino). The augmentation is done within its GMM-HMM engine by applying the jazz chord dictionary to the Gaussian model, whose setting is described in Table \ref{tab:5-jcgau}.
-
-\begin{table}
+Following the MIREX ACE convention, system performance on jazz chord vocabulary is evaluated based on WCSR. The WCSR computing procedure in its fairest/strictest sense should regard each chord as it is without applying any sort of mapping scheme, as happens to SeventhsBass. In the following each system is evaluated in this way. The baseline is an augmented Chordino with jazz vocabulary extension (Jazz-Chordino). The augmentation is done within its GMM-HMM engine by applying the jazz chord dictionary to the Gaussian model, whose setting is given in Table \ref{tab:5-jcgau}.
+\begin{table}[h]
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
@@ -113,11 +108,10 @@ Neither bass nor treble & 0 & 0.2 \\ \hline
 \label{tab:5-jcgau}
 \end{table}
 
-%\subsubsection{Study 1}
-%The jazz vocabulary systems have the same system framework as the SeventhsBass systems, but their deep learning models are trained using JazzGuitar99 dataset.
-All systems are tested using GaryBurton7 dataset\footnote{Composition of chords in GaryBurton7: maj:0.09; min7:0.13; 7:0.22; min7b5:0.12; 7b9:0.06; min:0.1; maj:0.14; others:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to SeventhsBass', but the results are in a sense more convincing, since the test set is not dominated by chords like major and minor. In fact the composition of chords in GaryBurton7 is relatively balanced, though rare chords are still rare. Therefore these results clearly demonstrate the advantage of the proposed system framework for very large chord vocabulary.
+All systems are tested using GaryBurton7 dataset\footnote{Composition of chords in GaryBurton7: maj:0.09; min7:0.13; 7:0.22; min7b5:0.12; 7b9:0.06; min:0.1; maj:0.14; others:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to SeventhsBass', but the results are in a sense more convincing, since the test set is not dominated by chords like major and minor. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
 
-Meanwhile, notice that the SQ (segmentation quality) of these systems are all relatively high, and these are achieved in pure jazz test audio. All systems use Jazz-Chordino's GMM-HMM as segmentation engine. The differences between SQ scores are caused by different merging of consecutive chord boundaries in different systems. Obviously the success of Jazz-BLSTM is based on the success of the GMM-HMM segmentation at the beginning; then based on the robust segmentation it performs classifications without taking care of chord progression context. This task is comfortable to deal with by a fixed-length input deep learning model. The advantage may not be obvious under a small chord vocabulary, but is obvious under a large chord vocabulary.
+Meanwhile, notice that the SQ (segmentation quality) of these systems are all relatively high, and these are achieved in pure jazz test audio. All systems use Jazz-Chordino's GMM-HMM as segmentation engine. The differences between SQ scores are caused by different merging of consecutive chord boundaries in different systems. Obviously the success of Jazz-BLSTM owes to the success of the GMM-HMM segmentation at the beginning; then based on the segmentation it performs classifications without taking care of chord progression context.
+%This task is comfortable to deal with by a fixed-length input deep learning model. The advantage may not be obvious under a small chord vocabulary, but is obvious under a large chord vocabulary.
 
 \begin{table}[t]
 \centering
@@ -136,25 +130,24 @@ Jazz-BLSTM-ch & 63.72 & 82.22\\ \hline
 \label{tab:5-jazz-wcsr}
 \end{table}
 
-
 \subsection{Extension - Jazz Scale Estimation}
-The above preliminary ACE work can be extended to cover jazz scale estimation, thereby achieving a unified chord-scale estimation approach. As reviewed in Section~\ref{sec:5-jazzfund}, the scales are chosen based on the harmonic functional group, which establishes a temporary tonal center, or a key. Consequently, a natural approach to do jazz scale estimation is by imitating local key estimation.
+The above preliminary jazz ACE system can be extended to jazz scale estimation, thereby achieving a unified chord-scale estimation approach. As reviewed in Section~\ref{sec:5-jazzfund}, the scales are chosen based on the harmonic functional group, which establishes a temporary tonal center, or a key. Consequently, a natural approach to do jazz scale estimation is by imitating local key estimation.
 \begin{figure}[htb]
     \centering
         \includegraphics[width=0.6\columnwidth]{5/figures/localscale.pdf}
-    \caption{Template-based local scale tracking}
+    \caption{Template-based local scale tracking. A scale is estimated within a context window of chords.}
     \label{fig:5-localscale}
 \end{figure}
-Figure~\ref{fig:5-localscale} shows the extended ACE system for local scale estimation. Different from the systems proposed by Mauch \cite{mauch2010simultaneous} and Catteau \cite{catteau2007probabilistic}, the scale is not estimated by a generative model, but in a discriminative template-based way similar to Rocher et al.'s approach \cite{rocher2010concurrent}. Instead of using a well-known key profile \cite{temperley2004cognition}, binary ``scale templates''($ST$) are used to compute a local scale posterior probability surface from the ``chord templates''($CT$), similar to the key estimation method in \cite{hu2015safedj} Since each local scale cannot be determined by just one chord, a context window is introduced to collect a 5 chords neighborhood in the local key computation:
+Figure~\ref{fig:5-localscale} shows the extended ACE system for local scale estimation. Different from the chord-key estimation systems proposed by Mauch \cite{mauch2010simultaneous} and Catteau \cite{catteau2007probabilistic}, the scale is not estimated by a generative model, but in a discriminative template-based way similar to Rocher et al.'s chord-key estimation approach \cite{rocher2010concurrent}. Instead of using a well-known key profile \cite{temperley2004cognition}, binary ``scale templates''($ST$) are used to compute a local scale posterior probability surface from the ``chord templates''($CT$), similar to the key estimation method in \cite{hu2015safedj}. Since each local scale cannot be determined by just one chord, a context window is introduced to collect a 3 chords neighborhood:
 \begin{equation}
-\text{fit} = \sum_i^{12} ST_i \times {\sum_{j=1}^5 CT_{ij} \over 5},
+\text{fit} = \sum_i^{12} ST_i \times {\sum_{j=1}^3 CT_{ij} \over 3},
 \end{equation}
 
-For each segment (chord position), the system will decide a list of scale candidates from a look-up-table, then pick the one with the best fit scale:
+For each chord, the system will decide a list of scale candidates from a look-up-table, then pick the one with the best fit score:
 \begin{equation}
 scale = \max_k \text{fit}_k.
 \end{equation}
-The template-based local scale estimation has been implemented during the Hackathon of ISMIR 2016 \footnote{https://github.com/tangkk/chordscale/blob/master/chordscale.py}. Figure~\ref{fig:5-chordscale} shows a demo of the output of this process with ``Olhos de Gato'', where the labels in red indicate the estimated scales.
+The template-based local scale estimation is implemented during the ISMIR 2016 Hackathon\footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. Figure~\ref{fig:5-chordscale} shows an example of the output of this estimation process with ``Olhos de Gato'', where the labels in red indicate the estimated scales.
 \begin{figure}[h]
     \centering
         \includegraphics[width=0.6\columnwidth]{5/figures/chordscale-demo.pdf}
@@ -164,33 +157,28 @@ The template-based local scale estimation has been implemented during the Hackat
 
 However, since this is a relatively new direction in MIR, there is not any well-established labeled dataset available for performance testing. Therefore this module has not been formally evaluated under any objective measure yet.
 
-The research of jazz chord-scale estimation has its straightforward application in new musical expression interfaces. Two mobile devices based jazz improvisation platforms will be introduced in Section~\ref{sec:5-wijam} and ~\ref{sec:5-akb}. And Section~\ref{sec:5-puttogether} will seek to put the chord-scale estimation system and jazz improvisation platforms together.
+The research of jazz chord-scale estimation has its straightforward application in new musical expression interfaces. Two mobile devices based jazz improvisation platforms will be introduced in Section~\ref{sec:5-wijam} and ~\ref{sec:5-akb}. And Section~\ref{sec:5-puttogether} will seek to put the chord-scale estimation system in a automatic jazz improvisation context.
 
 \section{Jazz Improvisation Platform - WIJAM} \label{sec:5-wijam}
 WIJAM is an impromptu \textit{iOS} mobile application for a group of musical novices to jam along with a music master. The master provides backings, directs the musical flow and gives feedbacks to the players. The players improvise along with the master's guidance.
 
 WIJAM, according to Weinberg\cite{weinberg2005interconnected}, is a ``small-scale local system", which can be characterized as ``collaborative musical network ... that support three to ten players in close proximity, which allows for detailed and subtle interpersonal interactions". Under the ``theoretical framework of musical interconnectivity''\cite{weinberg2005interconnected}, WIJAM can be considered structure-centered and process-centered, where ``structure'' is manifested in the absolute musical arrangement control of WIJAM master, and ``process'' is done when WIJAM players express intuitively their musical feelings within the bounds as defined by the WIJAM master.
 
-In terms of organization and architecture, WIJAM is a ``synchronous centralized network''
-with a ``flower topology'', where music is being generated in real-time
-with a central hub, and the degrees of freedom in terms of the nodes'
-expression are limited to a level such that the musical outcomes are at
-least musically harmonious.
+In terms of organization and architecture, WIJAM is a ``synchronous centralized network'' with a ``flower topology'', where music is being generated in real-time with a central hub, and the degrees of freedom in terms of the nodes' expression are limited to a level such that the musical outcomes are at least musically harmonious.
 
 \subsection{Design Concepts}
-
 WIJAM's design follows Blaine's guidance \cite{Blaine2003}:
 \begin{quote}
-The underlying premise of most collaborative interface design is that with various design constraints, playing music can be made accessible to non-musicians ... at the expense of limiting the musical range and possible gestures associated with sound in a collective space. \end{quote}
+The underlying premise of most collaborative interface design is that with various design constraints, playing music can be made accessible to non-musicians ... at the expense of limiting the musical range and possible gestures associated with sound in a collective space.
+\end{quote}
 But as pointed out in the same paper, such a guideline has its drawback:
 \begin{quote}
 ... many of the simple-to-use computer interfaces proposed for musical control seem, after even a brief period of use, to have a toy-like
 character and do not invite continued musical evolution.
 \end{quote}
-Although the authors go on to argue that this is only true for expert musicians, but ``balancing this trade-off is a key concern for designers", as pointed out in \cite{blaine2003collaborative}. This point is echoed in many other papers, such as \cite{xambo2011multi}, emphasizing that ``provide novices with essential goals and experts with additional goals". Trying to meet this balance, WIJAM equips the players with an easy to learn and easy to play keyboard, while at the same time providing ``a knowledgeable person to stand by and assist the players" \cite{Blaine2003}---the master. The players performance bound is imposed upon by the master, which should give a large enough space for the players to show off their virtuosity.
+Although the paper goes on to argue that this is only true for expert musicians, but ``balancing this trade-off is a key concern for designers", as pointed out in \cite{blaine2003collaborative}. This point is echoed in many other papers\cite{xambo2011multi}, emphasizing that ``provide novices with essential goals and experts with additional goals". Trying to meet this balance, WIJAM equips the players with an easy to learn and easy to play keyboard, while at the same time providing ``a knowledgeable person to stand by and assist the players" \cite{Blaine2003}--the master. The players performance bound is imposed upon by the master, which should give a large enough space for the players to show off their virtuosity.
 
-\subsubsection{System Overview}
-
+\subsection{System Overview}
 Figure~\ref{fig:5-BigPicture} shows the big picture of WIJAM. There are two types of active entities: the master, who initiates and orchestrates the jamming, and the players who participate in the jamming. There is a passive entity: a loudspeaker system, which is connected to the master.
 
 \begin{figure}[htbp]
@@ -208,7 +196,7 @@ Figure~\ref{fig:5-FlowChart} is the flowchart of the WIJAM session process. At t
     \label{fig:5-FlowChart}
 \end{figure}
 
-\subsubsection{Master Machine}
+\subsection{Master Machine}
 
 \begin{figure}[htbp]
     \centering
@@ -217,7 +205,7 @@ Figure~\ref{fig:5-FlowChart} is the flowchart of the WIJAM session process. At t
     \label{fig:5-MasterVC}
 \end{figure}
 
-The internal structure and layering of the master machine \footnote{https://github.com/tangkk/MasterMachine.git} is shown in the middle part
+The internal structure and layering of the master machine\footnote{https://github.com/tangkk/MasterMachine.git} is shown in the middle part
 of Figure~\ref{fig:5-Layering}. The core modules are detailed below:
 \begin{figure*}[htbp]
     \centering
@@ -227,8 +215,7 @@ of Figure~\ref{fig:5-Layering}. The core modules are detailed below:
 \end{figure*}
 
 \Hsection{Master Interface}
-The master interface is shown in Figure~\ref{fig:5-MasterVC}. In the top left corner there is a backing selector which allows the ``user" to initiate the backing music. Moving downwards one finds the chord and the scale panels. They are
-particularly important for orchestrating the musical flow. At the bottom there are six consoles, from A to F, each for an individual player. They provide performance feedback to the players as well as music output level balancing.
+The master interface is shown in Figure~\ref{fig:5-MasterVC}. In the top left corner there is a backing selector which allows the ``master" to initiate the backing music. Moving downwards there is a chord-scale panels. They are particularly important for orchestrating the musical flow. At the bottom there are six consoles, from A to F, each for an individual player. They provide performance feedback to the players as well as music output level balancing.
 
 \Hsection{Arranger}
 This allows the master to manipulate chords, scales, instruments, and feedbacks. These messages are sent via \textit{MIDI sysEx} messages.
@@ -240,8 +227,7 @@ It stores a library of digital musical instruments in the form of samplers. The 
 It hosts a service which can be discovered and connected to by the player machines. \textit{MIDINetworkSession} is used to enable a \textit{Bonjour} service. It is to be discovered by the player machines' Bonjour service browsers, and to be connected to by the player machines' \textit{MIDINetworkSessions}.
 
 \subsection{Player Machine}
-
-The player machine's layering is described on the right hand side of Figure~\ref{fig:5-Layering} and its interface on Figure~\ref{fig:5-PlayerMachineVC} with the jam console on the left and the keyboard on the right.\footnote{https://github.com/tangkk/PlayerMachine.git}The jam console is designed to discover and connect to the master machine, and the keyboard is for musical expression. The following items summarize the working mechanism of the keyboard:
+The player machine's layering is described on the right hand side of Figure~\ref{fig:5-Layering} and its interface on Figure~\ref{fig:5-PlayerMachineVC} with the jam console on the left and the keyboard on the right.\footnote{https://github.com/tangkk/PlayerMachine.git} The jam console is designed to discover and connect to the master machine, and the keyboard is for musical expression. The following items summarize the working mechanism of the keyboard:
 \begin{figure}[htbp]
 \begin{center}$
 \begin{array}{cc}
@@ -265,7 +251,7 @@ When sketching, a note is generated when the it starts or when the curve comes t
 This keyboard is easy to use for novice players, by abstracting away most complicated musical context. It allows the players to do a high-level melody improvisation.
 
 \subsection{Demos}
-There are two basic demos \footnote{\url{http://www.youtube.com/watch?v=Y0PnKBrgzgw} and one advanced demo \url{http://www.youtube.com/watch?v=16dWj5G9UKw}} for WIJAM. The basic demo shows how WIJAM works, and provides tips for using the master machine and the player machine. The audio track is an unmodified recording of the original playback. Before the jam starts, the players are told to follow their ``musical feelings" based on the backing. As can be heard in the video, the music outcome is quite pleasing, even at the critical ``key modulation" points: 2:30 and 2:43. Note that as the jam goes on, because the players have little idea about what the exact notes they are playing, the ``avoid note", the most dissonant note within the chord-scale, may be played on downbeat. This may happen, but with a very small chance.
+There are two basic demos\footnote{\url{http://www.youtube.com/watch?v=Y0PnKBrgzgw}} and one advanced demo\footnote{\url{http://www.youtube.com/watch?v=16dWj5G9UKw}} for WIJAM. The basic demo shows how WIJAM works, and provides tips for using the master machine and the player machine. The audio track is an unmodified recording of the original playback. Before the jam starts, the players are told to follow their ``musical feelings" based on the backing. As can be heard in the video, the music outcome is quite pleasing, even at the critical ``key modulation" points: 2:30 and 2:43. Note that as the jam goes on, because the players have little idea about what the exact notes they are playing, the ``avoid note", the most dissonant note within the chord-scale, may be played on downbeat. This may happen, but with a very small chance.
 
 The ``trombone" player and the two ``guitar" players are with zero training in musical instruments. The ``piano" player has some limited
 experience with piano before. Even so, the piano player is able to inject a very beautiful solo during the jam. The ``piano" player apparently plays the best music in this jam session. This somewhat justifies the ``balance" problem in the ``Introduction" section of this paper, in that WIJAM actually allows advanced players to show off their virtuosity while also enabling an acceptable level of performance for the novice players.
@@ -273,9 +259,9 @@ experience with piano before. Even so, the piano player is able to inject a very
 The advanced demo is a bonus track featuring the designer of WIJAM playing and overdubbing a whole jam session. It shows some advanced features of the PlayerMachine. The audio track is an overdubbing of each instrument track plus the backing track.
 
 \section{Jazz Improvisation Platform - ArmKeyBoard} \label{sec:5-akb}
-The piano keyboard, although is versatile and popular, has a lot of drawbacks. The same type of chord or scale in different keys are laid out differently, which adds to the learning difficulty. Additionally, the keyboard has a linear layout of the black and white keys, which works well with music expressions that exhibit certain linearity , but is less effective for modernistic non-linear styles such as that of serialistic and stochastic music\cite{Mitsuko:Schoenberg}.
+The piano keyboard, although is versatile and popular, has a lot of drawbacks. The same type of chord or scale in different keys are laid out differently, which adds to the learning difficulty. Additionally, the keyboard has a linear layout of the black and white keys, which works well with music expressions that exhibit certain linearity , but is less effective for modernistic non-linear styles such as that of serialistic and stochastic music \cite{Mitsuko:Schoenberg}.
 
-Trying to solve the above mentioned problems, a new type of keyboard is designed. Based on the NIME design principles \cite{cook2001principles}---specifically the ``Make a piece, not an instrument or controller" and ``Instant music, subtlety later"---the keyboard leverages a chord-octave-scale sequence grid to pack 88 keys into a 15--17 keys-sized screen, and features an almost zero learning curve for the production of beautiful and sophisticated melodies. It offers both linear and non-linear layouts. The non-linear layout is mapped to a user chosen image by an algorithm based on contour separation and tonal hierarchy. This is called ``ArmKeyBoard", where ``Armkey" means suitable, comfortable, and in-tune, in our spoken dialect.
+Trying to solve the above problems, a new type of keyboard is designed. Based on the NIME design principles \cite{cook2001principles}--specifically the ``Make a piece, not an instrument or controller" and ``Instant music, subtlety later"--the keyboard leverages a chord-octave-scale sequence grid to pack 88 keys into a 15--17 keys-sized screen, and features an almost zero learning curve for the production of beautiful and sophisticated melodies. It offers both linear and non-linear layouts. The non-linear layout is mapped to a user chosen image by an algorithm based on contour separation and tonal hierarchy. This is called ``ArmKeyBoard", where ``ArmKey" means suitable, comfortable, and in-tune, in our spoken dialect.
 
 \subsection{Two Types of Keyboard Layout}
 In the remaining discussion, ``keyboard" refers to an instrument implementing a series of key-note pairs and deterministically
@@ -357,16 +343,16 @@ bars equally divided along the y-axis. The velocity is controlled by the X posit
 \label{fig:5-AKB12}
 \end{figure}
 
-\subsubsection{Contour Separation}
+\Hsection{Contour Separation}
 The contour separation is processed using opencv \cite{opencv}. The image is first transformed to opencv \textit{Mat} which is then passed to a contour separation function. The function then: Step 1, turns the \textit{Mat} into gray scale and slightly performs a blur operation on it; Step 2, passes the output of step 1 (a gray scale \textit{Mat}) to an edge detection function (the output is a binary \textit{Mat} with the edge pixels set as step 1); Step 3, passes the output of step 2 to a \textit{findContour} function, which finds contours, stores them in an array and calculates the contour hierarchy (a tree structure describing the inclusion relationship of contours); Step 4, calculates the area of each contour, discards those below a certain size and deletes their nodes in the hierarchy; Step 5, creates an outer contour which is the whole screen subtracted by all the contours output by step 4. The output of all the above steps is an array of valid contours (each contour is itself an array of its vertices), and a hierarchy structure describing the inclusion relationship of these contours.
 
-\subsubsection{Contour Ranking}
+\Hsection{Contour Ranking}
 Next step is to decide which note to map to which contour. The minimal musical concern is, when the keyboard is being played, the notes being generated should at least imply the currently active chord-scale most of the time. Note that it is not necessary that it should ``always" behave this way, but ``most of the time". For example, in \textit{G-Ionian}, the keyboard is supposed to generate notes that form a tonal gravity at G and imply G major chord most of the time, but sometimes it may also sound like \textit{C-Lydian} (tonic at C).
 
 More assumptions are needed to connect this musical concern to contours. Assume that most user tends to tap on: 1, a contour with a larger area; 2, a contour closer to the center of the screen; 3, a contour that contains more sub-contours. Based on how often most users will tap on a contour, its importance can be determined. Thus in the implementation, contours are ranked based on the weighted sum of
 the above three indices. This corresponds to how important a note is in implying a certain chord-scale, which will be discussed below.
 
-\subsubsection{Tonal Hierarchy}
+\Hsection{Tonal Hierarchy}
 Similar to ranking contours, if the notes within a chord-scale is also ranked, then what is left is to map the two rankings. According to \cite{jarvinen1995tonal}, there is a certain tonal hierarchy within a chord-scale being played in bebop style jazz music, and this finding actually corresponds to the avoid note issue \cite{nettles1987harmony}. The tonal hierarchy theory says during the performance of a certain chord-scale, some notes are more often heard than others.
 
 If the notes are to be divided into a hierarchy according to how often they appear, the first class contains chord tones (or chord notes), the second class contains those a whole step above the chord notes and finally those half step above, with exceptions. The avoid note issue expresses basically the same idea, but with ``more often heard" replaced by ``more often played".
@@ -394,7 +380,7 @@ Melodic Minor & 1, 5, b3, 7& 2, 4, 6 &\\ \hline
 \label{tab:5-tonalhierarchy}
 \end{table}
 
-\subsubsection{The Final Mapping}
+\Hsection{The Final Mapping}
 The final mapping is not so obvious as it may seem. Although there are already a ranking of contours and a ranking of 15--17 notes within a chord-scale, they are by no means simply 1-to-1 mappings, because in reality it is not clear how many contours there are and how large each of them is until the user selects an image. In view of this complication, a heuristic based algorithm is devised to do this final mapping:
 \begin{algorithm}
 \caption{Contour-Note mapping}
@@ -417,14 +403,14 @@ Where 15 or 17 is the number of notes. This whole scheme tries to make position 
 and RGB affect more, while making sure all the notes are included regardless of the image.
 
 \subsection{Demos}
-There is a demo of Armkeyboard \footnote{\url{https://www.youtube.com/watch?v=ZhTleEXKeu4}}. The first part shows Armkeyboard's performance on a jazz backing track, and the second part shows a few solo performances. Besides the demo, the author has also applied Armkeyboard in Gary Burton's on-line jazz improvisation course to complete the peer reviewed assignments. In all 6 assignments, it gets an average of 3 points out of a maximum 5 points.
+There is a demo of Armkeyboard\footnote{\url{https://www.youtube.com/watch?v=ZhTleEXKeu4}}. The first part shows Armkeyboard's performance on a jazz backing track, and the second part shows a few solo performances. Besides the demo, the author has also applied Armkeyboard in Gary Burton's on-line jazz improvisation course to complete the peer reviewed assignments. In all 6 assignments, it gets an average of 3 points out of a maximum 5 points.
 
 
 \section{Putting It Together}\label{sec:5-puttogether}
 The module in Section~\ref{sec:5-jazzace} to ~\ref{sec:5-akb} can be put together and form a semi-automatic or fully automatic jazz improvisation machine. The differences among these approaches are the way they deal with generation of note sequence within a chord-scale context.
 
 \subsection{Chord-scale informed user improvisation}
-The simplest form would be to only provide the platform with timed chord-scale sequence information, and let users input notes sequence to play. First the jazz backing track is analyzed into chord-scale sequence with change time information similar to chord segmentation (this could be called chord-scale segmentation), then the sequence and segmentation is programmed into the improvisation platform. These information can automatically guide users with little musical knowledge to improvise jazz with at least the proper choice of chord-scale.
+The simplest form would be to only provide the platform with timed chord-scale sequence information, and let players input note sequence. First the jazz backing track is analyzed into segmented chord-scale sequence, then it is programmed into the improvisation platform. These information can automatically guide users with little musical knowledge to improvise jazz with at least the proper choice of chord-scale.
 
 \subsection{Markov model note sequence generation}
 A more intelligent approach is to generate note sequence within a chord-scale context using a Markov model. This model has two sets of parameters: the note prior probability matrix and the note transition matrix. These matrices can be trained from existing jazz solo MIDI datasets such as the Weimar Jazz Dataset\footnote{http://jazzomat.hfm-weimar.de/dbformat/dboverview.html}\cite{abesser2013introducing}.
@@ -441,7 +427,9 @@ There is a preliminary implementation of this Markov model based note generator 
 The code base of this project is available on-line \footnote{https://github.com/tangkk/chordscale}. It depends on the \textit{pretty-midi} \cite{raffel2014intuitive} library to do MIDI interfacing and perform simple sound synthesis. Several preliminary demos can also be found in the code base, showcasing simple chord-melody outputs from the system.
 
 \subsection{RNN-DBN automatic note sequence generation}
-To the other extreme, it could be a fully artistically automatic improvisation process if the ``patterns of choices'' from real jazz practice \cite{jazzguitarimpro,pracjazz} are modeled and learned. These are sequences of notes (each of them with both pitch and duration) within the context of chords or chord progressions. They can be well captured by sequential models such as an RNN using the chordal context as the starting cue, with the discriminative objective being whether the sequence of notes are artistically ``acceptable'' or not. This is the discriminative part of the model, and it is similar to the LSTM semantic analysis model by Maas et al.\cite{maas2011learning}. Note that this discriminative model cannot capture generative details. Hence there should be a generative model inserted into it, and thus it becomes a discriminative-generative model. Referring Boulanger's RNN-RBM based symbolic music generation system \cite{boulanger2012modeling}, if an instance of DBN (instead of RBM) is inserted between the output layer and the LSTM layer of the previous discriminative model, the resulting network will be able to both classify a sequence to labels and generate a sequence based on the prior labels (Figure~\ref{fig:5-rnndbn}).
+To the other extreme, it could be a fully artistically automatic improvisation process if the ``patterns of choices'' from real jazz practice \cite{jazzguitarimpro,pracjazz} are modeled and learned. These are sequences of notes (each of them with both pitch and duration) within the context of chords or chord progressions. They can be well captured by sequential models such as an RNN using the chordal context as the starting cue, with the discriminative objective being whether the sequence of notes are artistically ``acceptable'' or not. This is the discriminative part of the model, and it is similar to the LSTM semantic analysis model by Maas et al.\cite{maas2011learning}.
+
+Note that this discriminative model cannot capture generative details. Hence there should be a generative model inserted, and thus it becomes a discriminative-generative model. Referring Boulanger's RNN-RBM based symbolic music generation system \cite{boulanger2012modeling}, if an instance of DBN (instead of RBM) is inserted between the output layer and the LSTM layer of the previous discriminative model, the resulting network will be able to both classify a sequence to labels and generate a sequence based on the prior labels (Figure~\ref{fig:5-rnndbn}).
 
 \begin{figure}[htb]
     \centering
@@ -449,7 +437,6 @@ To the other extreme, it could be a fully artistically automatic improvisation p
     \caption{The RNN-DBN for note sequence generation}
     \label{fig:5-rnndbn}
 \end{figure}
-
 
 In this case, there needs to be a set of training cases for every chord-scale. By training the model with jazz lick patterns, a sequence of ``acceptable'' notes could hopefully be automatically generated by the chord-scale changes estimated from the backing track.
 

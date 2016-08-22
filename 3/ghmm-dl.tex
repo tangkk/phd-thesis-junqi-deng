@@ -4,24 +4,18 @@
 %: ----------------------- name of chapter  -------------------------
 \chapter{A Hybrid Gaussian-HMM-Deep-Learning Approach}\label{cp:ghmm} % top level followed by section, subsection
 
-%: ----------------------- paths to graphics ------------------------
 
-% change according to folder and file names
-\ifpdf
-    \graphicspath{{X/figures/PNG/}{X/figures/PDF/}{X/figures/}}
-\else
-    \graphicspath{{X/figures/EPS/}{X/figures/}}
-\fi
-
-As recapped in Section~\ref{sec:2-rnnpm} that by now there are basically three deep learning approaches for ACE:
+As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically three types of deep learning approach for ACE:
 \begin{itemize}
 \item local classification - global smoothing \cite{humphrey2012rethinking};
 \item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
 \item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
 \end{itemize}
-All of these approaches apply similar deep learning methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and they are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE. 
+All these approaches apply similar deep learning methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and they are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
 
-This chapter introduces a new approach that leverages this property of ACE. Particularly, this methodology can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region. Note that in the recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable to each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification at the same time, which leads to a belief that setting apart the two, or equivalently, adding one more local classification layer above the segmentation, will bring more benefit to the systems.
+This chapter introduces a new approach that leverages this property of ACE. Particularly, the method described here can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region. 
+
+Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification in one single pass at the same time, which leads to the belief that setting apart the two will bring more benefit to system performance.
 
 %: ----------------------- contents from here ------------------------
 
@@ -194,11 +188,11 @@ This section describes a systematic approach to sample the design space of the A
 \subsection{Datasets}
 For training/validation, five datasets of 366 tracks in total is used. They contain both eastern and western pop/rock songs. They are:
 \begin{enumerate}
-\item JayChou29 (J) dataset \cite{deng2016chord}, annotated by the author of this thesis \footnote{\url{http://www.tangkk.net/label/}};
+\item JayChou29 (J) dataset \cite{deng2016chord}, annotated by the author of this thesis\footnote{\url{http://www.tangkk.net/label/}};
 \item a Chinese pop song dataset (CNPop20, or C)\footnote{containing 20 songs from both male and female singer-songwriters from Chinese cultural backgrounds}, also annotated by the author \cite{deng2016hybrid};
 \item Carole King + Queen dataset (KingQueen26, or K)\footnote{\url{http://isophonics.net/datasets}}, annotated by Mauch \cite{mauch2009omras2} in C4DM (Center for Digital Music in Queen Mary University of London);
-\item 191 songs from USPop dataset (U) \footnote{\url{http://labrosa.ee.columbia.edu/projects/musicsim/uspop2002.html}}, annotated by MARL (Music and Audio Research Lab in New York University) \footnote{\url{https://github.com/tmc323/Chord-Annotations}} \cite{cho2014improved};
-\item 100 songs from RWC dataset, provided by the RWC group \footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}} and also annotated by MARL \cite{cho2014improved}.
+\item 191 songs from USPop dataset (U)\footnote{\url{http://labrosa.ee.columbia.edu/projects/musicsim/uspop2002.html}}, annotated by MARL (Music and Audio Research Lab in New York University)\footnote{\url{https://github.com/tmc323/Chord-Annotations}} \cite{cho2014improved};
+\item 100 songs from RWC dataset, provided by the RWC group\footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}} and also annotated by MARL \cite{cho2014improved}.
 \end{enumerate}
 
 
@@ -217,9 +211,6 @@ There is a large design space under the system framework. Specifically, possible
 \item input feature representation level; and
 \item training data size.
 \end{itemize}
-
-%Note that throughout this paper we refer to tuned notegram as ``-ns'' and chromagram as ``-ch''.
-%It is beneficial to explore some of these common variations and try to come up with guidelines for practical large vocabulary ACE system design under the proposed framework.
 
 \begin{table}
 \caption{Variations considered in this study.}
@@ -716,7 +707,7 @@ With these definitions, the other three vocabularies' scores can be interpreted 
 The rationale behind these tolerations is that if such confusions happen, the general harmony may still be acceptable by some music listening subjects.
 %By clarifying that, SeventhsBass is the strictest evaluation among all; Sevenths and MajMinBass are less strict, both with relaxation of one confusion type; MajMin is the loosest, with both types tolerated.
 
-Figure~\ref{fig:3-vs} and~\ref{fig:3-ds} show two relationships between the scores of these vocabularies for all systems implemented in this paper. In the first box plot we see the S:SB ratio is very focused around 1.02-1.03, while the other two ratios are also focused with less than 0.1 between the first and third quartiles. In the second plot we see similar boxes showing the differences rather than the ratios. The two plots demonstrate a generally steady confusion behavior among all systems.
+Figure~\ref{fig:3-vs} and~\ref{fig:3-ds} show two relationships between the scores of these vocabularies for all systems implemented in this chapter. In the first box plot we see the S:SB ratio is very focused around 1.02-1.03, while the other two ratios are also focused with less than 0.1 between the first and third quartiles. In the second plot we see similar boxes showing the differences rather than the ratios. The two plots demonstrate a generally steady confusion behavior among all systems.
 
 More information can be revealed by sorting Mm-SB in descending order. Eight out of the top ten systems are based on BLSTM-RNN, and the last ten are DBN systems. This further confirms the belief in the potential of BLSTM-RNN models: whenever it mis-classifies a chord, it tends to do it in a more ``acceptable'' way.
 
@@ -771,16 +762,16 @@ MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
 \end{itemize}
 
 \subsection{Dataset and Vocabulary}
-It should be noted that except CM3, whose model parameters are all manually specified, all other systems all involve extensive training:
+It should be noted that except CM3, whose model parameters are all manually specified, all other systems involve extensive training:
 \begin{itemize}
-\item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has a too high SB score in isophonic, while not as high in other test sets.
+\item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has too high a SB score in Isophonic, while not as high in other test sets.
 
 \item FK* are trained with the Isophonic, Robbie Williams\footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard\footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
 
-\item DK* are trained with USPop dataset and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016.
+\item DK* are trained with USPop and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016.
 \end{itemize}
 
-And in terms of chord vocabulary, both DK3, FK* and KO1 only support majmin, CM1 support a large vocabulary including most chord types in SeventhsBass, and DK1-2 support exactly the SeventhsBass.
+In terms of chord vocabulary, both DK3, FK* and KO1 only support majmin, CM1 supports a large vocabulary including most types in SeventhsBass, and DK1\&2 support exactly the SeventhsBass.
 
 \begin{table*}[htb]
 \centering
@@ -837,22 +828,21 @@ KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 \end{tabular}
 \end{table*}
 \subsection{Results and Discussions}
-Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016. Within the context of this thesis, the main focus of this set of results is the SeventhsBass column.
+Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016. Within the context of this thesis, the main focus of the results is the SeventhsBass column.
 
-In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores a much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this dataset is not statistically valid to deduce any reasonable conclusions regarding these systems.
+In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this test is not statistically valid to deduce any reasonable conclusions regarding these systems.
 
 In Billboard 2012 and 2013 tests, the best performances are both from DK1. Although FK* learn from part of the test set, they somehow does not outperform DK1. Moreover, DK1 outscore KO1 by about 3 points in both tests, which demonstrates a better generalization capability in DK1 system.
 
 JayChou 2015 test is probably the most convincing one, since on one had none of the systems are learning this set, and on the other hand it has more than 20\% of chords other than maj, min and sevenths, much more than other test sets. The performance on this test could well demonstrate the system's vocabulary versatility. This can be noticed by making comparison within the DK* systems, where DK1 and DK2 perform much better than DK3 in SB. The best two systems in this test are DK1 and DK2, outscoring the FK* systems by around 10 points, and the KO1 system by about 8 points.
 
-Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of maj, min and sevenths (probably >90\%), which is very similar to the chord composition of the Isophonic set, and therefore systems with ordinary chord vocabulary only will have a huge advantage by not being able to have confusions on long-tail chords.
+Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of maj, min and sevenths (probably >90\%), which is very similar to the chord composition of the Isophonic set. Therefore systems that only support a small chord vocabulary will have a huge advantage by not being able to have confusions on long-tail chords.
 
 \section{On Smaller Vocabulary}
-This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a minor comparison between the proposed system framework and other approaches, a set of experiments are conducted using two other smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (mentioned in Section~\ref{sec:2-largevocab}). For MajMin system implementation, each label in the training set will be first mapped to its MajMin form following a normal scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy is followed.
+This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a comparison between the proposed system framework and other approaches, a set of experiments are conducted using two smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (also mentioned in Section~\ref{sec:2-largevocab}). For MajMin system implementation, each label in the training set will be mapped to its MajMin form following a normal mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy \cite{mauch2010automatic} is followed.
 
 \subsection{On MajMin}
-
-Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, while on the other hand the SOSB of these systems are all much lower because of a much smaller vocabulary than Chordino.
+Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand the SOSB of these systems are all much lower because of a much smaller vocabulary than Chordino.
 \begin{table}[h]
 \footnotesize
 \centering
@@ -870,7 +860,7 @@ BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 153.63\\ 
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:3-detailres} shows the SeventhsBass categorical breakdown. Take DBN-ch as representative, since it only supports MajMin, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the data set population, that's why it has a much higher SB score. However, by relaxing the evaluation strength from SB to Mm, the performance difference between DBN-ch and Chordino becomes lesser and lesser.
+Table~\ref{tab:3-detailres} shows the SeventhsBass categorical breakdown. Take DBN-ch as representative, since it only supports MajMin, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the data set population, that's why it has a much higher SB score. However, by relaxing the evaluation strength from SB to Mm, the performance difference between DBN-ch and Chordino becomes less and less.
 
 \begin{landscape}
 \thispagestyle{plain}
@@ -897,7 +887,7 @@ BLSTM-RNN-ns & 0.0 & 0.0 & 79.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 WCSR scores. Tested on TheBeatles180 dataset (180 tracks out of the 216 tracks isophonic 2009) All systems are trained with CJKUR-(800,800)-ch, with Full121 vocabulary support.}
+\caption{Full121 WCSR scores. Tested on TheBeatles180 dataset (180 tracks out of the 216 tracks Isophonic 2009) All systems are trained with CJKUR-(800,800)-ch, with Full121 vocabulary support.}
 \label{tab:3-full}
 \begin{tabular}{|c|c|c|}\hline
 System & Full121 WCSR & Seg \\ \hline
@@ -910,7 +900,7 @@ BLSTM-RNN & 73.63 & 83.80 \\ \hline
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
+\caption{Full121 scores. Tested on Isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
 \label{tab:3-fullhp}
 \begin{tabular}{|c|c|c|}\hline
 System & Full121 Chord Precision (CP) & Seg \\ \hline
@@ -922,7 +912,7 @@ HP(Harmonic Analyzer) & 70.26 & N/A\\ \hline
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
+\caption{Full121 scores. Tested on Isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
 \label{tab:3-fullmbk}
 \begin{tabular}{|c|c|c|}\hline
 System & Full121 Relative Correct Overlap (RCO) & Seg \\ \hline
@@ -934,27 +924,26 @@ MBK-NNLS & 61.8 & N/A \\ \hline
 
 Table~\ref{tab:3-full} shows results of Full121 vocabulary with the same test set. Table~\ref{tab:3-fullhp} and ~\ref{tab:3-fullmbk} shows Full121 scores by other systems using a slightly larger 216-track test set, which includes the 180-track test set used throughout this chapter. Table~\ref{tab:3-fullhp} is reported in a 3-fold cross-validation manner, while Table~\ref{tab:3-fullhp} is in 5-fold. According to the descriptions \cite{ni2012end,mauch2010automatic}, the computation processes of both CP and RCO metrics are essentially similar to that of WCSR, and they only accept ``exact chord match'' under the vocabulary.
 
+It is difficult to make any conclusive statement out of these three different tables, from slightly different test sets, and reported in different ways. But it is reasonably fair to say that the proposed system framework is not bad at all in handling the Full121 vocabulary.
+
 
 \section{Summary} \label{sec:3-concln}
-This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in large vocabulary ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable large vocabulary segmentation-informed ACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify chords of the segmented features. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
+This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in LVACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable large vocabulary segmentation-classification ACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
 
-The results indicate that among the three proposed models, BLSTM-RNN is the most musically correct and balanced one for practical use.  With more training data, MLP and DBN tends to over-fit the most ordinary chords, but BLSTM-RNN will gradually generalize better in all categories.
+The results indicate that among the three proposed deep learning models, BLSTM-RNN is the most musically correct and balanced one for practical use.  With more training data, MLP and DBN tends to over-fit the most ordinary chords, but BLSTM-RNN will gradually generalize better in all categories.
 
-It extends naturally from this study that ACE systems should try to focus more on improving long-tail chords recognition accuracies. That is, instead of considering the overall WCSR of a large vocabulary, attention should also be given to the versatility metric, such as SOSB, or ``Average individual chord accuracy'' \cite{cho2014improved} that summarize scores of every chord type without weighting their populations. Although BLSTM-RNN model is very promising for handling large vocabulary with inversions, various possible ways to train the network in such ``imbalanced class population '' scenario \cite{chawla2004editorial}, which will undeniably be an important future work are yet to be explored .
+It extends naturally from this study that ACE systems should try to focus more on improving long-tail recognition accuracies. That is, instead of considering the overall WCSR of a large vocabulary, attention should also be given to the versatility metric, such as SOSB, or ``Average individual chord accuracy'' \cite{cho2014improved} that summarize scores of every chord type without weighting their populations. Although BLSTM-RNN model is very promising in handling large vocabulary with inversions, developing new methods to train the network in such ``imbalanced class population '' scenario \cite{chawla2004editorial} will undeniably be an important direction that are yet to be explored.
 
-It should be pointed out that the ultimate goal of ACE is to device a computer program that comes as close as possible to human musician's ability to chord transcription. Differentiating between long-tail chords and ordinary chords is undoubtedly what differentiates a musician from an amateur. Now that there are already good systems that match an amateur level \cite{ni2013understanding}, it is a good moment to start to pursuit systems that match musician level.
+It should be pointed out that the ultimate goal of ACE is to device a computer program that comes as close as possible to human musician's ability to chord transcription. Differentiating between long-tail chords and ordinary chords is undoubtedly what differentiates a musician from an amateur. Now that there are already good systems that match an amateur level \cite{ni2013understanding}, it is a good moment to start to pursuit systems at musician level.
 
-Finally, a piece timed chord sequence output can be combined with the \textit{.lrc} file of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. Such combination process is also implemented\footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Note that in this case the lyrics might not be perfectly aligned with chords, since an \textit{.lrc} file only has information on the start and end time of each lyrics line, rather than each word. A more sophisticated solution would be to use audio-lyrics alignment tool \cite{mauch2010lyrics} as a preprocessing stage before matching the lyrics and chords.
-
-\begin{comment}
-Inevitably, due to difference in musical training, human annotators sometimes disagree, especially on long-tail chords \cite{humphreyfour}. In a very strict sense, there is not any ``gold standard'' if human might disagree with each other. But in a loose sense, theoretically there could be a ``gold standard'' if:
-\begin{itemize}
-\item all annotations are done by only one annotator, or
-\item all annotations are done by multiple annotators (much more than two).
-\end{itemize}
-In the former case, that only annotator ``dictates'' a local ``gold standard'', so that whenever a machine tries to learn from the data, it actually targets at this annotator's ``style''. In the latter case, multiple annotators decide a ``gold standard'' in a way such as majority vote or data fusion \cite{koopsintegration,klein2004sensor}, so that a trained model actually aims at the optimal ``style'' that minimizes the objections within these annotators. Therefore, although the ``gold standard'' is indeed an important issue, designing a system that ``learns well'' remains another big part of the same problem.
-%It should be pointed out that the ultimate goal of ACE is to device a computer program that comes as close as possible to human musician's ability to chord transcription. Differentiating between long-tail chords and ordinary chords is undoubtedly what differentiates a musician from an amateur. Now that there are already good systems that match an amateur level, it is a good moment that we start to pursuit something that matches a musician level.
-\end{comment}
+Finally, a piece of timed chord sequence output can be combined with the \textit{.lrc} file\footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. This combination process is implemented\footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output.
+\begin{figure}[h]
+    \centering
+        \includegraphics[width=0.8\columnwidth]{3/figures/aihenjiandan.pdf}
+    \caption{Chord-lyrics output of \textit{Aihenjiandan} (by Taiwan singer-songwriter David Tao)}
+    \label{fig:3-aihenjiandan}
+\end{figure}
+Note that in this case the lyrics might not be perfectly aligned with chords, since an \textit{.lrc} file only has information on the start and end time of each lyrics line, rather than each word. A more sophisticated solution would be to use audio-lyrics alignment tool \cite{mauch2010lyrics} as a preprocessing stage before matching the lyrics and chords.
 
 
 % ---------------------------------------------------------------------------
