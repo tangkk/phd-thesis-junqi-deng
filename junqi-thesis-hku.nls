@@ -1,0 +1,78 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{ACE}]\begingroup automatic chord estimation\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{ASR}]\begingroup automatic speech recognition\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{BLSTM}]\begingroup bidirectional long short-term memory\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{BRNN}]\begingroup bidirectional recurrent neural network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{CD}]\begingroup contrastive divergence\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{CNN}]\begingroup convolutional neural network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{CQT}]\begingroup constant-Q transform\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{CRF}]\begingroup conditional random field\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{CSR}]\begingroup chord symbol recall\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{DBN}]\begingroup deep belief network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{DFT}]\begingroup discrete Fourier transform\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{DNN}]\begingroup deep neural network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{DYBM}]\begingroup dynamic Bayesian network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{GMM}]\begingroup Gaussian mixture model\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{HMM}]\begingroup hidden Markov model\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{HPCP}]\begingroup harmonic pitch class profile\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{ICA}]\begingroup independent component analysis\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{LSTM}]\begingroup long short-term memory\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{LV}]\begingroup large vocabulary\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{MIR}]\begingroup music information retrieval\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{MIREX}]\begingroup music information retrieval exchange\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{MLN}]\begingroup Markov logic network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{MLP}]\begingroup multi-layer perceptron\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{NNLS}]\begingroup non-negative least square\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{PCA}]\begingroup principle component analysis\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{PCD}]\begingroup persistent contrastive divergence\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{PCP}]\begingroup pitch class profile\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{RBM}]\begingroup restricted Boltzmann machine\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{RCO}]\begingroup relative correct overlap\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{RNN}]\begingroup recurrent neural network\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{SGD}]\begingroup stochastic gradient descent\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{SOSB}]\begingroup sum of SeventhsBass\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{SQ}]\begingroup segmentation quality\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{STFT}]\begingroup short-time Fourier transform\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{SVM}]\begingroup support vector machine\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+  \item [{WCSR}]\begingroup weighted chord symbol recall\nomeqref {{\rm  0}.0}
+		\nompageref{xv}
+
+\end{thenomenclature}

@@ -1,0 +1,109 @@
+% prelude
+%   - titlepage
+%   - dedication
+%   - acknowledgments
+%   - table of contents, list of tables and list of figures
+%   - nomenclature
+%   - abstract
+%============================================================================
+
+\clearpage\pagenumbering{roman}  % This makes the page numbers Roman (i, ii, %%@
+%etc)
+
+% TITLE PAGE
+%   - define \title{} \author{} \date{}
+\title{\LARGE Large Vocabulary Automatic Chord Estimation from Audio Using Deep Learning Approaches}
+
+\author{Junqi Deng}
+
+\date{August 31st, 2016}
+
+%   - The default degree is ``Doctor of Philosophy''
+%     (unless the document style msthesis is specified
+%      and then the default degree is ``Master of Science'')
+%     Degree can be changed using the command \degree{}
+\degree{Doctor of Philosophy}
+
+%   - The default is dissertation, unless the document style
+%     msthesis was specified in which case it becomes thesis.
+%     If msthesis is specified for the MS margins, you can
+%     still have a dissertation if you specify \disseration
+%\disseration
+%   - for a masters project report, specify \project
+%\project
+%   - for a preliminary report, specify \prelim
+%\prelim
+%   - for a masters thesis, specify \thesis
+\thesis
+
+%   - The default department is ``Electrical Engineering''
+%     The department can be changed using the command \department{}
+\department{Department of Electrical and Electronic Engineering}
+
+%   - once the above are defined, use \maketitle to generate the titlepage
+\copyrightb{Copyright $\copyright$ 2016 Junqi Deng}
+
+%\edlevel{{\it B.Eng. (Computer Engineering), The University of Hong
+%Kong \\ M.Phil. (Electrical and Electronic Engineering), The
+%University of Hong Kong}}
+\edlevel{{\it B.Eng., M.Eng.}}
+
+\advisorname{Ricky Yu-Kwong Kwok}
+
+\advisortitle{Professor}
+
+\abstractwords{273}
+
+% ABSTRACT
+\begin{umiabstract}
+  \input{0/abstract}
+\end{umiabstract}
+
+\maketitle
+
+% COPYRIGHT PAGE
+%   - To include a copyright page use \copyrightpage
+%\copyrightpage
+
+%\principaladviser{Dr. Ricky Kwok}
+%\committeechair{NA}
+%\firstreader{Professor Ishfaq Ahmad}
+%\secondreader{NA}
+%\thirdreader{NA}
+%\fourthreader{NA}
+
+%\signaturepage
+
+% DECLARATION
+\begin{declaration}
+% use default
+\end{declaration}
+
+% DEDICATION
+\include{0_frontmatter/dedication}
+
+% ACKNOWLEDGMENTS
+\include{0_frontmatter/acknowledgement}
+
+% CONTENTS, TABLES, FIGURES
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+\include{0_frontmatter/glossary}
+\begin{multicols}{2} % \begin{multicols}{#columns}[header text][space]
+\begin{footnotesize} % scriptsize(7) < footnotesize(8) < small (9) < normal (10)
+
+\printnomenclature[1.5cm] % [] = distance between entry and description
+\label{nom} % target name for links to glossary
+
+\end{footnotesize}
+\end{multicols}
+
+\begin{abstract}
+  \input{0/abstract}
+\end{abstract}
+
+\clearpage\pagenumbering{arabic} % This makes the page numbers Arabic (1, 2,.)
