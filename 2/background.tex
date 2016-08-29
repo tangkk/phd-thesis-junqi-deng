@@ -76,7 +76,7 @@ The act of adjusting the fundamental sounding frequency or frequencies of an ins
 A standard tuning normally adopted in Western tonal music is $A4 = 440\,Hz$, where $A4$ stands for the $A$ note above $C4$ or the middle $C$, which could be illustrated as the fourth $C$ key on a standard 88-key piano keyboard.
 
 \subsubsection{Intervals Within an Octave}
-All the music objects considered in this thesis are assumed to be in 12-tone equal temperament, and very close to standard tuning \footnote{an absolute standard tuning is actually quite impossible}. Therefore it is very useful to study a few common intervals within such temperament system.
+All the music objects considered in this thesis are assumed to be in 12-tone equal temperament, and very close to standard tuning. Therefore it is very useful to study a few common intervals within such temperament system.
 
 \begin{figure}[htb]
 \centering
@@ -215,13 +215,13 @@ Figure~\ref{fig:2-sheetmusic} to ~\ref{fig:2-chordtabs} shows excerpts of sheet 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.4\columnwidth, height=0.12\columnwidth]{2/figures/chordtabs.PNG}
+\includegraphics[width=0.6\columnwidth, height=0.15\columnwidth]{2/figures/chordtabs.PNG}
 \caption{Chord tabs - The Girl From Ipanema}
 \label{fig:2-chordtabs}
 \end{figure}
 
 \newpage
-\section{Review of Automatic Chord Estimation Design} \label{sec:2-review}
+\section{Review of ACE Design} \label{sec:2-review}
 Automatic chord estimation is an algorithmic process that automates the transcription of chords within a piece of tonal music. This process includes the identification of chord boundaries and the recognition of chord labels. This section is a review of the ACE literature. First of all the general system framework is introduced in Section~\ref{sec:2-sys}; then various feature extraction methods are reviewed and compared in Section~\ref{sec:2-fe}, followed by a reexamination of different pattern recognition techniques in Section~\ref{sec:2-pm}; the issue of chord vocabularies will be raised in Section~\ref{sec:2-vocab}, which focuses on some arguments on large vocabulary and chord inversions.
 
 %a closely related issue - ACE evaluation methods, will be reviewed in Section~\ref{sec:2-eval}; this literature review section will be concluded with a pointer to the current research gap in Section~\ref{sec:2-gap}.
@@ -235,7 +235,7 @@ Automatic chord estimation is an algorithmic process that automates the transcri
 \label{fig:2-sys}
 \end{figure}
 
-The general system framework is depicted in Figure~\ref{fig:2-sys}. Similar to other pattern recognition systems \cite{duda2012pattern}, such as automatic speech recognition (ASR) \cite{huang2001spoken}, it contains two big functional modules - feature extraction and pattern matching, both can be trained using ground truth data or powered by expert domain knowledge. Different from other applications, it takes a piece of tonal music audio as input, and exports a time-segmented chord sequence. The ``tonal musical'' nature of the input-output imposes key constraints to the two functional modules. As a result, the implementations of feature extraction and pattern matching modules, which are determined by the usage of expert knowledge and training data, have their own characteristics.
+The general work-flow of an ACE system is depicted in Figure~\ref{fig:2-sys}. Similar to other pattern recognition systems \cite{duda2012pattern}, such as \textit{automatic speech recognition} (ASR) \cite{huang2001spoken}, it contains two big functional modules - feature extraction and pattern matching, both can be trained using ground truth data or powered by expert domain knowledge. Different from the working domains of other applications, it takes a piece of (chordal) tonal music audio as input, and exports a time-segmented chord sequence. The ``tonal musical'' nature of the input-output imposes key constraints to the two functional modules. As a result, the implementations of feature extraction and pattern matching modules, which are determined by the usage of expert knowledge and training data, have their own characteristics.
 
 In order to better understand ACE, it is beneficial to distinguish between the basic problem settings of ASR and ACE, both being roughly classified as audio-text transcription problems. Table~\ref{tab:2-asrace} presents two fundamental differences between an ASR and ACE.
 \begin{table}
@@ -327,7 +327,7 @@ where in a 36 bins per octave case, as the author indicates, $Q=36/ln2 \approx 5
 \begin{equation}
 Y_k = \sum_f h_l(f,f_k)M_f,
 \end{equation}
-where $Y_k$ is final log-frequency spectrum. This approach, albeit not as theoretically sound as constant-Q transform, works very well in practical. Combining two kernels into a single operation, it becomes a linear-log transformation matrix as illustrated in Figure~\ref{fig:2-linearlog}.
+where $Y_k$ is the final log-frequency spectrum. This approach, albeit not as theoretically sound as constant-Q transform, works very well in practice. Combining two kernels into a single operation, it becomes a linear-log transformation matrix as illustrated in Figure~\ref{fig:2-linearlog}.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\columnwidth]{2/figures/linearlog.png}
@@ -364,7 +364,7 @@ where $E$ is a dictionary of note profiles, and $x$ is the note activation varia
 \begin{equation}
 a_k=s^{k-1},\,s\in(0,1),
 \end{equation}
-where $k$ indicates the $k^{th}$ upper partials. A large $s$ means a slower decline. Normally $s$ is within $[0.6, 0.9]$. In order to find out an $x$ that minimize the difference between $Y$ and $Ex$, an NNLS method \cite{lawson1995solving} is used. The output of this process is usually called NNLS chroma
+where $k$ indicates the $k^{th}$ upper partials. A large $s$ means a slower decline. Normally $s$ is within $[0.6, 0.9]$. In order to find out an $x$ that minimize the difference between $Y$ and $Ex$, an NNLS method \cite{lawson1995solving} is used. The output of this process is usually called NNLS chroma.
 
 \subsubsection{Tuning Compensation}
 Despite standardized as $A4 = 440\,Hz$, the actual tuning of musical pieces differ from this from time to time. This is on one hand because of the difficulty of absolutely adjusting a pitch at a high frequency resolution, while on the other hand some pieces are actually deviating from the standard tuning deliberately. For example, as pointed out by Harte \cite{harte2010towards}, ``many of the Beatles songs deviate from this tuning (the standard tuning)''.
@@ -373,9 +373,16 @@ Human auditory system could easily neglect the slight detuning as it relates tog
 
 Instead of ``histogram of peaks'' way of estimating detuning, there is anther type solution, first proposed by Dressler and Streich \cite{dressler2007tuning}, that interpret detuning as an angle within $[-\pi,\pi)$, where $\pi$ corresponds to half-semitone. Particularly, Mauch \cite{mauch2010automatic} implement a version of this scheme within his ACE system, where the amount of detuning is estimated as:
 \begin{equation}\label{eq:2-tuning}
-\delta = { {wrap(-\varphi-{2\pi}/3)} \over {2\pi} }
+\delta = { {wrap(-\varphi-{2\pi}/3)} \over {2\pi} },
 \end{equation}
-where $wrap$ is a function wrapping its input to $[-\pi,\pi)$, and $\varphi$ is the phase angle at $2\pi/3$ of the DFT of the time averaged log-frequency spectrogram.
+where $wrap$ is a function wrapping its input to $[-\pi,\pi)$, and $\varphi$ is the phase angle at $2\pi/3$ of the DFT of the time averaged log-frequency spectrogram. The tuning frequency is then computed as:
+\begin{equation}
+\tau=440\cdot2^{\delta/12},
+\end{equation}
+and the original tuning is thus updated by interpolating the original $N$-bin spectrogram $Y_i$ at $Y_{i+p}$, where:
+\begin{equation}
+p = (\log(\tau / 440) / \log(2)) \times N
+\end{equation}
 
 This angle based tuning compensation method is adopted in many ACE works such as \cite{papadopoulos2007large}, \cite{papadopoulos2008simultaneous}, \cite{mauch2008discrete}, \cite{reed2009minimum} and \cite{noland2009influences}.
 
@@ -392,7 +399,7 @@ There are a few review articles on ACE feature extractions. Cho et al. \cite{cho
 \subsection{Feature Learning} \label{sec:2-fl}
 All the above discussed techniques are regarded as ``feature engineering'', in which manually designed features are extracted via handcrafted transformations. However, with various machine learning techniques, these features can actually be learned from the data \cite{bengio2009learning}, and these have been widely applied in numerous pattern recognition field such as computer vision \cite{hinton2006reducing}, automatic speech recognition and natural language processing \cite{deng2014deep}.
 
-Different from a machine learning classification problem, feature learning targets at the intermediate representations instead of the output labels. Therefore this process can be achieved by many unsupervised learning algorithms such as {\it principle component analysis} (PCA), {\it independent component analysis} (ICA), and {\it k-means clustering}. It can also be done by neural networks or deep learning based models such as {\it deep belief network} (DBN) and {\it deep autoencoder} (DAE). These algorithms normally do no require labeled data. Features can be learned using the unlabeled raw data.
+Different from a machine learning classification problem, feature learning targets at the intermediate representations instead of the output labels. Therefore this process can be achieved by many unsupervised learning algorithms such as {\it principle component analysis} (PCA) \cite{jolliffe2002principal}, {\it independent component analysis} (ICA) \cite{hyvarinen2004independent}, and {\it k-means clustering} \cite{macqueen1967some}. It can also be done by neural networks or deep learning based models such as {\it deep belief network} (DBN) and {\it deep autoencoder} (DAE) \cite{bengio2009learning}. These algorithms normally do no require labeled data. Features can be learned using the unlabeled raw data.
 
 Certainly, supervised learning algorithms can also do this task. These include {\it logistic regression}, {\it support vector machines} and some deep learning models like {\it multilayer perceptrons} (MLP) and {\it recurrent neural network} (RNN). Since these are all discriminative models, they solely rely on the labeled data to learn, disregarding huge amount of information in the raw data themselves. Hence the features they learn will be good for classification purpose, but may not be sensible.
 
@@ -509,7 +516,7 @@ Hamel and Eck \cite{hamel2010learning} are among the first to introduce feature 
 
 The first feature learning approach in ACE is proposed by Humphrey and Bello \cite{humphrey2012rethinking}, who use a CNN to extract features. Instead of learning an ``intermediate'' feature representation, the CNN actually outputs a ``probability surface'', which is actually the posterior probabilities of chord classes conditioned on the CNN input ``time-pitch'' constant-Q spectra. In this work, there is no concept of ``chroma'' involved, but there is ``pitch class'' presented in the constant-Q spectra.
 
-Boulanger et al. \cite{boulanger2013audio} takes an DBN based approach similar to Hamel and Eck's. They first perform a PCA to a STFT spectrogram to reduce input dimensionality. Then they train a DBN to predict the output at each frame. Instead of taking these predictions to the pattern matching machine, they use the activation of the last hidden layer as the ``feature''. There is neither concept of ``chroma'' nor ``pitch class'' in this work. The ``pitch class'' is avoided by the PCA preprocessing stage. Later, Zhou and Lerch \cite{zhou2015chord} augment this process with a time-frequency splicing function inserted between the PCA and the DBN in order to exploit similarities of neighboring frames.
+Boulanger et al. \cite{boulanger2013audio} take a DBN based approach similar to Hamel and Eck's. They first perform a PCA to a STFT spectrogram to reduce input dimensionality. Then they train a DBN to predict the output at each frame. Instead of taking these predictions to the pattern matching machine, they use the activation of the last hidden layer as the ``feature''. There is neither concept of ``chroma'' nor ``pitch class'' in this work. The ``pitch class'' is avoided by the PCA preprocessing stage. Later, Zhou and Lerch \cite{zhou2015chord} augment this process with a time-frequency splicing function inserted between the PCA and the DBN in order to exploit similarities of neighboring frames.
 
 Sigtia et al. \cite{sigtia2015audio} use a simple MLP to classify chord labels for each frame. They also take the activation of the last hidden layer as features. But instead of plugging it directly to the pattern matching engine, they perform a ``pre-processing'' stage of mean pooling, similar to the mean-filtering applied to a chromagram.
 
@@ -639,9 +646,7 @@ To train the network, a cross entropy lost function similar to equation~\ref{eq:
 \end{figure}
 Figure \ref{fig:2-lstmunit} shows the structure of a basic LSTM unit\cite{graves2012supervised} in the context of a simple logistic regression. The input data path has 4 identical copies for input gate $I$, output gate $O$, forget gate $F$ and the input port. Each gate or port will activate an output between 0 and 1 according to its input and activation function. The input gate activation is multiplied with the input port activation to become an input value to the LSTM cell. The forget gate activation is multiplied with the cell value from the previous time step to become another input to the cell. The current cell value is determined by the sum of the these two cell inputs. The output of the unit is given by the multiplication of output gate activation and the current cell value. Note that in some configuration the cell value can be feedback into the gates.
 
-Assuming the RNN in Figure~\ref{fig:2-rnn} is implemented with LSTM hidden layer. The input matrix $A$ will be separated into four different matrices $A_i$, $A_f$, $A_o$ and $A_c$, for input gate, forget gate, output gate and input port respectively. Similarly, the recurrent matrix $R$ will have four different copies $R_i$, $R_f$, $R_o$ and $R_c$. Let $b$ be the bias input to each gate and port.
-
-Formally, the input gate activation at time $t$ is computed as follows:
+Assuming the RNN in Figure~\ref{fig:2-rnn} is implemented with LSTM hidden layer. The input matrix $A$ will be separated into four different matrices $A_i$, $A_f$, $A_o$ and $A_c$, for input gate, forget gate, output gate and input port respectively. Similarly, the recurrent matrix $R$ will have four different copies $R_i$, $R_f$, $R_o$ and $R_c$. Let $b$ be the bias input to each gate and port. Formally, the input gate activation at time $t$ is computed as follows:
 \begin{equation}
 i_t = \sigma(A_iX^t + R_iH^{t-1}+b_i).
 \end{equation}
@@ -672,9 +677,9 @@ For chord sequence pattern matching task, there are so far three types of modeli
 
 Humphrey and Bello \cite{humphrey2012rethinking} propose a model that performs CNN chord classification at each constant-Q frame, and then applies median-filtering to smooth the classification results into segments. The CNN outputs a ``probability surface'', which is the posterior chord probabilities given the input frame, so that it actually performs both feature learning and pattern matching. Consider that the role of CNN here can be replaced by any type of DNN, this is a ``local (DNN) classification - global smoothing'' approach.
 
-Boulanger et al. \cite{boulanger2013audio} perform feature learning via a STFT-PCA-DBN chain, and take the activation of the last DBN hidden layer as the feature. A sequence of such feature is then classified by an RNN, and the output posteriors are further subject to smoothing using HMM with Viterbi decoding, or {\it beam search} with dynamic programming. This can be regarded as a ``local feature learning - global (RNN) classification - global smoothing'' approach. Sigtia et al. \cite{sigtia2015audio} follow up this by applying LSTM to the RNN, and augmenting the beam search with a hashed beam search.
+Boulanger et al. \cite{boulanger2013audio} perform feature learning via a STFT-PCA-DBN chain, and take the activation of the last DBN hidden layer as the feature. A sequence of such feature is then classified by an RNN, and the output posteriors are further smoothed using a HMM with Viterbi decoding, or {\it beam search} with dynamic programming. This can be regarded as a ``local feature learning - global (RNN) classification - global smoothing'' approach. Sigtia et al. \cite{sigtia2015audio} follow up this by applying LSTM to the RNN, and augmenting the beam search with a hashed beam search.
 
-Zhou and Lerch \cite{zhou2015chord} put forward another system that resembles Boulanger's in terms of feature learning, but instead they use a SVM to classified the learned features locally, and use a HMM to perform sequence decoding. This belongs to a ``local feature learning - local classification - global smoothing'' category.
+Zhou and Lerch \cite{zhou2015chord} put forward another system that resembles Boulanger's in terms of feature learning, but instead they use a SVM to classified the learned features locally, and use a HMM to perform sequence decoding and smoothing. This belongs to a ``local feature learning - local classification - global smoothing'' approach.
 
 Certainly there could be more deep learning architectures for ACE that could possibly work more efficiently, and this will be one of the main topics in the following chapters.
 
@@ -735,7 +740,7 @@ The output format of ACE is defined by Harte et al. \cite{harte2005symbolic}. Th
 in which the core idea of this format is revealed. Basically, a chord label is preceded by two time stamps, being the onset and offset time of the chord in terms of seconds. These time stamps are actually the chord ``segmentation''. As for the labels, a chord's root is first notated, followed by a semicolon ``:'' to separate the root and the quality. An inversion is notated by a slash ``/'', followed by the bass that is different from the root. If a chord is $maj$, it can be simply notated as only the root.
 
 \newpage
-\section{Review of Automatic Chord Estimation Evaluation} \label{sec:2-eval}
+\section{Review of ACE Evaluation} \label{sec:2-eval}
 This section is going to review several issues regarding the evaluation of ACE systems. First of all the system performance metrics will be discussed. Then under the context of a yearly music information retrieval exchange event, the actual application of the metrics to different chord matching functions will be elaborated. The section is concluded by a fundamental issue of ACE that is closely related to evaluation - human annotation subjectivity.
 
 \subsection{Estimation Accuracy Metrics}

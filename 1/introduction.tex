@@ -22,7 +22,7 @@
 This chapter introduces automatic chord estimation (ACE) by defining the problem in Section~\ref{sec:1-problemdef} and motivating it in Section~\ref{sec:1-moti}. Then the thesis structure will be elaborated in Section~\ref{sec:1-outline}, followed by the thesis contributions and the author's publications in Section~\ref{sec:1-contribution}.
 
 \section{Problem Definition} \label{sec:1-problemdef}
-ACE, within the context of this thesis, refers to a task that \textbf{estimates, recognizes, or transcribes the segmented chord sequence from a piece of audio (i.e., a song or a musical instrumental) that contains such sequence under equal-temperament tonal music constraint} (see Chapter~\ref{cp:background} for more definitions of these musical terms). In this definition, the verbs ``estimate'', ``recognize'' or ``transcribe'' all mean the same process. This process analyzes the input audio, uncovers the underlying chord progression, and segments the audio in terms of these chords. The task also asks for a \textbf{classification of chord material and no-chord material (i.e., silence, natural sound, environmental noise, etc.)}, and the algorithms that solve this task should be able to label both. Figure~\ref{fig:1-acemir} illustrates ACE as an music information retrieval (MIR) task.
+ACE, within the context of this thesis, refers to a task that \textbf{estimates, recognizes, or transcribes the segmented chord sequence from a piece of audio (i.e., a song or a musical instrumental) that contains such sequence under equal-temperament tonal music constraint} (see Chapter~\ref{cp:background} for more definitions of these musical terms). In this definition, the verbs ``estimate'', ``recognize'' or ``transcribe'' all refer to the same process. This process analyzes the input audio, uncovers the underlying chord progression, and segments the audio in terms of these chords. The task also asks for \textbf{classification of chord material and no-chord material (i.e., silence, natural sound, environmental noise, etc.)}, hence the algorithms that solve this task should be able to label both. Figure~\ref{fig:1-acemir} illustrates ACE as a music information retrieval (MIR) task.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\columnwidth]{1/figures/acemir.PNG}
@@ -34,14 +34,14 @@ ACE, within the context of this thesis, refers to a task that \textbf{estimates,
 ACE has been one of the most important problems in MIR. The motivation of an ACE research is four-fold, expounded as follows:
 
 \subsection{ACE as submodule to other tasks}
-ACE is a subproblem in other tasks such as cover song identification \cite{bello2007audio,lee2006identifying,serra2010audio} (which make use of the chord sequence similarity), music structural segmentation \cite{bello2005robust} (where the repetition of chord sequence is a structural cue), and genre classification \cite{cheng2008automatic,perez2009genre} (where the chord sequence carries genre information). It also has a critical role in problems such as audio key detection \cite{papadopoulos2012modeling,pauwels2010integrating} and downbeat estimation \cite{papadopoulos2008simultaneous,mauch2010simultaneous}, where in the former problem the estimated chord sequence often serves as a lower level harmonic information to infer the key or key sequence, while in the latter the chord and downbeat estimation are sometimes a dual problem within one single algorithmic framework.
+ACE is a subproblem in other tasks such as cover song identification \cite{bello2007audio,lee2006identifying,serra2010audio} (which makes use of the chord sequence similarity), music structural segmentation \cite{bello2005robust} (where the repetition of a chord sequence is a structural cue), and genre classification \cite{cheng2008automatic,perez2009genre} (where the chord sequence itself carries genre information). It also has a critical role in problems such as audio key detection \cite{papadopoulos2012modeling,pauwels2010integrating} and downbeat estimation \cite{papadopoulos2008simultaneous,mauch2010simultaneous}, where in the former problem the estimated chord sequence often serves as a lower level harmonic information to infer the key or key sequence, while in the latter the chord and downbeat estimation are sometimes a dual problem within one single algorithmic framework.
 
 \subsection{ACE's own merit as chord transcription engine}
-For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish among similar chords (e.g., $C7$ and $C13$), is a common way to demonstrate sophisticated musicianship. People with chord transcription abilities help power the popular chords/tabs websites such as UltimateGuitar\footnote{\url{ultimate-guitar.com}}, E-chords\footnote{\url{e-chords.com}} and many others\footnote{\url{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance), those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. Figure~\ref{fig:1-humanchord} showcases some of the human chord annotation examples from the above mentioned websites.
+For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish among similar chords (e.g., $C7$ and $C13$), is a common way to demonstrate sophisticated musicianship. People with chord transcription abilities help power the popular chords-lyrics websites such as UltimateGuitar \footnote{\url{ultimate-guitar.com}}, E-chords \footnote{\url{e-chords.com}} and many others \footnote{\url{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance), those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. Figure~\ref{fig:1-humanchord} showcases some of the human chord annotation examples from the above mentioned websites.
 \begin{figure}
 \centering
-\includegraphics[width=0.8\columnwidth]{1/figures/humanchord.PNG}
-\caption{Human chord transcriptions from popular chords/tabs websites}
+\includegraphics[width=1\columnwidth]{1/figures/humanchord.PNG}
+\caption{Human chord transcriptions from popular chords-lyrics websites}
 \label{fig:1-humanchord}
 \end{figure}
 
@@ -51,7 +51,7 @@ But such human musical sophistication is not a resource that can be easily repli
 Human musicianship requires as least one of the four kinds of trainings: ear training, sight-reading, composition and improvisation, as captured in Figure~\ref{fig:1-musictraining}. MIR researches mostly focus on ``ear training'' and ``sight-reading''. The ability to transcribe ``chords'' obviously belongs to ``ear training''.
 \begin{figure}
 \centering
-\includegraphics[width=0.6\columnwidth]{1/figures/musictraining.PNG}
+\includegraphics[width=0.6\columnwidth]{1/figures/musictraining.pdf}
 \caption{Human music training as related to language training}
 \label{fig:1-musictraining}
 \end{figure}
@@ -59,13 +59,13 @@ Human musicianship requires as least one of the four kinds of trainings: ear tra
 Ear training, according to the EarMasterPro\footnote{\url{http://www.earmaster.com/}} (as elaborated in Figure~\ref{fig:1-eartraining}), includes several sub-trainings. The ``identification of chords'' is one of them. Therefore, in building artificial musicianship, ACE plays a key function in the artificial musical ``ear''.
 \begin{figure}
 \centering
-\includegraphics[width=0.6\columnwidth]{1/figures/eartraining.PNG}
+\includegraphics[width=0.6\columnwidth]{1/figures/eartraining.pdf}
 \caption{Human ear training}
 \label{fig:1-eartraining}
 \end{figure}
 
 \subsection{ACE inspires scientific researches on human audition and mind}
-Last but not the least, ACE research, in an algorithmic level, could shed light on the working mechanism of the human auditory system or human perception towards music harmony at certain level. This similar motivation is shared by many other artificial intelligent tasks\cite{lecun1995convolutional,hinton1995wake}, where the exploration of algorithmic or machine learning solution itself inspires the scientific researches on human mind.
+Last but not the least, ACE research, in an algorithmic level, could shed light on the working mechanism of the human auditory system or human perception towards music harmony. This similar motivation is shared by many other artificial intelligent tasks\cite{lecun1995convolutional,hinton1995wake}, where the exploration of algorithmic or machine learning solution itself inspires the scientific researches on working mechanisms of visual perceptions within human brain.
 
 \section{Thesis Structure} \label{sec:1-outline}
 This thesis focuses on deep learning based solutions to ACE. The main contributions of this thesis can be found in Chapter~\ref{cp:ghmm}--\ref{cp:jazz}, where Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} are parallel sections presenting two different deep learning based LVACE approaches, and Chapter~\ref{cp:jazz} takes one of the approaches and build algorithmic music systems for jazz. Particularly:
@@ -112,6 +112,7 @@ There are currently two articles under review:
 \begin{itemize}
 \item Deng, J., Kwok, Y. K., Large Vocabulary Automatic Chord Estimation Using Deep Learning: Design Framework and Efficient System Configurations, submitted to IEEE/ACM Transactions on Audio, Speech and Language Processing, 2016 (under review)
 \item Deng, J., Kwok, Y. K., End-to-end Large Vocabulary Automatic Chord Estimation Using Bidirectional Long-Short-Term-Memory Recurrent Neural Network with Even Chance Training, submitted to Journal of New Music Research, 2016 (under review)
+\item Deng, J., Kwok, Y. K., High Level Performance Based on Chord-scale Progression: Towards Building a Music Machine, submitted to Computer Music Journal, 2016 (under review)
 \end{itemize}
 
 %So far, this introduction chapter has already briefly summarized the general idea of this thesis. In a word, this thesis is mainly dedicated to large vocabulary automatic chord estimation, so as to approach the ultimate human-like machine chord transcription goal, that tries to recover every subtle flavors of the original recordings.
