@@ -188,11 +188,11 @@ This section describes a systematic approach to sample the design space of the A
 \subsection{Datasets}
 For training/validation, five datasets of 366 tracks in total are used. They contain both eastern and western pop/rock songs. They are:
 \begin{itemize}
-\item JayChou29 (J) dataset \cite{deng2016chord}, annotated by the author of this thesis\footnote{\url{http://www.tangkk.net/label/}};
-\item a Chinese pop song dataset (CNPop20, or C)\footnote{containing 20 songs from both male and female singer-songwriters from Chinese cultural backgrounds}, also annotated by the author \cite{deng2016hybrid};
-\item Carole King + Queen dataset (KingQueen26, or K)\footnote{\url{http://isophonics.net/datasets}}, annotated by Mauch \cite{mauch2009omras2} in C4DM (Center for Digital Music in Queen Mary University of London);
-\item 191 songs from USPop dataset (U)\footnote{\url{http://labrosa.ee.columbia.edu/projects/musicsim/uspop2002.html}}, annotated by MARL (Music and Audio Research Lab in New York University)\footnote{\url{https://github.com/tmc323/Chord-Annotations}} \cite{cho2014improved};
-\item 100 songs from RWC dataset, provided by the RWC group\footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}} and also annotated by MARL \cite{cho2014improved}.
+\item JayChou29 (J) dataset \cite{deng2016chord}, annotated by the author of this thesis \footnote{\url{http://www.tangkk.net/label/}};
+\item a Chinese pop song dataset (CNPop20, or C) \footnote{containing 20 songs from both male and female singer-songwriters from Chinese cultural backgrounds}, also annotated by the author \cite{deng2016hybrid};
+\item Carole King + Queen dataset (KingQueen26, or K) \footnote{\url{http://isophonics.net/datasets}}, annotated by Mauch \cite{mauch2009omras2} in C4DM (Center for Digital Music in Queen Mary University of London);
+\item 191 songs from USPop dataset (U) \footnote{\url{http://labrosa.ee.columbia.edu/projects/musicsim/uspop2002.html}}, annotated by MARL (Music and Audio Research Lab in New York University) \footnote{\url{https://github.com/tmc323/Chord-Annotations}} \cite{cho2014improved};
+\item 100 songs from RWC dataset, provided by the RWC group \footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}} and also annotated by MARL \cite{cho2014improved}.
 \end{itemize}
 
 
@@ -248,7 +248,7 @@ To control variations of training, we apply the following techniques in all impl
 
 One interesting observation in this study is that randomness incorporated in the original design does not really provide significant flexibility in training data selection and model initialization. Indeed, through extensive experiments, specifically those described in Section~\ref{sec:3-res}, it can be found that randomness in the system only contributes to very limited amount of unpredictability, leading to rather minimal impact on the general exploration of design space. Moreover, the strong regularities provided by data augmentation, generative pre-training, and other techniques, more or less offset the randomness effect during training/validation split.
 
-In the testing process, each of the 180 tracks in the test dataset are chord estimated from raw audio file. The output is written in a {\tt .lab} file conforming with the ``start\_time end\_time chord'' format\footnote{\url{http://www.music-ir.org/mirex/wiki/2016:Audio\_Chord\_Estimation}}, where the ``chord'' is conforming with Harte's format \cite{harte2005symbolic}. All implementation details are available online\footnote{\url{github.com/tangkk/tangkkace}} in so that interested readers can repeat the experiments. All deep learning components are implemented under the framework of Theano \cite{bergstra2010theano}.
+In the testing process, each of the 180 tracks in the test dataset are chord estimated from raw audio file. The output is written in a {\tt .lab} file conforming with the ``start\_time end\_time chord'' format \footnote{\url{http://www.music-ir.org/mirex/wiki/2016:Audio\_Chord\_Estimation}}, where the ``chord'' is conforming with Harte's format \cite{harte2005symbolic}. All implementation details are available online \footnote{\url{github.com/tangkk/tangkkace}} in so that interested readers can repeat the experiments. All deep learning components are implemented under the framework of Theano \cite{bergstra2010theano}.
 
 \section{Results and Discussions} \label{sec:3-res}
 % explain the WCSR metric 
@@ -274,7 +274,7 @@ In the testing process, each of the 180 tracks in the test dataset are chord est
 
 Throughout this section, the current MIREX ACE standard evaluation metrics (as reviewed in Section~\ref{sec:2-eval}) will be used to report system performances. Unless otherwise specified, the following WCSR scores are all reported under SeventhsBass evaluation, where a correct classification does {\it not} involve any chord mapping scheme beyond SeventhsBass vocabulary \cite{pauwels2013evaluating,burgoyne2014comparative}.
 
-Apart from exploration, the best system variants are also compared with Chordino\footnote{\url{http://www.isophonics.net/nnls-chroma}} \cite{cannam2010sonic}. It should be noted that Chordino represents the best benchmark because: (1) Our framework resembles Chordino's in terms of segmentation and feature extraction; (2) Chordino is the only other system that supports large vocabulary as well as chord inversions.
+Apart from exploration, the best system variants are also compared with Chordino \footnote{\url{http://www.isophonics.net/nnls-chroma}} \cite{cannam2010sonic}. It should be noted that Chordino represents the best benchmark because: (1) Our framework resembles Chordino's in terms of segmentation and feature extraction; (2) Chordino is the only other system that supports large vocabulary as well as chord inversions.
 
 %The analysis also generally applies to other vocabulary subsets, because under our system framework, WCSRs of SeventhsBass is steadily in proportion to WCSRs of MajMin, MajMinBass and Sevenths (elaborated in Section \ref{sec:3-p8}). 
 \subsection{Intra-comparison and Implications}
@@ -464,7 +464,7 @@ On the contrary, BLSTM-RNN-ns generally scores better than the BLSTM-RNN-ch. Unl
 
 %where the fine detail of a chord is generally lost
 
-Note that at -ch level BLSTM-RNN's performance is generally worse than those of MLP and DBN. While BLSTM-RNN tries to explore useful information related to time, MLP and DBN try to search in terms of space. As chromagram is already a summary of notegram, searching regularities in an order-irrelevant style is economic and effective. To learn a function from chromagram to chord label could be as easy as spotting the relative salience undulations across frames. But this order-irrelevant learning process sometimes overlooks the fine details that distinguish a ordinary chord\footnote{chords with majority population, not to be confused with its other meanings} from a long-tail chord\footnote{chords with minority population}. For example, it may overlook the difference between $maj$ and $maj/3$. Therefore, albeit efficient, it could easily over-fit ordinary chords, or under-fit long-tail chords, which are susceptible to confusion with ordinary chords. This over-fitting phenomenon is confirmed by our experiment in Section~\ref{sec:3-p7}.
+Note that at -ch level BLSTM-RNN's performance is generally worse than those of MLP and DBN. While BLSTM-RNN tries to explore useful information related to time, MLP and DBN try to search in terms of space. As chromagram is already a summary of notegram, searching regularities in an order-irrelevant style is economic and effective. To learn a function from chromagram to chord label could be as easy as spotting the relative salience undulations across frames. But this order-irrelevant learning process sometimes overlooks the fine details that distinguish a ordinary chord \footnote{chords with majority population, not to be confused with its other meanings} from a long-tail chord \footnote{chords with minority population}. For example, it may overlook the difference between $maj$ and $maj/3$. Therefore, albeit efficient, it could easily over-fit ordinary chords, or under-fit long-tail chords, which are susceptible to confusion with ordinary chords. This over-fitting phenomenon is confirmed by our experiment in Section~\ref{sec:3-p7}.
 
 \Hsection{At -ch level, both MLP and DBN are impervious to training data size, while BLSTM-RNN benefits from more training data}\label{sec:3-p5}
 
@@ -766,7 +766,7 @@ It should be noted that except CM3, whose model parameters are all manually spec
 \begin{itemize}
 \item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has too high a SB score in Isophonic, while not as high in other test sets.
 
-\item FK* are trained with the Isophonic, Robbie Williams\footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard\footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
+\item FK* are trained with the Isophonic, Robbie Williams \footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard \footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
 
 \item DK* are trained with USPop and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016.
 \end{itemize}
@@ -828,7 +828,7 @@ KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 \end{tabular}
 \end{table*}
 \subsection{Results and Discussions}
-Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016\footnote{B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}. Within the context of this thesis, the main focus of the results is the SeventhsBass column.
+Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016 \footnote{B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}. Within the context of this thesis, the main focus of the results is the SeventhsBass column.
 
 In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this test is not statistically valid to deduce any reasonable conclusions regarding these systems.
 
@@ -936,7 +936,7 @@ It extends naturally from this study that ACE systems should try to focus more o
 
 It should be pointed out that the ultimate goal of ACE is to device a computer program that comes as close as possible to human musician's ability to chord transcription. Differentiating between long-tail chords and ordinary chords is undoubtedly what differentiates a musician from an amateur. Now that there are already good systems that match an amateur level \cite{ni2013understanding}, it is a good moment to start to pursuit systems at musician level.
 
-Finally, a piece of timed chord sequence output can be combined with the \textit{.lrc} file\footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. This combination process is implemented\footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output.
+Finally, a piece of timed chord sequence output can be combined with the \textit{.lrc} file \footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. This combination process is implemented \footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output.
 \begin{figure}[h]
     \centering
         \includegraphics[trim={0 6cm 0 0},clip,width=1.2\columnwidth]{3/figures/aihenjiandan.pdf}

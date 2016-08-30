@@ -84,7 +84,7 @@ Feature level & tuned notegrame(-ns), chromagram (-ch) \\ \hline
 \end{table}
 
 \subsection{Experimental Setup}
-In this study, 99 pieces of jazz chord comping + soloing dataset extracted from a jazz guitar book \cite{jazzguitarbook} (JazzGuitar99) are used as training/validation dataset, and 7 pieces from Gary Burton's on-line course \cite{garyburtoncourse} (GaryBurton7) are used as test dataset. JazzGuitar99's annotations are taken directly from the book, and GaryBurton7's annotations are taken from the leadsheets provided along with the course. The vocabulary has 36 types\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$, $ maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$ and $N$}.
+In this study, 99 pieces of jazz chord comping + soloing dataset extracted from a jazz guitar book \cite{jazzguitarbook} (JazzGuitar99) are used as training/validation dataset, and 7 pieces from Gary Burton's on-line course \cite{garyburtoncourse} (GaryBurton7) are used as test dataset. JazzGuitar99's annotations are taken directly from the book, and GaryBurton7's annotations are taken from the leadsheets provided along with the course. The vocabulary has 36 types \footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$, $ maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$ and $N$}.
 
 %In the second study, the training/validation dataset is extracted from the CDs of a jazz guitar improvisation tutorial \cite{jazzguitarimpro} (JazzImpro96) and a practical jazz guide \cite{pracjazz} (PracJazz76). Totally they contain 172 tracks. All annotations are taken from the leadsheets in the books. The datasets of the previous study is used for testing. The vocabulary has 60 types\footnote{$maj7$, $min7$, $7$, $maj7\#11$, $min9$, $9sus4$, $7sus4$, $maj$, $7b9$, $9$, $13$, $9\#11$, $7\#9$, $min7b5$, $min$, $minmaj7$, $min6$, $7b13$, $7(9, \#11, 13)$, $7\#5$, $6$, $maj9$, $7(b9, \#9, b13)$, $7(b9, b13)$, $7(\#9, b13)$, $7(\#9, b9)$, $7\#11$, $9(b9, b13)$, $69$, $13b9$, $9b13$, $7(9, \#11)$, $7(13)$, $9(13)$, $7(alt)$, $dim7$, $min7(11)$, $7(b9, 13)$, $7(\#11, 13)$, $min7b9$, $7(9, 13)$, $7(9)$, $min7b5(11)$, $7\#5(\#9)$, $min7(11, 13)$, $9(6)$, $aug7$, $7b5$, $maj13$, $min11$, $7\#5\#9$, $11$, $min13$, $7\#5b9$, $maj7\#5$, $min11b5$, $maj7b5$, $min7\#5$, $7b5b9$ and $N$}.
 
@@ -108,7 +108,7 @@ Neither bass nor treble & 0 & 0.2 \\ \hline
 \label{tab:5-jcgau}
 \end{table}
 
-All systems are tested using GaryBurton7 dataset\footnote{Composition of chords in GaryBurton7: maj:0.09; min7:0.13; 7:0.22; min7b5:0.12; 7b9:0.06; min:0.1; maj:0.14; others:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to SeventhsBass', but the results are in a sense more convincing, since the test set is not dominated by chords like major and minor. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
+All systems are tested using GaryBurton7 dataset \footnote{Composition of chords in GaryBurton7: maj:0.09; min7:0.13; 7:0.22; min7b5:0.12; 7b9:0.06; min:0.1; maj:0.14; others:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to SeventhsBass', but the results are in a sense more convincing, since the test set is not dominated by chords like major and minor. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
 
 Meanwhile, notice that the SQ (segmentation quality) of these systems are all relatively high, and these are achieved in pure jazz test audio. All systems use Jazz-Chordino's GMM-HMM as segmentation engine. The differences between SQ scores are caused by different merging of consecutive chord boundaries in different systems. Obviously the success of Jazz-BLSTM owes to the success of the GMM-HMM segmentation at the beginning; then based on the segmentation it performs classifications without taking care of chord progression context.
 %This task is comfortable to deal with by a fixed-length input deep learning model. The advantage may not be obvious under a small chord vocabulary, but is obvious under a large chord vocabulary.
@@ -147,7 +147,7 @@ For each chord, the system will decide a list of scale candidates from a look-up
 \begin{equation}
 scale = \max_k \text{fit}_k.
 \end{equation}
-The template-based local scale estimation is implemented during the ISMIR 2016 Hackathon\footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. Figure~\ref{fig:5-chordscale} shows an example of the output of this estimation process with ``Olhos de Gato'', where the labels in red indicate the estimated scales.
+The template-based local scale estimation is implemented during the ISMIR 2016 Hackathon \footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. Figure~\ref{fig:5-chordscale} shows an example of the output of this estimation process with ``Olhos de Gato'', where the labels in red indicate the estimated scales.
 \begin{figure}[h]
     \centering
         \includegraphics[width=0.6\columnwidth]{5/figures/chordscale-demo.pdf}
@@ -205,7 +205,7 @@ Figure~\ref{fig:5-FlowChart} is the flowchart of the WIJAM session process. At t
     \label{fig:5-MasterVC}
 \end{figure}
 
-The internal structure and layering of the master machine\footnote{https://github.com/tangkk/MasterMachine.git} is shown in the middle part
+The internal structure and layering of the master machine \footnote{https://github.com/tangkk/MasterMachine.git} is shown in the middle part
 of Figure~\ref{fig:5-Layering}. The core modules are detailed below:
 \begin{figure*}[htbp]
     \centering
@@ -227,7 +227,7 @@ It stores a library of digital musical instruments in the form of samplers. The 
 It hosts a service which can be discovered and connected to by the player machines. \textit{MIDINetworkSession} is used to enable a \textit{Bonjour} service. It is to be discovered by the player machines' Bonjour service browsers, and to be connected to by the player machines' \textit{MIDINetworkSessions}.
 
 \subsection{Player Machine}
-The player machine's layering is described on the right hand side of Figure~\ref{fig:5-Layering} and its interface on Figure~\ref{fig:5-PlayerMachineVC} with the jam console on the left and the keyboard on the right.\footnote{https://github.com/tangkk/PlayerMachine.git} The jam console is designed to discover and connect to the master machine, and the keyboard is for musical expression. The following items summarize the working mechanism of the keyboard:
+The player machine's layering is described on the right hand side of Figure~\ref{fig:5-Layering} and its interface on Figure~\ref{fig:5-PlayerMachineVC} with the jam console on the left and the keyboard on the right. \footnote{https://github.com/tangkk/PlayerMachine.git} The jam console is designed to discover and connect to the master machine, and the keyboard is for musical expression. The following items summarize the working mechanism of the keyboard:
 \begin{figure}[htbp]
 \begin{center}$
 \begin{array}{cc}
@@ -251,7 +251,7 @@ When sketching, a note is generated when the it starts or when the curve comes t
 This keyboard is easy to use for novice players, by abstracting away most complicated musical context. It allows the players to do a high-level melody improvisation.
 
 \subsection{Demos}
-There are two basic demos\footnote{\url{http://www.youtube.com/watch?v=Y0PnKBrgzgw}} and one advanced demo\footnote{\url{http://www.youtube.com/watch?v=16dWj5G9UKw}} for WIJAM. The basic demo shows how WIJAM works, and provides tips for using the master machine and the player machine. The audio track is an unmodified recording of the original playback. Before the jam starts, the players are told to follow their ``musical feelings" based on the backing. As can be heard in the video, the music outcome is quite pleasing, even at the critical ``key modulation" points: 2:30 and 2:43. Note that as the jam goes on, because the players have little idea about what the exact notes they are playing, the ``avoid note", the most dissonant note within the chord-scale, may be played on downbeat. This may happen, but with a very small chance.
+There are two basic demos \footnote{\url{http://www.youtube.com/watch?v=Y0PnKBrgzgw}} and one advanced demo \footnote{\url{http://www.youtube.com/watch?v=16dWj5G9UKw}} for WIJAM. The basic demo shows how WIJAM works, and provides tips for using the master machine and the player machine. The audio track is an unmodified recording of the original playback. Before the jam starts, the players are told to follow their ``musical feelings" based on the backing. As can be heard in the video, the music outcome is quite pleasing, even at the critical ``key modulation" points: 2:30 and 2:43. Note that as the jam goes on, because the players have little idea about what the exact notes they are playing, the ``avoid note", the most dissonant note within the chord-scale, may be played on downbeat. This may happen, but with a very small chance.
 
 The ``trombone" player and the two ``guitar" players are with zero training in musical instruments. The ``piano" player has some limited
 experience with piano before. Even so, the piano player is able to inject a very beautiful solo during the jam. The ``piano" player apparently plays the best music in this jam session. This somewhat justifies the ``balance" problem in the ``Introduction" section of this paper, in that WIJAM actually allows advanced players to show off their virtuosity while also enabling an acceptable level of performance for the novice players.
@@ -403,7 +403,7 @@ Where 15 or 17 is the number of notes. This whole scheme tries to make position 
 and RGB affect more, while making sure all the notes are included regardless of the image.
 
 \subsection{Demos}
-There is a demo of Armkeyboard\footnote{\url{https://www.youtube.com/watch?v=ZhTleEXKeu4}}. The first part shows Armkeyboard's performance on a jazz backing track, and the second part shows a few solo performances. Besides the demo, the author has also applied Armkeyboard in Gary Burton's on-line jazz improvisation course to complete the peer reviewed assignments. In all 6 assignments, it gets an average of 3 points out of a maximum 5 points.
+There is a demo of Armkeyboard \footnote{\url{https://www.youtube.com/watch?v=ZhTleEXKeu4}}. The first part shows Armkeyboard's performance on a jazz backing track, and the second part shows a few solo performances. Besides the demo, the author has also applied Armkeyboard in Gary Burton's on-line jazz improvisation course to complete the peer reviewed assignments. In all 6 assignments, it gets an average of 3 points out of a maximum 5 points.
 
 
 \section{Putting It Together}\label{sec:5-puttogether}
@@ -413,7 +413,7 @@ The module in Section~\ref{sec:5-jazzace} to ~\ref{sec:5-akb} can be put togethe
 The simplest form would be to only provide the platform with timed chord-scale sequence information, and let players input note sequence. First the jazz backing track is analyzed into segmented chord-scale sequence, then it is programmed into the improvisation platform. These information can automatically guide users with little musical knowledge to improvise jazz with at least the proper choice of chord-scale.
 
 \subsection{Markov model note sequence generation}
-A more intelligent approach is to generate note sequence within a chord-scale context using a Markov model. This model has two sets of parameters: the note prior probability matrix and the note transition matrix. These matrices can be trained from existing jazz solo MIDI datasets such as the Weimar Jazz Dataset\footnote{http://jazzomat.hfm-weimar.de/dbformat/dboverview.html}\cite{abesser2013introducing}.
+A more intelligent approach is to generate note sequence within a chord-scale context using a Markov model. This model has two sets of parameters: the note prior probability matrix and the note transition matrix. These matrices can be trained from existing jazz solo MIDI datasets such as the Weimar Jazz Dataset \footnote{http://jazzomat.hfm-weimar.de/dbformat/dboverview.html}\cite{abesser2013introducing}.
 
 There is a preliminary implementation of this Markov model based note generator together with the template-based scale tracker during the ``Science of Music Hackathon'' in August 2016 \footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. In this implementation (Figure~\ref{fig:5-hmm1}), a simplified version of the model is built to generate sequence of ``pitches'' instead of ``notes'', where the former do not have duration information but the latter do. The note sequence generation of the Markov chain is constraint by the chord-scale context, namely, only pitches indicated in the chord-scale are allowed.
 
