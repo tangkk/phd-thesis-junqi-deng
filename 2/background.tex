@@ -22,7 +22,7 @@ This section introduces a necessary amount of musical concepts, that on one hand
 \subsection{Basic Concepts}
 Music can be understood as an organized sound sequence composed of pitches, noise and silence. The art of music lies very much in the design and arrangement of pitches. Therefore it is of principle need to understand the concept of pitch, upon which we can further understand other related important concepts that gradually lead to the concept of chord.
 
-\subsubsection{Pitch}
+\Hsection{Pitch}
 {\it Pitch}, by definition \cite{randel1999harvard}, is:
 \begin{quote}
 The perceived quality of a sound that is chiefly a function of its fundamental frequency - the number of oscillations per second (called *Hertz, abbr. Hz) of the sounding object or of the particles of air excited by it.
@@ -35,7 +35,7 @@ In acoustics, a series of frequencies, all of which are integral multiples of a 
 \end{quote}
 For example, when a string is pluck, it generates a pitch with harmonics, and this is mainly because of the physical phenomenon of standing wave \cite{helmholtz2009sensations}.
 
-\subsubsection{Note}
+\Hsection{Note}
 Pitch and note and closely related. {\it Note}, by definition \cite{randel1999harvard}, is:
 \begin{quote}
 A symbol used in musical notation to represent the duration of a sound and, when placed upon a staff, to indicate its pitch; more generally (especially in British usage), the pitch itself.
@@ -43,14 +43,14 @@ A symbol used in musical notation to represent the duration of a sound and, when
 
 It is easily understood that {\it note} is a symbol of pitch and its duration, but as a generally acceptable usage, it can also be referred to the pitch itself. With the concept of note, it is not difficult to understand the concept of {\it interval}.
 
-\subsubsection{Interval}
+\Hsection{Interval}
 {\it Interval}, by definition \cite{randel1999harvard}, is:
 \begin{quote}
 The relationship between two pitches. For purpose of Western tonal music, intervals are named according to ... the number of semitones (the smallest interval in the Western system) between the two pitches.
 \end{quote}
 The interval between two pitches is usually measured as the their ratio (i.e., the ratio of the fundamental frequencies).
 
-\subsubsection{Equal Temperament}
+\Hsection{Equal Temperament}
 For any tonal music system, there must be a kind of {\it temperament} that defines the relationship among different pitches that an instrument produce. Well known temperaments include Pythagorean, just intonation, mean-tone, well temperament and equal temperament. Interested reader can refer to \cite{barbour2004tuning} for more information on this topic. Within all these temperaments, an {\it octave} is defined as an interval where the ratio of two pitches is 2:1. %The differences among them are in the slight adjustments of intervals that are smaller than an octave.
 
 The most dominant temperament in modern Western style music, including the modern pop, rock, jazz and many other styles, is {\it equal temperament}, particularly the {\it twelve-tone equal temperament}. In this temperament, an octave contains 12 equally-sized semitones, each has an interval of $\sqrt[12]{2} $.
@@ -59,14 +59,14 @@ Within a 12-tone-equal-tempered octave, if we name the first pitch as $C$, then 
 $C$, $C\#/Db$, $D$, $D\#/Eb$, $E$, $F$, $F\#/Gb$, $G$, $G\#/Ab$, $A$, $A\#/Bb$, $B$
 where ``/'' means ``or'', $\#$ means with one semitone higher, and $b$ means with one semitone lower. The next pitch of this sequence will be an octave above the original $C$. To differentiate octaves, in scientific pitch notation \cite{tuningstandard} an Arabic number is usually appended to the letter notes, such as $C4$, $A3$, $C5$.
 
-\subsubsection{Pitch Class and Octave Equivalence}
+\Hsection{Pitch Class and Octave Equivalence}
 ``A pitch without reference to the octave or register in which it occurs'' is a {\it pitch class} \cite{randel1999harvard}. Humans are reported to have the ability to perceive pitch class. This perceptual phenomenon is called {\it octave equivalence} \cite{randel1999harvard,boring1942sensation}:
 
 \begin{quote}
 The feature of musical perception according to which all pitches separated by one or more perfect octaves are regarded as belonging to the same class or as being in some sense equivalent.
 \end{quote}
 
-\subsubsection{Tuning}
+\Hsection{Tuning}
 Now that a equal temperament can be set in terms of any pitch sequence that meets the requirement, there is technically not any hard constraints in terms of pitch frequencies. For example, the note $Bb5$ can be of $1000\,Hz$, or $2000\,Hz$, or just any number like $23.75892\,Hz$, as long as the sequence is equal-tempered. With random frequency constraint, any two instruments have almost no chance to be in tuned. In order to get instruments ``in tuned'', there shall be some kind of frequency constraint, or ``tuning''. {\it Tuning}, by musical definition \cite{randel1999harvard}, is:
 
 \begin{quote}
@@ -75,7 +75,7 @@ The act of adjusting the fundamental sounding frequency or frequencies of an ins
 
 A standard tuning normally adopted in Western tonal music is $A4 = 440\,Hz$, where $A4$ stands for the $A$ note above $C4$ or the middle $C$, which could be illustrated as the fourth $C$ key on a standard 88-key piano keyboard.
 
-\subsubsection{Intervals Within an Octave}
+\Hsection{Intervals Within an Octave}
 All the music objects considered in this thesis are assumed to be in 12-tone equal temperament, and very close to standard tuning. Therefore it is very useful to study a few common intervals within such temperament system.
 
 \begin{figure}[htb]
@@ -105,7 +105,7 @@ The interval that contains $0$ semitone is called {\it unison} or {\it perfect u
 
 \subsection{Chords and Chord Progressions}
 This subsection elaborates the concept of chord and chord progression based on the more fundamental concepts of pitch and interval.
-\subsubsection{Chord}
+\Hsection{Chord}
 {\it Chord} is one of the most important concepts in this thesis, which deals with automatic chord estimation technologies. {\it Chord}, by definition \cite{randel1999harvard}, is:
 
 \begin{quote}
@@ -153,7 +153,7 @@ For example, Figure~\ref{fig:2-cmaj} shows three possible renderings of Cmaj cho
 
 As for major chord, a shorthanded notation omits the ``maj'' and only keeps the root symbol. An inversion is labeled as the original chord symbol concatenated by its bass pitch class, bridged with a slash symbol ``/''. Thus these three instances are labeled $C$, $C/E$ and $C/G$ separately.
 
-\subsubsection{Chord Progression}
+\Hsection{Chord Progression}
 A {\it chord progression} or {\it harmonic progression} is \cite{schonberg1989structural}:
 \begin{quote}
 a series of musical chords, or chord changes that``aims for a definite goal" of establishing (or contradicting) a tonality founded on a key, root or tonic chord.
@@ -163,7 +163,7 @@ The {\it tonality} here means \cite{randel1999harvard}:
 In Western music, the organized relationships of tones with reference to a definite center, the tonic, and generally to a community of pitch classes, called a scale, of which the tonic is the principal tone; sometimes also synonymous with {\it key}.
 \end{quote}
 
-\subsubsection{Key and Scale}
+\Hsection{Key and Scale}
 Particularly, a {\it key} is \cite{randel1999harvard}:
 \begin{quote}
 In tonal music, the pitch relationships that establish a single pitch class as a tonal center or tonic (or key note), with respect to which the remaining pitches have subordinate functions.
@@ -180,7 +180,7 @@ The keys and scales can be named after the starting pitch class, such as ``C maj
 Cmaj - Dmin - Emin - Fmaj - Gmaj - Amin - Bmin7b5,
 \end{equation}
 
-\subsubsection{Short Summary}
+\Hsection{Short Summary}
 For now, we only need to know that a {\it chord progression} is a ``progression'' of chords, or sequence of chords that describes (as musical notation) or decides (as the music itself) the harmonic structure. Figure~\ref{fig:2-chordprogression} illustrates a few sample chord progressions. Note that a minor chord can be shorthand notated as ``m'' (not to be confused with the minor third notation).
 \begin{figure}[htb]
 \centering
@@ -256,7 +256,7 @@ Note how the ``segmentation'' requirement separate the two otherwise similar pro
 \subsection{Feature Extraction} \label{sec:2-fe}
 At first, the fundamental feature extraction paradigm will be introduced, and then different variants will be reviewed in terms of all categories of practical concerns.
 
-\subsubsection{Pitch Class Profile, Chroma and Chromagram}
+\Hsection{Pitch Class Profile, Chroma and Chromagram}
 The first known ACE research is published in 1999 by Fujishima \cite{fujishima1999realtime}. In this work, he considers first ``transforms a fragment of the input sound stream to a DFT spectrum'', where DFT is {\it discrete-Fourier-transform}. The spectrum is then summarized into a {\it pitch class profile} (PCP), which is ``a twelve dimension vector which represents the intensities of the twelve semitone pitch classes''. PCP is calculated as follows:
 \begin{equation}
 PCP(p) = \sum_{s.t.\,M(l)=p}{||X(l)||^2},
@@ -271,7 +271,7 @@ As a matter of fact, Fujishima's PCP is formally discussed as early as in 1964 b
 
 Consequently, except for a few works that applies wavelet \cite{su2001multi}, or autocorrelation \cite{bello2000techniques,zenz2007automatic} for pitch tracking, the STFT-chromagram is the dominant feature extraction paradigm that all other following approaches resemble in various degrees.
 
-\subsubsection{Musical Concerns}
+\Hsection{Musical Concerns}
 Each DFT spectrum in STFT is linear spaced in frequency. But as recapped in Section~\ref{sec:2-fund}, that musical pitches are arranged in terms of the ratios of their fundamental frequencies. Therefore equal-tempered pitches are arrange linearly only within a log scale. This is depicted in Figure~\ref{fig:2-pitchplot}.
 \begin{figure}[htb]
 \centering
@@ -335,17 +335,17 @@ where $Y_k$ is the final log-frequency spectrum. This approach, albeit not as th
 \label{fig:2-linearlog}
 \end{figure}
 
-%\subsubsection{Tonal Centroid}
+%\Hsection{Tonal Centroid}
 As an effort to model the ``intervals'' instead of ``pitch classes'', and to further reduce the feature dimension, Harte et al. propose {\it tonal centroid} \cite{harte2006detecting}, which is inspired by Chew's ``Spiral Array'' \cite{chew2000towards}. It is a point in 6-dimension space, so that when a 12-dimension pitch class is mapped onto it, ``close harmonic relations such as fifths and thirds appear as small Euclidean distances''. Theoretically sound though, only a few authors explore this feature in their ACE systems \cite{lee2008acoustic,humphrey2012learning}.
  
-\subsubsection{Noise Removal}
+\Hsection{Noise Removal}
 Another concern is that the noise within the audio will get into the chroma. It can be reduced along the time dimension, such as feature smoothing with a mean filter \cite{harte2005automatic,humphrey2012rethinking} or median filter \cite{khadkevich2009use,mauch2008discrete}, which applies to the feature across a number frames. Perhaps a more intuitive way to reduce noise from a time perspective is ``beat-averaging''\cite{bello2005robust,mauch2010approximate}, since the onsets and offsets of chords often coincide with beats \cite{goto1999real}. Moreover, structural information can also be leveraged \cite{mauch2009using,cho2011feature,cho2014improved} to smooth out noise within the audio feature.
 
 It can also be alleviated along the frequency dimension in several ways. Catteau et al. \cite{catteau2007probabilistic} subtracts from the original log-frequency spectrum a ``background spectrum'', which is computed by convolving the log-frequency spectrum with a 1-octave wide Hamming window. Alternatively, Varewyck et al. \cite{varewyck2008novel} computes the background spectrum by ``filtering the amplitude spectrum with a median filter''. Noticing that the source of noise is often the percussive instruments, Reed et al. \cite{reed2009minimum} attempts to remove noise by doing harmonic-percussive separation \cite{ono2008separation}. This method is also welcomed by later works such as \cite{ni2012end} and \cite{ueda2010hmm}.
 
 Mauch \cite{mauch2010automatic} puts forward a ``standardization'' process that tries to reshape the spectra along frequency dimension. In this process, every log-frequency spectrum is first subtracted from its ``running mean'' similar to Catteau's background spectrum removal; it is then divided by the ``running standard'' similar to Klapuri's spectral whitening technique \cite{klapuri2006multiple}.
 
-\subsubsection{Harmonics Removal}
+\Hsection{Harmonics Removal}
 Harmonics could be considered another type of ``noise'' in chord estimation problem, since intuitively, human auditory system identify a chord by first identifying all the notes being played. Removing the harmonics from the signal is to some extent equivalent to recovering the true note activations, or fundamental frequencies.
 
 Lee proposes the {\it enhanced pitch class profile} (EPCP) \cite{lee2006automatic}. In his approach, the DFT spectrum is first transformed to a {\it harmonic product spectrum} (HPS) through the following process:
@@ -366,7 +366,7 @@ a_k=s^{k-1},\,s\in(0,1),
 \end{equation}
 where $k$ indicates the $k^{th}$ upper partials. A large $s$ means a slower decline. Normally $s$ is within $[0.6, 0.9]$. In order to find out an $x$ that minimize the difference between $Y$ and $Ex$, an NNLS method \cite{lawson1995solving} is used. The output of this process is usually called NNLS chroma.
 
-\subsubsection{Tuning Compensation}
+\Hsection{Tuning Compensation}
 Despite standardized as $A4 = 440\,Hz$, the actual tuning of musical pieces differ from this from time to time. This is on one hand because of the difficulty of absolutely adjusting a pitch at a high frequency resolution, while on the other hand some pieces are actually deviating from the standard tuning deliberately. For example, as pointed out by Harte \cite{harte2010towards}, ``many of the Beatles songs deviate from this tuning (the standard tuning)''.
 
 Human auditory system could easily neglect the slight detuning as it relates together the pitches with similar fundamental frequencies. But for a computer system, in an acoustic engineering perspective, the detuning phenomenon needs to be compensated. Sheh and Ellis \cite{sheh2003chord} are among the first to recognize this and use a 24-bin PCP instead of 12-bin to ``give some flexibility in accounting for slight variations in tuning''. Later, Harte \cite{harte2005automatic} introduces a tuning algorithm. This algorithm first quadratic interpolates on each 36-bin constant-Q spectrum, peak-picking them across every semitone, and then adjusts the chromagram bins according to the ``center tuning value'', which is determined as the maximum value of the histogram of the peaks. This algorithm is also adopted in subsequent works such as \cite{bello2005robust} and \cite{harte2006detecting}.
@@ -386,12 +386,12 @@ p = (\log(\tau / 440) / \log(2)) \times N
 
 This angle based tuning compensation method is adopted in many ACE works such as \cite{papadopoulos2007large}, \cite{papadopoulos2008simultaneous}, \cite{mauch2008discrete}, \cite{reed2009minimum} and \cite{noland2009influences}.
 
-\subsubsection{Bass Information}
+\Hsection{Bass Information}
 Human chord annotators sometimes recognize the chord bass before they figure out the chord itself. Therefore it is conceivably justifiable that an ACE system can treat high range and low range pitches differently. This leads to a separate consideration for bass information, which is first discussed by Yoshioka et al. \cite{yoshioka2004automatic}. Later, Sumi et al. \cite{sumi2008automatic} explore this again by adding a bass probability cue to Yoshioka's model.
 
 Ryynänen and Klapuri \cite{ryynanen2008automatic}, augment the chroma vector to be 24-bin, which contains a 12-bin low-frequency chroma and a 12-bin high-frequency chroma. The bass information in this approach is achieve by an explicit bass line transcription process. Mauch and Dixon \cite{mauch2010approximate,mauch2010simultaneous} look at a 24-dimension chromagram as a concatenation of a bass chromagram and a treble chromagram, where two chroma are computed by weighting an NNLS chroma with different profiles.
 
-\subsubsection{Short Summary}
+\Hsection{Short Summary}
 There are a few review articles on ACE feature extractions. Cho et al. \cite{cho2010exploring} explore some common variations in ACE systems, including different pre and post-filtering techniques mentioned previously. Jiang et al. \cite{jiang2011analyzing} analyze the effect of different chroma feature types on two popular pattern matching techniques. Finally, McVicar et al. \cite{mcvicar2014automatic} give a detailed technical review of all the feature extraction techniques, including various noise reduction and harmonic removal methods, up to 2013.
 
 %It is worth noting that, except for \cite{mauch2010approximate}, all the feature extraction approaches overlook the fact that bass information can help distinguishing root position chords from their inversions.
@@ -405,7 +405,7 @@ Certainly, supervised learning algorithms can also do this task. These include {
 
 The following will discuss two important deep learning models that are recently used in ACE for feature learning purpose.
 
-\subsubsection{Multilayer Perceptron}
+\Hsection{Multilayer Perceptron}
 Multilayer Perceptron or feedforward neural network, is probably the most basic deep learning model that other models are built upon. Note that multilayer perceptrons may have a different meaning from feedforward neural network because the classical perceptron model \cite{rosenblatt1958perceptron} is different from a differentiable model (e.g., logistic, tanh, etc.) within a typical feedforward network \cite{rumelhart1988parallel}. But in this thesis, MLP is used to stand for a feedforward neural network, in order to avoid a sometimes confusing term {\it deep neural network} (DNN) \cite{deng2014deep}, which may refer to any type of neural network powered by deep learning technologies.
 
 \begin{figure}[htb]
@@ -442,7 +442,7 @@ The most common training practice is called {\it stochastic gradient descent} (S
 
 Another very popular feedforward architecture is the {\it convolutional neural network} (CNN), which is a sparsely connected MLP with weight sharing and layer output pooling operations \cite{lecun1995convolutional}.
 
-\subsubsection{Deep Belief Network}
+\Hsection{Deep Belief Network}
 A DBN is a generative model that captures the joint probability distribution of several layers of latent variables and the visible variables that they generate. Figure~\ref{fig:2-dbn} illustrates a DBN with three hidden layers.
 \begin{figure}[htb]
 \centering
@@ -511,7 +511,7 @@ Pre-training the DBN in Figure~\ref{fig:2-dbn-pt} takes the following steps:
 
 The fine-tuning phase is actually similar to training a {\it feed forward neural network}, or {\it multilayer perceptron} (MLP), with the network weights initialized by the outcome of the pre-training phase. 
 
-\subsubsection{Feature Learning in ACE}
+\Hsection{Feature Learning in ACE}
 Hamel and Eck \cite{hamel2010learning} are among the first to introduce feature learning techniques into MIR. Specifically, their task is music genre classification, where a DBN is used to learn features from the raw data. They start by training the DBN as a frame-wise genre classifier, and then take the activation of the last hidden layer as the learned feature. Later, Humphrey et al. \cite{humphrey2013feature} explore the theoretical underpinnings of feature learning in music informatics. Sigtia and Dixon \cite{sigtia2014improved} summarize previous works and introduce more such technologies in the MIR field.
 
 The first feature learning approach in ACE is proposed by Humphrey and Bello \cite{humphrey2012rethinking}, who use a CNN to extract features. Instead of learning an ``intermediate'' feature representation, the CNN actually outputs a ``probability surface'', which is actually the posterior probabilities of chord classes conditioned on the CNN input ``time-pitch'' constant-Q spectra. In this work, there is no concept of ``chroma'' involved, but there is ``pitch class'' presented in the constant-Q spectra.
@@ -528,12 +528,12 @@ Chords = M(chromagram),
 \end{equation}
 where $chords$ contain both chord {\it sequence} and {\it segmentation}, and $M$ is the pattern matching model.
 
-\subsubsection{Template Matching with Post-Filtering}
+\Hsection{Template Matching with Post-Filtering}
 The most straightforward way to implement $M$ is by {\it template matching} with post-filtering (TM-PF), which is first proposed by Fujishima \cite{fujishima1999realtime}. The idea to first predefine a ``chord type template'' (CTT) for each chord. The template is a 12-dimension binary vector, indicating whether each of the 12 pitch classes present at the chord. A certain similarity measure, such as Mahalanobis distance\cite{reinhard2008enhancing}, Euclidean distance \cite{zenz2007automatic}, or cosine similarity \cite{harte2005automatic}, is defined between PCP and CTT. As a result, for each PCP (or chroma), the chord that ``match'' is the one with the highest similarity, or the lowest distance. Ouder et al. \cite{oudre2009template} later upgrade this method by incorporating an ``exponentially decreasing spectral profile'' \cite{gomez2006tonal_a} into CTT, and considering Kullback-Leibler divergence \cite{kullback1951information} as the similarity measure.
 
 Any practical rendering of chords will most probably distribute the chord tones here and there throughout the whole duration, instead of filling every single frame with the chord. In consideration of this, a post-filtering process must be conducted to smooth the template matching output in order to compromise the chord tone distribution over time. Similar to the ``noise removal'', or pre-filtering \cite{cho2014improved} in feature extraction, the post-filtering \cite{cho2014improved} techniques include low-pass filtering \cite{oudre2009template} and median filtering \cite{harte2005automatic,humphrey2012rethinking}. Certainly there could be other post-filtering techniques such as beat-synchronized mode filtering, but this is never explored before under a template matching context.
 
-\subsubsection{Gaussian Mixture with Hidden Markov Model}
+\Hsection{Gaussian Mixture with Hidden Markov Model}
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.4\columnwidth, height=0.2\columnwidth]{2/figures/hmm.pdf}
@@ -573,7 +573,7 @@ or verbally: ``posterior is proportional to prior times likelihood''. For exampl
 
 The GMM-HMM model is widely adopted in many ACE systems, powered by either expert knowledge \cite{bello2005robust,weil2008hmm,cannam2013mirex} or ground truth data \cite{ellis20072007,lee2008acoustic,weil2009automatic,khadkevich2009use,mauch2008discrete,reed2009minimum,cho2009real}, or the combination of both.
 
-\subsubsection{Musical Context Constraints}
+\Hsection{Musical Context Constraints}
 Both the naive post-filtering and HMM decoding essentially work by injecting higher level musical constraints to the raw output. Indeed, chords can be correlated with other musical elements, such as {\it key} and {\it beat}:
 \begin{itemize}
 \item chord progression formed by diatonic chords, especially the tonic (I), dominant (V), or sub-dominant (IV) chords, strongly indicates underlying the key;
@@ -585,7 +585,7 @@ Taking advantages of these musical knowledge, the chord sequence output can be `
 
 A unified probabilistic chord-key framework of is first proposed by Catteau et al. \cite{catteau2007probabilistic}, and a unified chord-beat model is proposed by Papadopoulos and Peeters \cite{papadopoulos2008simultaneous}. Other variants are put forward by Pauwels and Martens \cite{pauwels2010integrating,pauwels2014combining}, and Weil and Durrieu \cite{weil2009automatic}. Noland and Sandler provide an detailed study of chord-key integrated models \cite{noland2009influences}. These models are all extended from the classic GMM-HMM, and all of them can be solved by dynamic programming based algorithms. This leads to a more unified framework based on a more general type of graphical model - dynamic Bayesian network, which will be elaborated in the next section.
 
-\subsubsection{Dynamic Bayesian Network}
+\Hsection{Dynamic Bayesian Network}
 A {\it Bayesian network} \cite{pearl2014probabilistic} is a probabilistic model of random variables and their conditional dependencies through a {\it directed acyclic graph} (DAG). A {\it dynamic Bayesian network} \cite{murphy2002dynamic} (DYBN, not to be confused with the deep belief network mentioned above) is a Bayesian network in which the random variables can also relate to each other over time. It is a generalization of the HMM, which can only model one hidden variable and one observable variable over time. Instead, a DYBN allows multiple of them with more flexible relationships.
 
 \begin{figure}[htb]
@@ -596,18 +596,18 @@ A {\it Bayesian network} \cite{pearl2014probabilistic} is a probabilistic model 
 \end{figure}
 Mauch and Dixon \cite{mauch2010approximate} pioneer to propose such integrated model of musical context for ACE as depicted in Figure~\ref{fig:2-dybn}. This DYBN model (GMM-DYBN) integrates the probabilistic models of beat (metric position), key, chord and bass, and it is parametrized by expert knowledge about the interrelationships among these music elements. The decoding process is also performed by a Viterbi algorithm. Later, Ni et al. \cite{ni2012end} and McVicar \cite{mcvicar2013machine} follow up this work by data driven DYBN approaches.
 
-\subsubsection{Conditional Random Fields and Support Vector Machines}
+\Hsection{Conditional Random Fields and Support Vector Machines}
 An HMM (and also its general case DYBN) can be regarded as a generative model that is either trained or manually engineered to maximize the joint probability of $P(X,Y)$, where $X$ is the observable sequence, and $Y$ is the hidden sequence. Note that $P(X,Y) = P(Y|X)P(X)$, the model does not only look for discriminative rules that predict $Y$ from $X$, but actually also models the distribution of $X$. As pointed out by Sutton et al. \cite{sutton2007dynamic}, it could be a waste of modeling power ``when the task does not require being able to generate $X$, such as in segmenting and labeling'', which is exactly the case in ACE. Therefore, an alternative solution for the task is a discriminative model, which only models $P(Y|X)$.
 
 In view of that, Weller et al. \cite{weller2009structured} implements another solely discriminative system \cite{weller2009structured} with {\it support vector machine} (SVM) \cite{cortes1995support} based on the SVMstruct algorithm \cite{tsochantaridis2005large}. Burgoyne et al. propose a system \cite{burgoyne2007cross} that incorporates a linear-chain {\it conditional random field} (CRF) \cite{lafferty2001conditional}. It is a discriminative model where each hidden state depends on the complete observable sequence. More generally, Papadopoulos and Tzanetakis \cite{papadopoulos2012modeling} propose the use of a {\it Markov logic network} (MLN) \cite{richardson2006markov} in ACE to combine the advantages of both {\it first-order logic} and probabilistic graphical models. The MLN is actually a Markov network template instantiated by first-order logic clauses, and its instances are easily interpreted as CRFs or equivalent HMMs. A comparison of different sequence labeling algorithm in general can be found in \cite{nguyen2007comparisons}.
 
-\subsubsection{Short Summary}
+\Hsection{Short Summary}
 There are a few review articles on ACE pattern matching. Papadopoulos and Peeters \cite{papadopoulos2007large} review both the expert and trained systems with template matching, GMM-HMM, or music context constrained techniques under the same large-scale benchmark. McVicar et al. \cite{mcvicar2014automatic} compare an extensive list of seven types of models, where the High-order HMMs \cite{scholz2009robust,mauch2007discovering,khadkevich2009use,yoshii2011vocabulary}, and genre-specific models \cite{lee2008acoustic,lee2007system} that are not expounded above.
 
 \subsection{Deep Learning for Pattern Matching} \label{sec:2-rnnpm}
 As reviewed in Section~\ref{sec:2-fl}, deep learning technologies have been applied to ACE feature learning. It can be expected that it is not only suitable for feature extraction, but also pattern matching. Now the most frequently used deep learning model in sequence pattern matching is {\it recurrent neural network} (RNN) with {\it long-short-term-memory} (LSTM).
 
-\subsubsection{Recurrent Neural Network}
+\Hsection{Recurrent Neural Network}
 A RNN is a neural network with cyclical connections, so that the network can be recurrently expanded into multiple frames \cite{elman1990finding,jordan1986attractor,lang1990time}. Figure~\ref{fig:2-rnn} shows a simple RNN with one self-connected hidden layer, unfolded into four frames.
 \begin{figure}[htb]
 \centering
@@ -637,7 +637,7 @@ Different from a MLP, a RNN models this probability in a sequential manner, so t
 
 To train the network, a cross entropy lost function similar to equation~\ref{eq:2-crossentropy} is commonly used. The gradients are computed as a backward pass (opposite to the directed connection) through the network from each output node. This leads to the {\it back-propagation-through-time} (BPTT) \cite{rumelhart1988parallel,werbos1990backpropagation} technique. But when the training sequence is long, the gradient signal may die down gradually through back-propagation. This {\it gradient vanishing} \cite{bengio2009learning} phenomenon often makes the training ineffective or unsuccessful. Using LSTM units instead of normal neurons within an RNN network is a common way to circumvent this undesirable effect.
 
-\subsubsection{Long-short-term-memory}
+\Hsection{Long-short-term-memory}
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.3\columnwidth, height=0.35\columnwidth]{2/figures/lstmunit.pdf}
@@ -672,7 +672,7 @@ H^t = o_t*\sigma(C^t).
 \end{equation}
 All $*$ stands for element-wise multiplication, and all ``summation over index'' operations are replaced by matrix multiplications for brevity. 
 
-\subsubsection{Deep Learning in ACE}
+\Hsection{Deep Learning in Pattern Matching}
 For chord sequence pattern matching task, there are so far three types of modeling topologies, each has at least one corresponding literature in recent years.
 
 Humphrey and Bello \cite{humphrey2012rethinking} propose a model that performs CNN chord classification at each constant-Q frame, and then applies median-filtering to smooth the classification results into segments. The CNN outputs a ``probability surface'', which is the posterior chord probabilities given the input frame, so that it actually performs both feature learning and pattern matching. Consider that the role of CNN here can be replaced by any type of DNN, this is a ``local (DNN) classification - global smoothing'' approach.
@@ -686,14 +686,14 @@ Certainly there could be more deep learning architectures for ACE that could pos
 \subsection{Chord Vocabularies and Output Format} \label{sec:2-vocab}
 Chord vocabulary is huge issue in ACE as it defines the domain of the chords that a system can recognize. The size of a chord vocabulary is denoted by the number of chord classes, which equals to the number of chord types times twelve (a chord type can be rooted at any of the 12 pitch classes in 12-tone equal temperament). For the two pioneering ACE works, Fujishima's system \cite{fujishima1999realtime} supports 324 classes, including many chord types used in Jazz, and Sheh and Ellis's system \cite{sheh2003chord} has 84 classes, including $maj$, $min$, $maj7$, $min7$, $7$, $aug$ and $dim$.
 
-\subsubsection{Consideration for Small Vocabulary}
+\Hsection{Consideration for Small Vocabulary}
 Note that such large vocabularies may lead to poor results in practice. One reason is that in the early days of ACE there are not enough amount of ground truth data to train a large vocabulary system, particularly for the ``long-tail'' chords. The term ``long-tail'' is derived from the distribution of chords in tonal music practice. For example, Burgoyne et al. \cite{burgoyne2011expert} find that in Western pop song practice, $maj$, $min$, $7$, $min7$ and $maj7$ make up of more than $80\%$ of the population. These chords are considered ``ordinary'', while the others are considered ``long-tail'', or ``skewed''. For an expert knowledge driven system, it is also hard to recognize long-tail chords since most of them are slightly {\it extended}, {\it altered} or {\it suspended} upon the ordinary chords. Their sound flavor can be distinguished by human though, their underlying composition differ in a very subtle way. If an ACE {\it expert system} tries to capture the ordinary chords as much as possible, it somehow finds very difficult to secure other chords in the same way. Moreover, since the population of long-tail chords is extremely small, even a few misclassification may lead to huge performance drop in that long-tail category.
 
 In this case, if a system tries to support a large vocabulary, it may suffer from low overall recognition accuracy due to confusions between the majority and minority, specifically, due to the extremely unbalanced population, there will be many ordinary chords misclassified as long-tail, and only a few the other way around. On the other hand, if a system only supports ordinary chords, although all the skewed classes will be misclassified, it guarantees the performance on the majority. \cite{deng2016hybrid}
 
 Su and Jeng \cite{su2001multi}, Maddage et al. \cite{maddage2004content} and Yoshioka et al. \cite{yoshioka2004automatic} are among the first to use a 48 chords vocabulary with four types, including $maj$, $min$, $aug$ and $dim$. This is echoed in many later works such  as \cite{harte2005automatic,catteau2007probabilistic,burgoyne2007cross,su2001multi,papadopoulos2008simultaneous}. Bello and Pickens \cite{bello2005robust} propose an even smaller vocabulary, covering only 24 chords with $maj$ and $min$ (normally called {\it majmin}). This is adopted in many systems such as \cite{ryynanen2008automatic,weil2008hmm,khadkevich2009use,weller2009structured,ni2012end,cho2010exploring,humphrey2012rethinking}. This two sets of vocabulary become the most popular among ACE. Note that usually a ``no chord'' with a ``chord symbol'' $N$ will be appended to the vocabulary to represent everything that is ``not a chord'', such as silence, speech, natural soundscape or environmental noise.
 
-\subsubsection{Consideration for Large Vocabulary} \label{sec:2-largevocab}
+\Hsection{Consideration for Large Vocabulary} \label{sec:2-largevocab}
 Large vocabulary systems originally considered by Fujishima, Sheh and Ellis \cite{fujishima1999realtime,sheh2003chord} recently has come to resurgence. This may be partly due to the ever growing complexity of the graphical probabilistic models, and partly due to the use of more complicated machine learning techniques together with much more ground truth annotation data than several decades ago.
 
 It is worth noting that large vocabulary is essential for any ACE system that targets practical use. Such ``practical use'' can be to really transcribe for chord tabs website, to assist transcription during a music rehearsal, or to provide aid to students in music education. The core of these practical scenario is that an ACE system need to perform at the same level as a human chord annotator, who tends to capture chords in great details, including the suspensions, extensions, inversions and alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. There are numerous such examples on popular chord tabs websites such as UltimateGuitar \footnote{ultimate-guitar.com}, E-chords \footnote{e-chords.com} and many others \footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. Regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE is absolutely a significant part of the machine.
@@ -709,7 +709,7 @@ Notably, Mauch's popular open source ACE tool, Chordio \cite{cannam2010sonic} \f
 %Recently, a preliminary study on ACE's performance on Jazz has been conducted by Deng and Kwok \cite{deng2016hybrid}
 %\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$,  $maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$}
 
-\subsubsection{Consideration for Chord Inversions}
+\Hsection{Consideration for Chord Inversions}
 So far only a few ACE systems that try to support inversions \cite{cannam2010sonic,mauch2010automatic,ni2012end,mcvicar2013machine,deng2016chord,deng2016hybrid}. When a system supports inversions, it's overall performance is generally downgraded \cite{deng2016chord}. This is because inversions are very easily to be confused with their root positions. The unavailability of inversions makes such confusion only possible in one direction (inversions misclassified as root position only), but supporting inversions makes it possible for both direction.
 
 Technically speaking, a system that supports inversions is much more musically correct because the sound quality of inversions and root positions are totally different in many musical contexts. For example, in Figure~\ref{fig:2-wdwu}, if a system does not support inversions, it automatically breaks bass line continuations and, thus, destroys the harmonies.
@@ -720,7 +720,7 @@ Technically speaking, a system that supports inversions is much more musically c
 \label{fig:2-wdwu}
 \end{figure}
 
-\subsubsection{The Output Format}
+\Hsection{The Output Format}
 The output format of ACE is defined by Harte et al. \cite{harte2005symbolic}. The following is the ground truth annotation of the first few seconds of {\it Let it be},
 \begin{quote}\footnotesize \it
 0.000000 0.175157 N
