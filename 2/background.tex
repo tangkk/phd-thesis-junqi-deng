@@ -171,13 +171,13 @@ In tonal music, the pitch relationships that establish a single pitch class as a
 There are {\it major key} and {\it minor key}, characterized by their own {\it major scale} and {\it minor scale}. Defining a {\it whole step} (W) as an interval containing two consecutive semitones, and a {\it half step} (H) as containing one semitone, the two scales can be expressed as two ordered lists:
 \begin{equation}
 \begin{split}
-major\,scale=(W,W, H,W,W,W, H),\\
-minor\,scale=(W,H,W,W,H,W,W),
+\mathit{major\,scale=(W,W, H,W,W,W, H),\\
+minor\,scale=(W,H,W,W,H,W,W),}
 \end{split}
 \end{equation}
 The keys and scales can be named after the starting pitch class, such as ``C major scale'' and ``D minor scale'', and the keys, ``C major key'' and ``D minor key''.  These seven-pitch scales are {\it diatonic}, regardless of the starting pitch class. Chord progressions that built upon these scales are decisive clues to the underlying keys. A {\it diatonic chord progression} is a sequence of seven chords built on a diatonic scale. For example, in C major key, a diatonic chord progression can be:
 \begin{equation}
-Cmaj - Dmin - Emin - Fmaj - Gmaj - Amin - Bmin7b5,
+\mathit{Cmaj - Dmin - Emin - Fmaj - Gmaj - Amin - Bmin7b5,}
 \end{equation}
 
 \Hsection{Short Summary}
@@ -524,7 +524,7 @@ Sigtia et al. \cite{sigtia2015audio} use a simple MLP to classify chord labels f
 \subsection{Pattern Matching} \label{sec:2-pm}
 The extracted features will become the input of a pattern matching process, which is a mathematical model that describe the relationship between the features and the chord labels (or chords). Assuming the input is a piece of chromagram, then:
 \begin{equation}
-Chords = M(chromagram),
+\mathit{Chords = M(chromagram)},
 \end{equation}
 where $chords$ contain both chord {\it sequence} and {\it segmentation}, and $M$ is the pattern matching model.
 
@@ -696,7 +696,7 @@ Su and Jeng \cite{su2001multi}, Maddage et al. \cite{maddage2004content} and Yos
 \Hsection{Consideration for Large Vocabulary} \label{sec:2-largevocab}
 Large vocabulary systems originally considered by Fujishima, Sheh and Ellis \cite{fujishima1999realtime,sheh2003chord} recently has come to resurgence. This may be partly due to the ever growing complexity of the graphical probabilistic models, and partly due to the use of more complicated machine learning techniques together with much more ground truth annotation data than several decades ago.
 
-It is worth noting that large vocabulary is essential for any ACE system that targets practical use. Such ``practical use'' can be to really transcribe for chord tabs website, to assist transcription during a music rehearsal, or to provide aid to students in music education. The core of these practical scenario is that an ACE system need to perform at the same level as a human chord annotator, who tends to capture chords in great details, including the suspensions, extensions, inversions and alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. There are numerous such examples on popular chord tabs websites such as UltimateGuitar \footnote{ultimate-guitar.com}, E-chords \footnote{e-chords.com} and many others \footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. Regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE is absolutely a significant part of the machine.
+It is worth noting that large vocabulary is essential for any ACE system that targets practical use. Such ``practical use'' can be to really transcribe for chord tabs website, to assist transcription during a music rehearsal, or to provide aid to students in music education. The core of these practical scenario is that an ACE system need to perform at the same level as a human chord annotator, who tends to capture chords in great details, including the suspensions, extensions, inversions and alterations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. There are numerous such examples on popular chord tabs websites such as UltimateGuitar \footnote{ultimate-guitar.com}, E-chords \footnote{e-chords.com} and many others \footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. Regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE is absolutely a significant part of the machine.
 
 Besides the above mentioned two, there are currently several other types of large vocabularies ever supported in ACE systems. Mauch \cite{mauch2010automatic} puts forward a vocabulary in his DYBN based system, which he name it as ``full'', that contains $maj$, $min$, $maj/3$, $maj/5$, $maj6$, $7$, $maj7$, $min7$, $dim$, $aug$, totally 121 chord types. Note that this is a vocabulary with chord inversions $maj/3$ and $maj/5$. This vocabulary is adopted in systems such as \cite{ni2012end,mcvicar2014automatic,boulanger2013audio}. Notably, it is also used as a default
 
@@ -746,33 +746,33 @@ This section is going to review several issues regarding the evaluation of ACE s
 \subsection{Estimation Accuracy Metrics}
 In his pioneering ACE paper, Fujishima \cite{fujishima1999realtime} scores the system by
 \begin{equation}
-score = {\#\,correct\,guesses\over\#\,all\,guesses},
+\mathit{score = {\#\,correct\,guesses\over\#\,all\,guesses},}
 \end{equation}
 where a $guess$ is made on every frame. This is later coined as {\it frame-based chord symbol recall} \cite{harte2010towards}, {\it average overlap score} \cite{oudre2010template}, or {\it relative correct overlap} (RCO) \cite{mauch2010automatic}. Generally, the scores given by these method can all be regarded as {\it chord symbol recall} (CSR), formulated as:
 
 \begin{equation}
-CSR={|\text{correctly identified frames}| \over |\text{total frames}|}\times 100\%,
+\mathit{CSR={|\text{correctly identified frames}| \over |\text{total frames}|}\times 100\%,}
 \end{equation}
 This is a waste of computation by noting that a chord label actually remains the same for hundreds or thousands of frames. Instead of computing the CSR in a frame-based way, Harte \cite{harte2010towards} introduces a {\it segment-based chord symbol recall}:
 
 \begin{equation}
-CSR = {|S\cap S^*|\over|S^*|} \times 100\%,
+\mathit{CSR = {|S\cap S^*|\over|S^*|} \times 100\%,}
 \label{eq:2-csr}
 \end{equation}
-where $S$ is automatic estimated segments, and $S^*$ is ground truth annotated segments. Verbally, it can be re-expressed as \footnote{\url{http://www.music-ir.org/mirex/wiki/2015:Audio\_Chord\_Estimation}}:
+where $S$ is automatic estimated segments, $S^*$ is ground truth annotated segments, and the intersection of $S$ and $S^*$ results in the part where they: 1, overlap and 2, have equal chord annotations. A segment is usually represented as a tuple of ``(start time, end time)''. Verbally, it can be re-expressed as \footnote{\url{http://www.music-ir.org/mirex/wiki/2015:Audio\_Chord\_Estimation}}:
 
 \begin{equation}\footnotesize
-CSR = {\text{total duration of segments where chord annotation equals chord estimation}\over\text{the total duration of annotated segments}} \times 100\%,
+\mathit{CSR = {\text{total duration of segments where chord annotation equals chord estimation}\over\text{the total duration of annotated segments}} \times 100\%,}
 \label{eq:2-csrv}
 \end{equation}
 
 For multiple track estimation, the overall performance is usually calculated by {\it weighted chord symbol recall} (WCSR):
 
 \begin{equation}
-WCSR = {\sum_i{Length(Track_i)*CSR_i} \over \sum_i{Length(Track_i)}}\times 100\%,
+\mathit{WCSR = {\sum_i{Length(Track_i)*CSR_i} \over \sum_i{Length(Track_i)}}\times 100\%,}
 \label{eq:2-wcsr}
 \end{equation}
-which is the weighted average of all tracks' CSRs by the lengths of these tracks. This corresponds to the {\it total relative correct overlap} (TRCO) used by McVicar \cite{mcvicar2013machine}. Another approach is to simply take the average CSRs of all tracks without weighting, and this is called {\it average relative correct overlap} (ARCO).
+where the subscript $i$ denotes the track number. It is the weighted average of all tracks' CSRs by the lengths of these tracks. This corresponds to the {\it total relative correct overlap} (TRCO) used by McVicar \cite{mcvicar2013machine}. Another approach is to simply take the average CSRs of all tracks without weighting, and this is called {\it average relative correct overlap} (ARCO).
 
 Instead of an overall performance metric, ACE researchers also report such CSR scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}.
 
@@ -781,8 +781,8 @@ All above metrics compute effect score only if a {\it chord matching function} i
 \begin{equation}
 M(C_G,C_E)=
 \begin{cases}
-1 \quad \text{if $C_G$ matches $C_E$} \\
-0 \quad \text{otherwise}
+\mathit{1 \quad \text{if $C_G$ matches $C_E$} \\
+0 \quad \text{otherwise}}
 \end{cases}
 \end{equation}
 where $C_G$ is the ground truth label and $C_E$ is the estimated label. At the early years of ACE, chords are matched as they are \cite{fujishima1999realtime,sheh2003chord,bello2005robust}. Two labels are the same if and only if they are the same label. Since then, different $M$ has been used notably in MIREX (Music Information Retrieval Evaluation Exchange) \footnote{\url{http://www.music-ir.org/mirex/wiki/MIREX\_HOME}} \cite{downie2008music}, which is a yearly event that aims at advancing various MIR technologies through extensive evaluations. ACE has been one of the MIREX tasks since 2008. Because different systems may support different vocabularies, various $M$s has been proposed to try to make a fair comparison between them.
