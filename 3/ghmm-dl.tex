@@ -5,7 +5,7 @@
 \chapter{A Hybrid Gaussian-HMM-Deep-Learning Approach}\label{cp:ghmm} % top level followed by section, subsection
 
 
-As recapped in Section~\ref{sec:3-2-rnnpm}, by now there are basically three types of deep learning approach for ACE:
+As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically three types of deep learning approach for ACE:
 \begin{itemize}
 \item local classification - global smoothing \cite{humphrey2012rethinking};
 \item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
@@ -13,7 +13,7 @@ As recapped in Section~\ref{sec:3-2-rnnpm}, by now there are basically three typ
 \end{itemize}
 All these approaches apply similar deep learning methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and they are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
 
-This chapter introduces a new approach that leverages this property of ACE. Particularly, the method described here can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region. 
+This chapter introduces a new approach that leverages this property of ACE. Particularly, the method described here can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region.
 
 Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification in one single pass at the same time, which leads to the belief that setting apart the two will bring more benefit to system performance.
 
@@ -21,7 +21,7 @@ Note that in recent MIREX ACE submissions, systems' segmentation qualities are f
 
 \section{System Framework} \label{sec:3-sysframe}
 
-Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in our study. The workflow is as follows%The training process is as follows:
+Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in this chapter. The workflow is as follows%The training process is as follows:
 \begin{enumerate}
 	
 	\item Both training and testing data share the same feature extraction module. Features are extracted from each input track using a method similar to the one employed in the Chordino system~\cite{mauch2010automatic} (will be elaborated in Section~\ref{sec:3-chordino-like fe}).
@@ -40,7 +40,7 @@ Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in our st
 \end{figure}
 
 \subsection{Feature Extraction} \label{sec:3-chordino-like fe}
-Feature extraction starts with resampling the raw audio input at 11025 Hz, followed by transforming it using short-time-Fourier-transform (STFT) with 4096-point Hamming window and 512-point hop size. The process then proceeds to transform the linear-frequency-scale spectrogram (2049-bin) to log-frequency-scale (252-bin, 3 bins per semitone ranging from MIDI note 21 to 104). And then it tunes the spectrogram to standard tuning using equation~\ref{eq:3-2-tuning}. To enhance harmonic content and attenuate background noise, a standardization process is performed by running-mean subtraction and running-standard-deviation division along the frequency bins: %** according to R1, this is not elaborated in detail, now it is.
+Feature extraction starts with resampling the raw audio input at 11025 Hz, followed by transforming it using short-time-Fourier-transform (STFT) with 4096-point Hamming window and 512-point hop size. The process then proceeds to transform the linear-frequency-scale spectrogram (2049-bin) to log-frequency-scale (252-bin, 3 bins per semitone ranging from MIDI note 21 to 104). And then it tunes the spectrogram to standard tuning using equation~\ref{eq:2-tuning}. To enhance harmonic content and attenuate background noise, a standardization process is performed by running-mean subtraction and running-standard-deviation division along the frequency bins: %** according to R1, this is not elaborated in detail, now it is.
 \begin{equation}
 	Y^{STD}_{k,m} = 
 	\begin{cases}
@@ -48,7 +48,7 @@ Feature extraction starts with resampling the raw audio input at 11025 Hz, follo
 		0 \quad\quad\quad\quad\quad\quad\quad\quad\quad\text{otherwise,}
 	\end{cases}
 \end{equation}
-where $\mu_{k,m}$ and $\sigma_{k,m}$ are the mean and standard deviation of the half-octave window of bins centered at $Y_{k,m}$, respectively. This is followed by an NNLS method  (equation~\ref{eq:3-2-nnls}) to extract note activation patterns (84-bin, 1 bin per semitone) \cite{mauch2010approximate}. This matrix is further reduced to a 24-bin per column bass-treble chromagram weighted by the bass and treble profiles (Figure~\ref{fig:3-btprofile}). Each chroma is normalized by its maximum norm. Table~\ref{tab:3-felevels} provides a summary of different levels of features generated by this process. Note that for brevity, in the following tuned notegram is referred to as as ``-ns'', NNLS notegram as ``-nnls'' and chromagram (or bass-treble chromagram) as ``-ch''.
+where $\mu_{k,m}$ and $\sigma_{k,m}$ are the mean and standard deviation of the half-octave window of bins centered at $Y_{k,m}$, respectively. This is followed by an NNLS method  (equation~\ref{eq:2-nnls}) to extract note activation patterns (84-bin, 1 bin per semitone) \cite{mauch2010approximate}. This matrix is further reduced to a 24-bin per column bass-treble chromagram weighted by the bass and treble profiles (Figure~\ref{fig:3-btprofile}). Each chroma is normalized by its maximum norm. Table~\ref{tab:3-felevels} provides a summary of different levels of features generated by this process. Note that for brevity, in the following tuned notegram is referred to as as ``-ns'', NNLS notegram as ``-nnls'' and chromagram (or bass-treble chromagram) as ``-ch''.
 
 \begin{figure}[htb]
 \centering
@@ -170,7 +170,7 @@ The DBN, as shown in Figure~\ref{fig:3-dbn} models the chord posteriors conditio
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.4\columnwidth]{3/figures/dbn.pdf}
-\caption{The deep belief network architecture used in our system. All layers are fully connected. The input is N-frame of features.}
+\caption{The deep belief network architecture used in the proposed system. All layers are fully connected. The input is N-frame of features.}
 \label{fig:3-dbn}
 \end{figure}
 
@@ -183,7 +183,7 @@ The RNN shown in Figure~\ref{fig:3-rnn} is bidirectional with LSTM hidden units 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.6\columnwidth]{3/figures/rnn.pdf}
-\caption{The bidirectional recurrent neural network architecture used in our system. Both hidden layers employ LSTM units in place of normal logistic units. The RNN is expanded to N frames, with mean pooling to summarize results.}
+\caption{The bidirectional recurrent neural network architecture used in the proposed system. Both hidden layers employ LSTM units in place of normal logistic units. The RNN is expanded to N frames, with mean pooling to summarize results.}
 \label{fig:3-rnn}
 \end{figure}
 
@@ -250,6 +250,14 @@ To control variations of training, the following techniques are applied in all i
 \end{itemize}
 
 In the testing process, each of the 180 tracks in the test dataset are chord estimated from raw audio file. The output is written in a {\tt .lab} file conforming with the ``start\_time end\_time chord'' format \footnote{\url{http://www.music-ir.org/mirex/wiki/2016:Audio\_Chord\_Estimation}}, where the ``chord'' is conforming with Harte's format \cite{harte2005symbolic}. All implementation details are available online \footnote{\url{github.com/tangkk/tangkkace}} in so that interested readers can repeat the experiments. All deep learning components are implemented under Theano framework \cite{bergstra2010theano}.
+
+\section{Results and Discussions} \label{sec:3-res}
+
+Throughout this section, we use the MIREX ACE standard evaluation metric, \textit{WCSR}, to report system performances). All the scores in this section are computed using Johan Pauwels' public available MusOOEvaluator tool\footnote{\url{https://github.com/jpauwels/MusOOEvaluator}}. Since all system variations have the same segmentation process, they all have similar segmentation scores, and thus we will not discuss them in this section.
+
+During the design exploration, both the training and testing scores are examined, so that we could diagnose the bias-variance of different system variants. Note that the training score is calculated from the whole training set, which, as described in Section~\ref{sec:3-traintest}, contains 20\% of its data used as validation set for early-stopping. Because of this, and also that the reported scores are not k-fold cross validation scores, it is possible for testing errors to be lower than training errors.
+
+Apart from design exploration, we also compare the best system variants with Chordino. It should be emphasized that Chordino represents the best suited baseline because: (1) The proposed framework resembles Chordino's in terms of segmentation and feature extraction; (2) Chordino is the only other system that supports SeventhsBass vocabulary as well as chord inversions.
 
 \subsection{Network configurations} \label{sec:3-p2}
 
@@ -596,111 +604,104 @@ For BLSTM-RNN, while the training score increases, the testing score seems to pe
 
 %\subsection{At -ch level, both MLP and DBN are impervious to training data size, while BLSTM-RNN benefits from more training data}\label{sec:3-p5}
 \subsection{Training data size}\label{sec:3-p5}
-
-\begin{figure}[htb]
+\begin{figure}[h]
 	\centering
 	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best SeventhsBass WCSR within MLP-6-ch-frame-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=70,
-		ytick={50,60,70},
-		legend pos=south west,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(J,60.8)(CJK,60.6)(CJKU,59.2)};
-		
-		\addplot[ % Testing
-		color=black,
-		mark=square,
-		]
-		coordinates {(J,60.6)(CJK,59.6)(CJKU,60.0)};
-		\legend{Training, Testing} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best SeventhsBass WCSR within DBN-6-ch-frame-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=70,
-		ytick={50,60,70},
-		legend pos=south west,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(J,58.6)(CJK,57.7)(CJKU,57.0)};
-		
-		\addplot[ % Testing
-		color=black,
-		mark=square,
-		]
-		coordinates {(J,62.0)(CJK,63.0)(CJKU,63.5)};
-		\legend{Training, Testing} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best SeventhsBass WCSR within BLSTM-RNN-6-ch-frame-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=70,
-		ytick={50,60,70},
-		legend style={at={(0.03,0.5)},anchor=west,legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(J,69.7)(CJK,66.6)(CJKU,60.9)};
-		
-		\addplot[ % Testing
-		color=black,
-		mark=square,
-		]
-		coordinates {(J,52.9)(CJK,53.8)(CJKU,58.3)};
-		\legend{Training, Testing} 
-		\end{axis}
-		\end{tikzpicture}
-	}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best SeventhsBass WCSR within MLP-6-ch-frame-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=70,
+	ytick={50,60,70},
+	legend pos=south west,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(J,60.8)(CJK,60.6)(CJKU,59.2)};
+	
+	\addplot[ % Testing
+	color=black,
+	mark=square,
+	]
+	coordinates {(J,60.6)(CJK,59.6)(CJKU,60.0)};
+	\legend{Training, Testing} 
+	\end{axis}
+	\end{tikzpicture}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best SeventhsBass WCSR within DBN-6-ch-frame-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=70,
+	ytick={50,60,70},
+	legend pos=south west,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(J,58.6)(CJK,57.7)(CJKU,57.0)};
+	
+	\addplot[ % Testing
+	color=black,
+	mark=square,
+	]
+	coordinates {(J,62.0)(CJK,63.0)(CJKU,63.5)};
+	\legend{Training, Testing} 
+	\end{axis}
+	\end{tikzpicture}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best SeventhsBass WCSR within BLSTM-RNN-6-ch-frame-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=70,
+	ytick={50,60,70},
+	legend style={at={(0.03,0.5)},anchor=west,legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(J,69.7)(CJK,66.6)(CJKU,60.9)};
+	
+	\addplot[ % Testing
+	color=black,
+	mark=square,
+	]
+	coordinates {(J,52.9)(CJK,53.8)(CJKU,58.3)};
+	\legend{Training, Testing} 
+	\end{axis}
+	\end{tikzpicture}
 	\caption{Exploring different training data size at -ch level. All systems are trained with 6-ch-frame-[800*2].}
 	\label{fig:3-ch-data}
 \end{figure}
@@ -713,138 +714,108 @@ For MLP and DBN, the results are consistent with all the previous results at -ch
 For BLSTM-RNN, the results are also consistent with all previous results.With the increase of training data size, there are less variance in the model. In this model, the bias of bass-treble chromagram is not quite fully utilized as the other two models do.
 
 Here is a plausible explanation as to why in Figure~\ref{fig:3-ch-data} (and Figure~\ref{fig:3-N-frame}) the testing scores of BLSTM-RNN are lower than the other two models. It is reasonable to think that BLSTM-RNN regards its input as a {\it sequence of frames}, while both MLP and DBN regard their inputs as \textit{2D images}. Therefore, while BLSTM-RNN tries to look for regularities within each pair of consecutive frames along the time direction, MLP and DBN could search regularities within every pair of frames along every possible directions. In many chord recognition cases, the latter approach is inevitably more efficient given that the input feature is already a very good summarization of pitch class saliences, but it also unavoidably suffers from the lack of consideration of ``sequential order'', which leads to over-fitting of root position chords, as will be demonstrated in Section~\ref{sec:3-p7}.
-
-
-\begin{figure}[htb]
+\begin{figure}[h]
 	\centering
 	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best SeventhsBass WCSR within MLP-6-ns-frame-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=45, ymax=65,
-		ytick={45,55,65},
-		legend style={at={(0.03,0.5)},anchor=west,legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(J,62.5)(CJK,61.3)(CJKU,58.3)};
-		
-		\addplot[ % Testing
-		color=black,
-		mark=square,
-		]
-		coordinates {(J,48.9)(CJK,52.0)(CJKU,54.1)};
-		\legend{Training, Testing} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best SeventhsBass WCSR within DBN-6-ns-frame-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=70,
-		ytick={50,60,70},
-		legend pos=north east,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(J,62.4)(CJK,62.3)(CJKU,58.9)};
-		
-		\addplot[ % Testing
-		color=black,
-		mark=square,
-		]
-		coordinates {(J,53.5)(CJK,54.0)(CJKU,54.4)};
-		\legend{Training, Testing} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best SeventhsBass WCSR within BLSTM-RNN-6-ns-frame-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=80,
-		ytick={50,60,70,80},
-		legend style={at={(0.03,0.5)},anchor=west,legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(J,76.6)(CJK,73.1)(CJKU,64.1)};
-		
-		\addplot[ % Testing
-		color=black,
-		mark=square,
-		]
-		coordinates {(J,51.7)(CJK,57.5)(CJKU,57.5)};
-		\legend{Training, Testing} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={Best MajMin WCSR within 6-ns-frame-[800*2]},
-		title style = {font=\scriptsize},
-		ybar=8pt,
-		enlargelimits=0.2,
-		legend style={at={(0.5,-0.2)},
-			anchor=north,legend columns=-1},
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		symbolic x coords={J,CJK,CJKU},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ymin=50, ymax=80,
-		ytick={50,65,80},
-		nodes near coords,
-		nodes near coords align={vertical},
-		legend style={font=\scriptsize},
-		]
-		\addplot [ybar,fill=white,draw=black] coordinates {(J,63.1)(CJK,65.2)(CJKU,68.0)};
-		\addplot [ybar,fill=brown,draw=black] coordinates {(J,67.5)(CJK,67.4)(CJKU,68.5)};
-		\addplot [ybar,fill=black,draw=black] coordinates {(J,66.1)(CJK,70.5)(CJKU,72.6)};
-		\legend{MLP,DBN,BLSTM-RNN}
-		\end{axis}
-		\end{tikzpicture}
-	}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best SeventhsBass WCSR within MLP-6-ns-frame-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=45, ymax=65,
+	ytick={45,55,65},
+	legend style={at={(0.03,0.5)},anchor=west,legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(J,62.5)(CJK,61.3)(CJKU,58.3)};
+	
+	\addplot[ % Testing
+	color=black,
+	mark=square,
+	]
+	coordinates {(J,48.9)(CJK,52.0)(CJKU,54.1)};
+	\legend{Training, Testing} 
+	\end{axis}
+	\end{tikzpicture}
+
+
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best SeventhsBass WCSR within DBN-6-ns-frame-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=70,
+	ytick={50,60,70},
+	legend pos=north east,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(J,62.4)(CJK,62.3)(CJKU,58.9)};
+	
+	\addplot[ % Testing
+	color=black,
+	mark=square,
+	]
+	coordinates {(J,53.5)(CJK,54.0)(CJKU,54.4)};
+	\legend{Training, Testing} 
+	\end{axis}
+	\end{tikzpicture}
+
+
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best SeventhsBass WCSR within BLSTM-RNN-6-ns-frame-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=80,
+	ytick={50,60,70,80},
+	legend style={at={(0.03,0.5)},anchor=west,legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(J,76.6)(CJK,73.1)(CJKU,64.1)};
+	
+	\addplot[ % Testing
+	color=black,
+	mark=square,
+	]
+	coordinates {(J,51.7)(CJK,57.5)(CJKU,57.5)};
+	\legend{Training, Testing} 
+	\end{axis}
+	\end{tikzpicture}
+
 	\caption{Exploring training data size at -ns level. All systems are trained with 6-ns-frame-[800*2].}
 	\label{fig:3-ns-data}
 \end{figure}
@@ -852,7 +823,38 @@ Here is a plausible explanation as to why in Figure~\ref{fig:3-ch-data} (and Fig
 \Hsection{-ns level}
 At -ns level, as shown in Figure~\ref{fig:3-ns-data}, with more training data, DBN still exhibits similar imperviousness in testing score with less variance, while both MLP and BLSTM-RNN have better testing scores and less variance with larger data size. In the case of DBN, this means the network might be over-regularized in the pre-training process, but nevertheless, the model's variance decrease with the increase of training data. As for MLP, since it is not so strongly regularized, it not only has less variance, but also better generalization ability as the training set grows.
 
-BLSTM-RNN behaves similarly as MLP does, but interestingly, although it does not show any SeventhsBass improvement from CJK to CJKU, the improvement happens in MajMin (see the last subfigure of Figure~\ref{fig:3-ns-data}), albeit MajMin is not a direct training objective. In Section~\ref{sec:3-p8} we will see that this actually means it tends to make mistakes/confusions in a more acceptable way.
+BLSTM-RNN behaves similarly as MLP does, but interestingly, although it does not show any SeventhsBass improvement from CJK to CJKU, the improvement happens in MajMin (see Figure~\ref{fig:3-ns-data-Mm}), albeit MajMin is not a direct training objective. In Section~\ref{sec:3-p8} we will see that this actually means it tends to make mistakes/confusions in a more acceptable way.
+\begin{figure}[h]
+	\centering
+	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={Best MajMin WCSR within 6-ns-frame-[800*2]},
+	title style = {font=\scriptsize},
+	ybar=8pt,
+	enlargelimits=0.2,
+	legend style={at={(0.5,-0.4)},
+		anchor=north,legend columns=-1},
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	symbolic x coords={J,CJK,CJKU},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ymin=50, ymax=80,
+	ytick={50,65,80},
+	nodes near coords,
+	nodes near coords align={vertical},
+	legend style={font=\scriptsize},
+	]
+	\addplot [ybar,fill=white,draw=black] coordinates {(J,63.1)(CJK,65.2)(CJKU,68.0)};
+	\addplot [ybar,fill=brown,draw=black] coordinates {(J,67.5)(CJK,67.4)(CJKU,68.5)};
+	\addplot [ybar,fill=black,draw=black] coordinates {(J,66.1)(CJK,70.5)(CJKU,72.6)};
+	\legend{MLP,DBN,BLSTM-RNN}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Exploring training data size at -ns level. All systems are trained with 6-ns-frame-[800*2].}
+	\label{fig:3-ns-data-Mm}
+\end{figure}
 
 At -ns level, there is no strong prior such as bass-treble chromagram being introduced, so that it almost all depends on the fitness of a model to learn meaningful regularities from the data. The above results illustrate that as the training data size grows, BLSTM-RNN model tends to have better generalization ability than the other two models, and it tends to make more acceptable labeling confusions. As discussed before, BLSTM-RNN employs an order-relevant approach in learning. The tuned notegram at -ns level maintains important raw information about ``order'', such as pitch continuity, voicing, bass positions and bass ordering, which helps BLSTM-RNN learn a good model. On the other hand, while MLP and DBN are regarding the -ns features as 2D images, it is more difficult to retrieve chord-related regularities compared with the -ch features.
 
@@ -861,7 +863,7 @@ At -ns level, there is no strong prior such as bass-treble chromagram being intr
 
 \begin{figure*}[htb]
 	\centering
-	\pgfplotsset{width=18cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
+	\pgfplotsset{width=15cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
 	\begin{tikzpicture}
 	\begin{axis}[
 	title={Best per chord WCSR within ch-[800*2]},
@@ -869,7 +871,7 @@ At -ns level, there is no strong prior such as bass-treble chromagram being intr
 	ybar=3pt,
 	bar width=5pt,
 	enlargelimits=0.2,
-	legend style={at={(0.5,-0.4)},
+	legend style={at={(0.5,-0.6)},
 		anchor=north,legend columns=-1},
 	ylabel={WCSR $\times$ 100},
 	y label style={font=\scriptsize},
@@ -901,7 +903,7 @@ Figure~\ref{fig:3-blstm-long-tail} shows how different models perform on differe
 	\mathit{WCSR_{chord} = {\sum{Length(chord_i)*CSR_i} \over \sum{Length(chord_i)}}},
 	\label{eq:3-wcsrchord}
 \end{equation}
-where the subscript $i$ denotes the $i^{th}$ instance of the chord within the data set. Among all chord types, \textit{maj} and \textit{min} are unarguably considered common chords, because they constitute the major population in pop/rock music practice \cite{burgoyne2011expert}, and specifically in both the training and testing sets. The other chords are considered uncommon. As demonstrated, the main advantage of MLP and DBN over BLSTM-RNN appears in \textit{maj} and \textit{min}, but BLSTM-RNN outperforms the two other models by large amounts in most uncommon chords. Note that based on Equation~\ref{eq:3-csr} and~\ref{eq:3-wcsr}, even small advantages in common chords could eventually lead to large advantages in overall \textit{WCSR}s.
+where the subscript $i$ denotes the $i^{th}$ instance of the chord within the data set. Among all chord types, \textit{maj} and \textit{min} are unarguably considered common chords, because they constitute the major population in pop/rock music practice \cite{burgoyne2011expert}, and specifically in both the training and testing sets. The other chords are considered uncommon. As demonstrated, the main advantage of MLP and DBN over BLSTM-RNN appears in \textit{maj} and \textit{min}, but BLSTM-RNN outperforms the two other models by large amounts in most uncommon chords. Note that based on Equation~\ref{eq:2-csr} and~\ref{eq:2-wcsr}, even small advantages in common chords could eventually lead to large advantages in overall \textit{WCSR}s.
 
 \begin{figure}[htb]
 	\centering
@@ -948,12 +950,12 @@ Models that over-fit on a few chord types tend to get lower \textit{ACQA}s, whil
 
 \begin{figure}[htb]
 	\centering
-	\includegraphics[width=1\columnwidth,height=0.6\columnwidth]{3/figures/ds-eps-converted-to.pdf}
-	\caption{Boxplot of the score differences of different vocabulary (for all system variants considered in this paper). Mm = MajMin; MmB = MajMinBass; S = Sevenths; SB = SeventhsBass}
+	\includegraphics[width=0.7\columnwidth,height=0.4\columnwidth]{3/figures/ds-eps-converted-to.pdf}
+	\caption{Boxplot of the score differences of different vocabulary (for all system variants considered in this chapter). Mm = MajMin; MmB = MajMinBass; S = Sevenths; SB = SeventhsBass}
 	\label{fig:3-ds}
 \end{figure}
 
-In the above discussions, there are mainly SeventhsBass results. However, in the MIREX ACE evaluation, three other vocabularies are evaluated, namely, MajMin, Maj-MinBass, and Sevenths (already introduced in Section~\ref{sec:3-aceeval}). Their scores are calculated based on SeventhsBass with certain toleration of two types of chord confusions:
+In the above discussions, there are mainly SeventhsBass results. However, in the MIREX ACE evaluation, three other vocabularies are evaluated, namely, MajMin, Maj-MinBass, and Sevenths. Their scores are calculated based on SeventhsBass with certain toleration of two types of chord confusions:
 \begin{itemize}
 	\item Bass confusion, where the estimation has the same root and quality as the reference, but has a different bass (e.g., confusion between root position and inversion);
 	\item Seventh confusion, where the estimation has the same root and bass as the reference, but has a different quality with regard to the seventh type (e.g., confusion between maj and maj7, between 7 and maj7, or between min/b3 and min7/b3).
@@ -969,7 +971,7 @@ The rationale behind these tolerations is that if such confusions happen, the di
 %By clarifying that, SeventhsBass is the strictest evaluation among all; Sevenths and MajMinBass are less strict, both with relaxation of one confusion type; MajMin is the loosest, with both types tolerated.
 
 % ** according to R2, not necessary to show both figures
-Figure~\ref{fig:3-ds} is a boxplot showing the amount of these confusions/tolerations for all system variants implemented in this paper. In the plot, the amount of bass confusions (S-SB) is very focused around 2, while the other two differences are also focused with less than 2.5 between the first and third quartiles.
+Figure~\ref{fig:3-ds} is a boxplot showing the amount of these confusions/tolerations for all system variants implemented in this chapter. In the plot, the amount of bass confusions (S-SB) is very focused around 2, while the other two differences are also focused with less than 2.5 between the first and third quartiles.
 
 \subsection{Baseline Comparison} \label{sec:3-p9}
 
@@ -1130,7 +1132,7 @@ JayChou 2015 test is probably the most convincing one, since on one had none of 
 Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of maj, min and sevenths (probably > 90\%), which is very similar to the chord composition of the Isophonic set. Therefore systems that only support a small chord vocabulary will have a huge advantage by not being able to have confusions on long-tail chords.
 
 \section{On Smaller Vocabulary}
-This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a comparison between the proposed system framework and other approaches, a set of experiments are conducted using two smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (also mentioned in Section~\ref{sec:3-2-largevocab}). For MajMin system implementation, each label in the training set will be mapped to its MajMin form following a normal mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy \cite{mauch2010automatic} is followed.
+This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a comparison between the proposed system framework and other approaches, a set of experiments are conducted using two smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (also mentioned in Section~\ref{sec:2-largevocab}). For MajMin system implementation, each label in the training set will be mapped to its MajMin form following a normal mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy \cite{mauch2010automatic} is followed.
 
 \subsection{On MajMin}
 Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand the CQA of these systems are all much lower because of a much smaller vocabulary than Chordino.
@@ -1221,15 +1223,15 @@ It is difficult to make any conclusive statement out of these three different ta
 \section{Summary} \label{sec:3-concln}
 This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in LVACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable large vocabulary segmentation-classification ACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
 
-Within the range of our experiments, the results indicate that among the three proposed deep learning models, BLSTM-RNN is the most balanced one for large vocabulary ACE solution, while both MLP and DBN tend to over-fit the most common chords. The bass-treble chromagram (-ch) feature contains strong prior knowledge about chord classification that could highly affect the performance of the related models. In contrast, the tuned notegram (-ns) feature is more suitable for deep learning tasks. Both MLP and BLSTM-RNN benefits from more training data at the -ns level.
+Within the range of the experiments in Section~\ref{sec:3-res}, the results indicate that among the three proposed deep learning models, BLSTM-RNN is the most balanced one for large vocabulary ACE solution, while both MLP and DBN tend to over-fit the most common chords. The bass-treble chromagram (-ch) feature contains strong prior knowledge about chord classification that could highly affect the performance of the related models. In contrast, the tuned notegram (-ns) feature is more suitable for deep learning tasks. Both MLP and BLSTM-RNN benefits from more training data at the -ns level.
 
-Despite the best proposed systems outperform the baseline system in large vocabulary, all the testing scores presented in this paper are far less than 100\%. There are at least three reasons as explained in the following.
+Despite the best proposed systems outperform the baseline system in large vocabulary, all the testing scores presented in this chapter are far less than 100\%. There are at least three reasons as explained in the following.
 
 % while BLSTM-RNN generalize better in all categories.
 %Unlike MLP and DBN, it takes most advantage of low level features, and generalizes better and better towards both common and long-tail chords given more and more training data.
 
 
-Firstly, the performance of the proposed framework is upper-bounded by the segmentation performance of the GMM-HMM process introduced in Section~\ref{sec:3-chordino-like sg}, and the performance of this process on our test set is about 84\%.
+Firstly, the performance of the proposed framework is upper-bounded by the segmentation performance of the GMM-HMM process introduced in Section~\ref{sec:3-chordino-like sg}, and the performance of this process on the test set is about 84\%.
 
 Secondly, the segment tiling process introduces bias to the system, since it assumes a chord can be correctly recognized after its original features are tiled into several frames of averaged feature. This process could help prevent over-fitting by regularizing the degree of freedom in the input, but at times it scarifies important information conveyed in the original variable-frame features.
 

@@ -171,8 +171,8 @@ In tonal music, the pitch relationships that establish a single pitch class as a
 There are {\it major key} and {\it minor key}, characterized by their own {\it major scale} and {\it minor scale}. Defining a {\it whole step} (W) as an interval containing two consecutive semitones, and a {\it half step} (H) as containing one semitone, the two scales can be expressed as two ordered lists:
 \begin{equation}
 \begin{split}
-\mathit{major\,scale=(W,W, H,W,W,W, H),\\
-minor\,scale=(W,H,W,W,H,W,W),}
+\mathit{major\,scale=(W,W, H,W,W,W, H)},\\
+\mathit{minor\,scale=(W,H,W,W,H,W,W),}
 \end{split}
 \end{equation}
 The keys and scales can be named after the starting pitch class, such as ``C major scale'' and ``D minor scale'', and the keys, ``C major key'' and ``D minor key''.  These seven-pitch scales are {\it diatonic}, regardless of the starting pitch class. Chord progressions that built upon these scales are decisive clues to the underlying keys. A {\it diatonic chord progression} is a sequence of seven chords built on a diatonic scale. For example, in C major key, a diatonic chord progression can be:
@@ -781,8 +781,8 @@ All above metrics compute effect score only if a {\it chord matching function} i
 \begin{equation}
 M(C_G,C_E)=
 \begin{cases}
-\mathit{1 \quad \text{if $C_G$ matches $C_E$} \\
-0 \quad \text{otherwise}}
+1 \quad \text{if $C_G$ matches $C_E$} \\
+0 \quad \text{otherwise}
 \end{cases}
 \end{equation}
 where $C_G$ is the ground truth label and $C_E$ is the estimated label. At the early years of ACE, chords are matched as they are \cite{fujishima1999realtime,sheh2003chord,bello2005robust}. Two labels are the same if and only if they are the same label. Since then, different $M$ has been used notably in MIREX (Music Information Retrieval Evaluation Exchange) \footnote{\url{http://www.music-ir.org/mirex/wiki/MIREX\_HOME}} \cite{downie2008music}, which is a yearly event that aims at advancing various MIR technologies through extensive evaluations. ACE has been one of the MIREX tasks since 2008. Because different systems may support different vocabularies, various $M$s has been proposed to try to make a fair comparison between them.
