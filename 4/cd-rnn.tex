@@ -123,14 +123,14 @@ training data size & J; CJ; CJK; CJKU; CJKUR \\ \hline
 \subsection{Overall Performance}
 Table~\ref{tab:4-overallres} shows the overall results in SeventhsBass evaluation. Generally speaking, the two best variants (in terms of SB), CJKU and CJKUR, largely outperform Chordino in both SB and S, and are fairly compared with Chordino in Mm and MmB, though significantly fall short in terms of SQ.
 
-In terms of SB, from J to CJKUR the scores increase in a diminishing way as the amount of training data increase (Figure~\ref{fig:3-SB-traindata}). Such increase is understandable since more training data leads to better generalization ability in an unknown test set drawn from a similar population. But the diminishing return is undesirable, especially for the small improvement from CJK to CJKU, and the no improvement from CJKU to CJKUR. In terms of SOSB, it is very obvious that systems with EC training have much better performances on long-tail chords. However, their SB scores are all lower than the random training scheme counterparts.
+In terms of SB, from J to CJKUR the scores increase in a diminishing way as the amount of training data increase (Figure~\ref{fig:3-SB-traindata}). Such increase is understandable since more training data leads to better generalization ability in an unknown test set drawn from a similar population. But the diminishing return is undesirable, especially for the small improvement from CJK to CJKU, and the no improvement from CJKU to CJKUR. In terms of CQA, it is very obvious that systems with EC training have much better performances on long-tail chords. However, their SB scores are all lower than the random training scheme counterparts.
 \begin{table}[htb]
 \caption{Overall WCSR scores. B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, SQ = Segmentation Quality; The asterisks indicate systems with even chance training.}
 \label{tab:4-overallres}
 \centering
 \scriptsize
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
-System & B & Mm & MmB & R & S & SB & SQ & SOSB \\ \hline
+System & B & Mm & MmB & R & S & SB & SQ & CQA \\ \hline
 Chordino & 76.41 & \textbf{74.30} & \textbf{71.40} & \textbf{77.19} & 52.99 & 50.60 & \textbf{83.87} & 299.01\\ \hline
 J& 67.66 & 65.38 & 61.80 & 69.06 & 54.21 & 50.86 & 71.72 & 230.30 \\ \hline
 J* & 68.48 & 65.05 & 61.90 & 68.96 & 53.94 & 51.10 & 71.85 & 298.42 \\ \hline
@@ -214,7 +214,7 @@ From J to CJKUR, as depicted in Figure~\ref{fig:3-bass-sevenths-confusion}, the 
     title style = {font=\scriptsize},
     xlabel={training data size},
     x label style={font=\scriptsize},
-    ylabel={CSR},
+    ylabel={CSR $\times$ 100},
     y label style={font=\scriptsize},
     ymin=0, ymax=15,
     symbolic x coords={J,CJ,CJK,CJKU,CJKUR},
@@ -256,7 +256,7 @@ From J to CJKUR, as depicted in Figure~\ref{fig:3-bass-sevenths-confusion}, the 
     title style = {font=\scriptsize},
     xlabel={training data size},
     x label style={font=\scriptsize},
-    ylabel={CSR},
+    ylabel={CSR $\times$ 100},
     y label style={font=\scriptsize},
     ymin=0, ymax=40,
     symbolic x coords={J,CJ,CJK,CJKU,CJKUR},
@@ -306,7 +306,7 @@ From J to CJKUR, as depicted in Figure~\ref{fig:3-bass-sevenths-confusion}, the 
     title style = {font=\scriptsize},
     xlabel={training data size},
     x label style={font=\scriptsize},
-    ylabel={CSR},
+    ylabel={CSR $\times$ 100},
     y label style={font=\scriptsize},
     ymin=9, ymax=80,
     symbolic x coords={J,CJ,CJK,CJKU,CJKUR},
@@ -363,7 +363,7 @@ This also explains the up and down irregularities in the WCSR trend of $M7$ and 
 Special attention is given to the $7$ chord in Table~\ref{tab:4-detailres}, where Chordino scores as high as 41\%, CJKU scores 21.5\%, and all others score less than 20\%. There is a huge gap between the baseline and the proposed systems' performances. Chordino is originally manually tuned against TheBeatles180 dataset, and that is why it gets a high score. This test set contain various song styles, including a lot of bluesy songs with progressions of \textit{dominant 7th}s. And many of these are rendered in a way with dynamic bass lines rather than static ones. But the population of $7$s in CJK, or at least in CJ, is mostly static, so that the system does not learn much about dynamic $7$s. By adding dataset U and R, which contain more examples of dynamic $7$s, the systems seem to learn and make better prediction of dynamic $7$s in the test set.
 
 \subsection{The Even Chance Training Scheme}
-As shown in Table~\ref{tab:4-overallres}, generally the incorporation of EC training downgrade the overall performances in all SeventhsBass categories, including the segmentation quality. However, it improves a lot the versatility score SOSB (Figure~\ref{fig:3-EC-SOSB}). Without using EC, none of the systems can surpass Chordino in SOSB, but with EC, two of them outscore Chordino for as many as 20 points. This can be reflected in Table~\ref{tab:4-detailres}, where systems score higher in long-tail chords such as $M/5$, $M/3$ and $7/b7$ mostly with EC than without EC. And those non-zero scores for the VERY long-tail chords, such as $m7/5$, $m7/b7$ and $m/b3$ are mostly found in EC trained entries. The major drawback of EC is that it tends to downgrade the scores of ordinary categories such as $M$ and $m$.
+As shown in Table~\ref{tab:4-overallres}, generally the incorporation of EC training downgrade the overall performances in all SeventhsBass categories, including the segmentation quality. However, it improves a lot the versatility score CQA (Figure~\ref{fig:3-EC-CQA}). Without using EC, none of the systems can surpass Chordino in CQA, but with EC, two of them outscore Chordino for as many as 20 points. This can be reflected in Table~\ref{tab:4-detailres}, where systems score higher in long-tail chords such as $M/5$, $M/3$ and $7/b7$ mostly with EC than without EC. And those non-zero scores for the VERY long-tail chords, such as $m7/5$, $m7/b7$ and $m/b3$ are mostly found in EC trained entries. The major drawback of EC is that it tends to downgrade the scores of ordinary categories such as $M$ and $m$.
 
 \begin{figure}[htb]
 \centering
@@ -377,7 +377,7 @@ As shown in Table~\ref{tab:4-overallres}, generally the incorporation of EC trai
     enlargelimits=0.2,
     legend style={at={(0.5,-0.6)},
     anchor=north,legend columns=-1},
-    ylabel={SOSB},
+    ylabel={CQA},
     y label style={font=\scriptsize},
     symbolic x coords={J,CJ,CJK,CJKU,CJKUR},
     x tick label style={font=\scriptsize},
@@ -392,8 +392,8 @@ As shown in Table~\ref{tab:4-overallres}, generally the incorporation of EC trai
 \legend{CR,EC}
 \end{axis}
 \end{tikzpicture}
-\caption{Completely random (CR) training v.s. even chance (EC) training, in terms of SOSB}
-\label{fig:3-EC-SOSB}
+\caption{Completely random (CR) training v.s. even chance (EC) training, in terms of CQA}
+\label{fig:3-EC-CQA}
 \end{figure}
 
 \subsection{Segmentation Quality}

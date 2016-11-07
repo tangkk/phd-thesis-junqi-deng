@@ -397,7 +397,7 @@ The final mapping is not so obvious as it may seem. Although there are already a
 \end{algorithm}
 With this, the most important notes are mapped to the most important contours, and contour with larger areas will contain more notes. But since multiple notes cannot be mapped to a single key, they need to be decoupled  within a contour that has more than one note. Instead of further separating a shape-unpredictable contour into several sub-contours, it should be noted that the real ``key" in question is composed of pixels, and thus a heuristic method is used to decouple the notes is to distribute their keys across the contour according to a formula related to pixels and their RGB value:
 \begin{equation}
-noteIdx = ((X + Y) \% 10 + (R + G + B)) \% (15\ or\ 17)
+\mathit{noteIdx = ((X + Y) \% 10 + (R + G + B)) \% (15\ or\ 17)}
 \end{equation}
 Where 15 or 17 is the number of notes. This whole scheme tries to make position affect less
 and RGB affect more, while making sure all the notes are included regardless of the image.
