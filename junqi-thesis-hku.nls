@@ -3,76 +3,76 @@
  \nomgroup{A}
 
   \item [{ACE}]\begingroup automatic chord estimation\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
+  \item [{ACQA}]\begingroup Average Chord Quality Accuracy\nomeqref {{\rm  0}.0}
+		\nompageref{xvii}
   \item [{ASR}]\begingroup automatic speech recognition\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{BLSTM}]\begingroup bidirectional long short-term memory\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{BRNN}]\begingroup bidirectional recurrent neural network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{CD}]\begingroup contrastive divergence\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{CNN}]\begingroup convolutional neural network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{CQT}]\begingroup constant-Q transform\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{CRF}]\begingroup conditional random field\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{CSR}]\begingroup chord symbol recall\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{DBN}]\begingroup deep belief network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{DFT}]\begingroup discrete Fourier transform\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{DNN}]\begingroup deep neural network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{DYBM}]\begingroup dynamic Bayesian network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{GMM}]\begingroup Gaussian mixture model\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{HMM}]\begingroup hidden Markov model\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{HPCP}]\begingroup harmonic pitch class profile\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{ICA}]\begingroup independent component analysis\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{LSTM}]\begingroup long short-term memory\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{LV}]\begingroup large vocabulary\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{MIR}]\begingroup music information retrieval\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{MIREX}]\begingroup music information retrieval exchange\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{MLN}]\begingroup Markov logic network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{MLP}]\begingroup multi-layer perceptron\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{NNLS}]\begingroup non-negative least square\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{PCA}]\begingroup principle component analysis\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{PCD}]\begingroup persistent contrastive divergence\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{PCP}]\begingroup pitch class profile\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{RBM}]\begingroup restricted Boltzmann machine\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{RCO}]\begingroup relative correct overlap\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{RNN}]\begingroup recurrent neural network\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{SGD}]\begingroup stochastic gradient descent\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
-  \item [{SOSB}]\begingroup sum of SeventhsBass\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{SQ}]\begingroup segmentation quality\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{STFT}]\begingroup short-time Fourier transform\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{SVM}]\begingroup support vector machine\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
   \item [{WCSR}]\begingroup weighted chord symbol recall\nomeqref {{\rm  0}.0}
-		\nompageref{xv}
+		\nompageref{xvii}
 
 \end{thenomenclature}
