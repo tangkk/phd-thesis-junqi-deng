@@ -6,7 +6,7 @@
 \chapter{Background and Related Work}\label{cp:background} % top level followed by section, subsection
 
 
-This chapter is an introduction to the background and related works that support the ACE research in this thesis. Section~\ref{sec:2-fund} gets the readers familiarized with the musical fundamentals that are necessary for understanding ACE. Section~\ref{sec:2-review} examines an exhaustive list of the ACE literature that reveals the evolution and variation of both expert knowledge and machine learning driven ACE approaches in various aspects. This is followed by a review of ACE evaluation methods in Section~\ref{sec:2-eval}. This chapter will be summarized and concluded in Section~\ref{sec:2-summary} with pointers to the current research gaps.
+This chapter is an introduction to the background and related works that support the ACE research in this thesis. Section~\ref{sec:2-fund} gets the readers familiarized with the musical fundamentals that are necessary for understanding ACE. Section~\ref{sec:2-review} examines an exhaustive list of ACE literatures that reveals the evolution and variation of both expert knowledge and machine learning driven ACE approaches in various aspects. This is followed by a review of ACE evaluation methods in Section~\ref{sec:2-eval}. This chapter will be summarized and concluded in Section~\ref{sec:2-summary} with pointers to the current research gaps that lead to the main content of the thesis.
 
 
 %The discussion of system design and evaluation is bridged by Section~\ref{sec:2-vocab} that details a few arguments surrounding the issue of recognizing large vocabulary. Then the chapter is proceeded with a brief introduction to the system evaluation methods in general, and their applications to different vocabularies (Section~\ref{sec:2-eval}).
@@ -15,32 +15,31 @@ This chapter is an introduction to the background and related works that support
 
 % ----------------------- contents from here ------------------------
 \section{Musical Fundamentals} \label{sec:2-fund}
-This section introduces a necessary amount of musical concepts, that on one hand serves as the basis of building an ACE system, and on the other hand facilitates the readers' understanding of theoretical underpinnings of the current research.
+This section introduces a necessary amount of musical concepts, that on one hand serves as the basis for building an ACE system, and on the other hand facilitates the readers' understanding of the theoretical underpinnings.
 
 %The {\it music} in this context is assumed to be {\it Western tonal music}
 
 \subsection{Basic Concepts}
-Music can be understood as an organized sound sequence composed of pitches, noise and silence. The art of music lies very much in the design and arrangement of pitches. Therefore it is of principle need to understand the concept of pitch, upon which we can further understand other related important concepts that gradually lead to the concept of chord.
+Music can be understood as an organized sound sequence composed of pitches, noise and silence. The art of music lies very much in the design and arrangement of pitches. Therefore it is of principle need to understand the concept of pitch, upon which we can further understand other related concepts that gradually lead to the concept of chord.
 
 \Hsection{Pitch}
 {\it Pitch}, by definition \cite{randel1999harvard}, is:
 \begin{quote}
 The perceived quality of a sound that is chiefly a function of its fundamental frequency - the number of oscillations per second (called *Hertz, abbr. Hz) of the sounding object or of the particles of air excited by it.
 \end{quote}
-According to this definition, pitch can be understood as a subjective measure of a sound's fundamental frequency. Although subjective, people usually use {\it pitch} to actually refer to the concept of {\it fundamental frequency} itself. In this thesis, unless otherwise clarified, the term {\it pitch} and {\it fundamental frequency} are used interchangeably. Sometimes {\it pitch} can also be used interchangeably with {\it tone} \cite{randel1999harvard}, which is: ``A sound of definite pitch; a pitch.''
+According to this definition, pitch can be understood as a subjective measure of a sound's fundamental frequency. Although subjective, people usually use {\it pitch} to actually refer to the {\it fundamental frequency} itself. In this thesis, unless otherwise clarified, the terms {\it pitch} and {\it fundamental frequency} are used interchangeably. Sometimes {\it pitch} can also be substituted with {\it tone} \cite{randel1999harvard}, which is: ``a sound of definite pitch; a pitch.''
 
 A pitch usually may not only contain its fundamental frequency, but also a {\it harmonic series}, or {\it harmonics}, which is \cite{randel1999harvard}:
 \begin{quote}
 In acoustics, a series of frequencies, all of which are integral multiples of a single frequency termed the fundamental.
 \end{quote}
-For example, when a string is pluck, it generates a pitch with harmonics, and this is mainly because of the physical phenomenon of standing wave \cite{helmholtz2009sensations}.
+For example, when a guitar string is pluck, it generates a pitch with harmonics, and this is mainly because of the physical phenomenon of standing wave \cite{helmholtz2009sensations}.
 
 \Hsection{Note}
-Pitch and note and closely related. {\it Note}, by definition \cite{randel1999harvard}, is:
+Pitch and note are closely related. {\it Note}, by definition \cite{randel1999harvard}, is:
 \begin{quote}
 A symbol used in musical notation to represent the duration of a sound and, when placed upon a staff, to indicate its pitch; more generally (especially in British usage), the pitch itself.
 \end{quote}
-
 It is easily understood that {\it note} is a symbol of pitch and its duration, but as a generally acceptable usage, it can also be referred to the pitch itself. With the concept of note, it is not difficult to understand the concept of {\it interval}.
 
 \Hsection{Interval}
@@ -48,16 +47,16 @@ It is easily understood that {\it note} is a symbol of pitch and its duration, b
 \begin{quote}
 The relationship between two pitches. For purpose of Western tonal music, intervals are named according to ... the number of semitones (the smallest interval in the Western system) between the two pitches.
 \end{quote}
-The interval between two pitches is usually measured as the their ratio (i.e., the ratio of the fundamental frequencies).
+The interval between two pitches is usually measured as the their ratio (i.e., the ratio of their fundamental frequencies).
 
 \Hsection{Equal Temperament}
-For any tonal music system, there must be a kind of {\it temperament} that defines the relationship among different pitches that an instrument produce. Well known temperaments include Pythagorean, just intonation, mean-tone, well temperament and equal temperament. Interested reader can refer to \cite{barbour2004tuning} for more information on this topic. Within all these temperaments, an {\it octave} is defined as an interval where the ratio of two pitches is 2:1. %The differences among them are in the slight adjustments of intervals that are smaller than an octave.
+For any tonal music system, there must be a kind of {\it temperament} that defines the relationship among different pitches that an instrument produces. Well known temperaments include Pythagorean, just intonation, mean-tone, well temperament and equal temperament. Interested reader can refer to \cite{barbour2004tuning} for more information on this topic. Within all these temperaments, an {\it octave} is defined as an interval where the ratio of two pitches is 2:1. %The differences among them are in the slight adjustments of intervals that are smaller than an octave.
 
 The most dominant temperament in modern Western style music, including the modern pop, rock, jazz and many other styles, is {\it equal temperament}, particularly the {\it twelve-tone equal temperament}. In this temperament, an octave contains 12 equally-sized semitones, each has an interval of $\sqrt[12]{2} $.
 
 Within a 12-tone-equal-tempered octave, if we name the first pitch as $C$, then the pitch sequence can be normally named as:
 $C$, $C\#/Db$, $D$, $D\#/Eb$, $E$, $F$, $F\#/Gb$, $G$, $G\#/Ab$, $A$, $A\#/Bb$, $B$
-where ``/'' means ``or'', $\#$ means with one semitone higher, and $b$ means with one semitone lower. The next pitch of this sequence will be an octave above the original $C$. To differentiate octaves, in scientific pitch notation \cite{tuningstandard} an Arabic number is usually appended to the letter notes, such as $C4$, $A3$, $C5$.
+where ``/'' means ``or'', $\#$ means with one semitone higher, and $b$ means with one semitone lower. The next pitch of this sequence will be an octave above the original $C$. To differentiate octaves, in scientific pitch notation \cite{tuningstandard} an Arabic number is usually appended to the pitch names, such as $C4$, $A3$, $C5$.
 
 \Hsection{Pitch Class and Octave Equivalence}
 ``A pitch without reference to the octave or register in which it occurs'' is a {\it pitch class} \cite{randel1999harvard}. Humans are reported to have the ability to perceive pitch class. This perceptual phenomenon is called {\it octave equivalence} \cite{randel1999harvard,boring1942sensation}:
@@ -67,25 +66,23 @@ The feature of musical perception according to which all pitches separated by on
 \end{quote}
 
 \Hsection{Tuning}
-Now that a equal temperament can be set in terms of any pitch sequence that meets the requirement, there is technically not any hard constraints in terms of pitch frequencies. For example, the note $Bb5$ can be of $1000\,Hz$, or $2000\,Hz$, or just any number like $23.75892\,Hz$, as long as the sequence is equal-tempered. With random frequency constraint, any two instruments have almost no chance to be in tuned. In order to get instruments ``in tuned'', there shall be some kind of frequency constraint, or ``tuning''. {\it Tuning}, by musical definition \cite{randel1999harvard}, is:
-
+Now that an equal temperament can be set in terms of any pitch sequence that meets the requirement, there is technically not any hard constraint on pitch frequencies. For example, the note $B5$ can be of $1000\,Hz$, or $2000\,Hz$, or just any number like $23.75892\,Hz$, as long as the sequence is equal-tempered. With random frequency constraint, any two instruments have almost no chance to be in tuned. In order to get instruments ``in tuned'', there shall be some kind of frequency constraint, or ``tuning''. {\it Tuning}, by musical definition \cite{randel1999harvard}, is:
 \begin{quote}
 The act of adjusting the fundamental sounding frequency or frequencies of an instrument, usually in order to bring it or them into agreement with some predetermined pitch.
 \end{quote}
-
-A standard tuning normally adopted in Western tonal music is $A4 = 440\,Hz$, where $A4$ stands for the $A$ note above $C4$ or the middle $C$, which could be illustrated as the fourth $C$ key on a standard 88-key piano keyboard.
+A standard tuning normally adopted in Western tonal music is $A4 = 440\,Hz$, where $A4$ stands for the $A$ note above $C4$ (or the middle $C$), which could be illustrated as the fourth $C$ key on a standard 88-key piano keyboard.
 
 \Hsection{Intervals Within an Octave}
 All the music objects considered in this thesis are assumed to be in 12-tone equal temperament, and very close to standard tuning. Therefore it is very useful to study a few common intervals within such temperament system.
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.6\columnwidth, height=0.08\columnwidth]{2/figures/intervals.PNG}
+\includegraphics[width=0.8\columnwidth, height=0.1\columnwidth]{2/figures/intervals.PNG}
 \caption{Music interval examples}
 \label{fig:2-mi}
 \end{figure}
 
-Figure~\ref{fig:2-mi} shows a list of intervals and their short notations. The number of semitones is indicated in the bracket that follows. All intervals are built upon $C4$, denoted by the note on the extra line below the staff. These intervals are:
+Figure~\ref{fig:2-mi} shows a list of intervals and their short notations. All intervals are built upon $C4$, denoted by the note on the extra line below the staff. These intervals are:
 
 \begin{enumerate}[label=(\alph*)]
 \item minor second - m2 (1)
@@ -101,25 +98,22 @@ Figure~\ref{fig:2-mi} shows a list of intervals and their short notations. The n
 \item major seventh - M7 (11)
 \item perfect octave - P8 (12)
 \end{enumerate}
-The interval that contains $0$ semitone is called {\it unison} or {\it perfect unison} (P1), meaning that the two pitches are equal in fundamental frequencies. %These intervals are the basic elements of more complex music structures such as chords and scales. In the following subsection, the concept of chord will be explained based on the understanding of intervals.
+The number of semitones is indicated in the bracket next to the interval name. The interval that contains $0$ semitone is called {\it unison} or {\it perfect unison} (P1), meaning that the two pitches are equal in fundamental frequencies. %These intervals are the basic elements of more complex music structures such as chords and scales. In the following subsection, the concept of chord will be explained based on the understanding of intervals.
 
 \subsection{Chords and Chord Progressions}
-This subsection elaborates the concept of chord and chord progression based on the more fundamental concepts of pitch and interval.
+This subsection elaborates the concept of chord and chord progression based on the concepts of pitch and interval.
 \Hsection{Chord}
 {\it Chord} is one of the most important concepts in this thesis, which deals with automatic chord estimation technologies. {\it Chord}, by definition \cite{randel1999harvard}, is:
-
 \begin{quote}
 Three or more pitches sounded simultaneously or functioning as if sounded simultaneously; two such pitches are normally referred to as an interval.
 \end{quote}
-
 All chords considered in this thesis are under equal temperament. In this sense, a chord can be decomposed into several intervals. As the above dictionary entry further elaborates:
-
 \begin{quote}
 In the analysis of tonal music, all chords may be regarded as consisting of or deriving from two or more thirds (whether major or minor) arranged one above another (e.g. G-B-D-F).
 \end{quote}
 
 A chord with three pitches is called a {\it triad}, with four pitches a {\it tetrad}. A triad is composed of two intervals, while a tetrad is composed of three. Assuming octave equivalence, Table~\ref{tab:2-chords} presents five frequently used triads and tetrads with examples shown in terms of pitch classes (chord tones).
-\begin{table}
+\begin{table}[htb]
 \caption{Chord examples}
 \centering
 \scriptsize
@@ -133,25 +127,24 @@ Tetrad & minor seventh & min7 & m3 + M3 + m3 & Amin7: A-C-E-G \\ \hline
 \end{tabular}
 \label{tab:2-chords}
 \end{table}
+
 Every chord has a {\it root} \cite{randel1999harvard}
 \begin{quote}
 (A root is,) in tonal harmony, the fundamental or generating pitch of a triad or chord. If the pitches of a chord are arranged as a series of superimposed thirds, the lowest pitch is the root.
 \end{quote}
-For example, a $Fmaj7$ chord has a root $F$, while $maj7$ is the chord's {\it quality}, which is independent of the root. Root should be distinguished from {\it bass}, which is the ``lowest pitch of any single chord'' \cite{randel1999harvard}. The {\it root} concept has a symbolic meaning, while the {\it bass} concept has a perceptual meaning. Two other important concepts can be derived from their relationship \cite{randel1999harvard}:
+For example, a $Fmaj7$ chord has a root $F$, while $maj7$ is the chord's {\it quality}, which is independent of the root. Root should be distinguished from {\it bass}, which is the ``lowest pitch of any single chord'' \cite{randel1999harvard}. The {\it root} concept has a symbolic meaning, while the {\it bass} concept has a perceptual meaning. Two other important concepts can help clarify their relationship \cite{randel1999harvard}:
 \begin{itemize}
 \item A chord is in {\it root position}, if its {\it bass} is the same as its {\it root};
 \item Otherwise, a chord is an {\it inversion}
 \end{itemize}
-For example, Figure~\ref{fig:2-cmaj} shows three possible renderings of Cmaj chord. The first one satisfies the requirement of a {\it root position}, but the other two do not. The second one starts the chord with $E$ rather than $C$. This is called a {\it first inversion}, since its bass is the first pitch class next to the root in the original chord tone sequence. The third one starts with $G$, and this is called a {\it second inversion}.
-
+For example, Figure~\ref{fig:2-cmaj} shows three possible positions of Cmaj chord. The first one satisfies the requirement of a {\it root position}, but the other two do not. The second one starts the chord with $E$ rather than $C$. This is called a {\it first inversion}, since its bass is the first pitch class next to the root in the original chord tone sequence. The third one starts with $G$, and this is called a {\it second inversion}.
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.3\columnwidth, height=0.08\columnwidth]{2/figures/Cmaj.PNG}
+\includegraphics[width=0.4\columnwidth, height=0.1\columnwidth]{2/figures/Cmaj.PNG}
 \caption{C, C/E and C/G}
 \label{fig:2-cmaj}
 \end{figure}
-
-As for major chord, a shorthanded notation omits the ``maj'' and only keeps the root symbol. An inversion is labeled as the original chord symbol concatenated by its bass pitch class, bridged with a slash symbol ``/''. Thus these three instances are labeled $C$, $C/E$ and $C/G$ separately.
+As for major chord, a shorthanded notation omits the ``maj'' and only keeps the root symbol. An inversion is labeled as the original chord symbol concatenated by its bass pitch class, bridged with a slash symbol ``/''. Thus these three instances are labeled $C$, $C/E$ and $C/G$ respectively.
 
 \Hsection{Chord Progression}
 A {\it chord progression} or {\it harmonic progression} is \cite{schonberg1989structural}:
