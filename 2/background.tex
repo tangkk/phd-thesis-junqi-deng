@@ -217,7 +217,7 @@ Figure~\ref{fig:2-sheetmusic} to ~\ref{fig:2-chordtabs} shows excerpts of sheet 
 
 \newpage
 \section{Review of ACE Design} \label{sec:2-review}
-Automatic chord estimation is an algorithmic process that automates the transcription of chords within a piece of tonal music. This process includes the identification of chord boundaries and the recognition of chord labels. This section is a review of the ACE literature. First of all the general system framework is introduced in Section~\ref{sec:2-sys}; then various feature extraction methods are reviewed and compared in Section~\ref{sec:2-fe}, followed by a reexamination of different pattern recognition techniques in Section~\ref{sec:2-pm}; the issue of chord vocabularies will be raised in Section~\ref{sec:2-vocab}, which focuses on some arguments on large vocabulary and chord inversions.
+Automatic chord estimation is an algorithmic process that automates the transcription of chords within a piece of tonal music. This process includes the identification of chord boundaries and the recognition of chord labels. This section reviews the ACE literatures. First of all, the general system framework is introduced in Section~\ref{sec:2-sys}; then various feature extraction and feature learning methods are reviewed and compared in Section~\ref{sec:2-fe} and ~\ref{sec:2-fl}, followed by a reexamination of different pattern recognition techniques in Section~\ref{sec:2-pm} and ~\ref{sec:2-rnnpm}; the issue of chord vocabularies will be raised in Section~\ref{sec:2-vocab}, which focuses on some arguments on large vocabulary and chord inversions.
 
 %a closely related issue - ACE evaluation methods, will be reviewed in Section~\ref{sec:2-eval}; this literature review section will be concluded with a pointer to the current research gap in Section~\ref{sec:2-gap}.
 
@@ -230,57 +230,57 @@ Automatic chord estimation is an algorithmic process that automates the transcri
 \label{fig:2-sys}
 \end{figure}
 
-The general work-flow of an ACE system is depicted in Figure~\ref{fig:2-sys}. Similar to other pattern recognition systems \cite{duda2012pattern}, such as \textit{automatic speech recognition} (ASR) \cite{huang2001spoken}, it contains two big functional modules - feature extraction and pattern matching, both can be trained using ground truth data or powered by expert domain knowledge. Different from the working domains of other applications, it takes a piece of (chordal) tonal music audio as input, and exports a time-segmented chord sequence. The ``tonal musical'' nature of the input-output imposes key constraints to the two functional modules. As a result, the implementations of feature extraction and pattern matching modules, which are determined by the usage of expert knowledge and training data, have their own characteristics.
+The general work-flow of an ACE system is depicted in Figure~\ref{fig:2-sys}. Similar to other pattern recognition systems \cite{duda2012pattern}, such as \textit{automatic speech recognition} (ASR) \cite{huang2001spoken}, it contains two big functional modules - feature extraction and pattern matching, both can be trained using ground truth data or powered by expert domain knowledge. Different from the working domains of other applications, it takes a piece of (chordal) tonal music audio as input, and exports a time-segmented chord sequence. The ``tonal musical'' nature of the input-output imposes key constraints to the two functional modules. As a result, the implementations of the two modules have their own characteristics.
 
-In order to better understand ACE, it is beneficial to distinguish between the basic problem settings of ASR and ACE, both being roughly classified as audio-text transcription problems. Table~\ref{tab:2-asrace} presents two fundamental differences between an ASR and ACE.
-\begin{table}
-\caption{Input-Output of ASR and ACE}
+In order to better understand ACE, it is beneficial to distinguish between the basic problem settings of ASR and ACE, both being roughly classified as audio-text transcription problems. Table~\ref{tab:2-asrace} presents two fundamental differences between ASR and ACE.
+\begin{table}[htb]
+\caption{I/O of ASR and ACE}
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
 	& ASR & ACE \\ \hline
 Audio Input & speech & tonal music \\ \hline
-Text Output & word sequence & chord sequence and segmentation \\ \hline
+Text Output & word sequence & chord sequence with segmentation \\ \hline
 \end{tabular}
 \label{tab:2-asrace}
 \end{table}
-Note how the ``segmentation'' requirement separate the two otherwise similar problems fundamentally. Meanwhile, the prior knowledge that the chords are often segmented periodically/rhythmically allows a much different system design methodology.
+Note how the ``segmentation'' requirement of ACE fundamentally distinguishes the two otherwise similar problems. Meanwhile, the prior knowledge that the chords are often segmented periodically/rhythmically allows a more flexible system design methodology.
 
 % %In the following Section~\ref{sec:2-fe} and~\ref{sec:2-pm} various feature extractions and pattern matching techniques for ACE will be reviewed, and the use of expert knowledge and training data
 
 \subsection{Feature Extraction} \label{sec:2-fe}
-At first, the fundamental feature extraction paradigm will be introduced, and then different variants will be reviewed in terms of all categories of practical concerns.
+At first, the fundamental feature extraction paradigm will be introduced, and then different variants will be reviewed in terms of different practical concerns.
 
 \Hsection{Pitch Class Profile, Chroma and Chromagram}
-The first known ACE research is published in 1999 by Fujishima \cite{fujishima1999realtime}. In this work, he considers first ``transforms a fragment of the input sound stream to a DFT spectrum'', where DFT is {\it discrete-Fourier-transform}. The spectrum is then summarized into a {\it pitch class profile} (PCP), which is ``a twelve dimension vector which represents the intensities of the twelve semitone pitch classes''. PCP is calculated as follows:
+The first known ACE research is published in 1999 by Fujishima \cite{fujishima1999realtime}. In this work, his ACE algorithm firstly ``transforms a fragment of the input sound stream to a DFT spectrum'', where DFT is {\it discrete-Fourier-transform}. The spectrum is then summarized into a {\it pitch class profile} (PCP), which is ``a twelve dimension vector which represents the intensities of the twelve semitone pitch classes''. PCP is calculated as follows:
 \begin{equation}
 PCP(p) = \sum_{s.t.\,M(l)=p}{||X(l)||^2},
 \end{equation}
-where $X(l)$ is the DFT spectrum, and $M(l)$ is a table that maps the linear scale of DFT spectrum to the non-linear scale of pitch spectrum:
+where $X(l)$ is the DFT spectrum, and $M(l)$ is a table that maps the linear $N$-point DFT frequencies to the non-linear pitch class frequencies:
 \begin{equation}
-M(l) = round(12log_2({f_s} \cdot {l\over N})/f_{ref})\,mod\,12,
+M(l) = round(12 \times log_2({f_s} \cdot {l\over N})/f_{ref})\,mod\,12,
 \end{equation}
-where $l=1,2,...,N/2=1$, $f_s$ is the sampling frequency, and $f_{ref}$ is the reference frequency that is in $PCP(0)$. Repeat this process for every consecutive ``fragment'' of the input, it actually becomes a ``{\it short-time-Fourier-transform} (STFT) - PCP'' feature extraction approach, which will output a sequence of PCPs.
+where $l=1,2,...,N/2-1$, $f_s$ is the sampling frequency, and $f_{ref}$ is a reference frequency that corresponds to $p=0$. Repeat this process for every consecutive ``fragment'' of the input, it actually becomes a ``{\it short-time-Fourier-transform} (STFT) - PCPs'' feature extraction approach, which will output a sequence of PCPs.
 
-As a matter of fact, Fujishima's PCP is formally discussed as early as in 1964 by Shepard \cite{shepard1964circularity}, who proposes the concept of {\it chroma}. A chroma ``transforms frequency into octave equivalence classes'', as pointed out by Wakefield \cite{wakefield1999mathematical}, who in the same paper invents the term {\it chromagram} to ``extend the concept of chroma to include the dimension of time''. As a result, one can relate PCP directly to {\it chroma}, and a sequence of PCPs to chromagram.
+As a matter of fact, Fujishima's PCP is formally discussed much earlier in 1964 by Shepard \cite{shepard1964circularity}, who proposes the concept of {\it chroma}. A chroma ``transforms frequency into octave equivalence classes'', as pointed out by Wakefield \cite{wakefield1999mathematical}, who in the same paper invents the term {\it chromagram} to ``extend the concept of chroma to include the dimension of time''. As a result, one can relate PCP directly to {\it chroma}, and a sequence of PCPs to chromagram.
 
-Consequently, except for a few works that applies wavelet \cite{su2001multi}, or autocorrelation \cite{bello2000techniques,zenz2007automatic} for pitch tracking, the STFT-chromagram is the dominant feature extraction paradigm that all other following approaches resemble in various degrees.
+Consequently, except for a few works that applies wavelet \cite{su2001multi}, or autocorrelation \cite{bello2000techniques,zenz2007automatic} for pitch tracking, the ``STFT-chromagram'' is the dominant feature extraction paradigm that all other following approaches resemble in various degrees.
 
 \Hsection{Musical Concerns}
-Each DFT spectrum in STFT is linear spaced in frequency. But as recapped in Section~\ref{sec:2-fund}, that musical pitches are arranged in terms of the ratios of their fundamental frequencies. Therefore equal-tempered pitches are arrange linearly only within a log scale. This is depicted in Figure~\ref{fig:2-pitchplot}.
+Each DFT spectrum in STFT is linear spaced in frequency. But as recapped in Section~\ref{sec:2-fund}, musical pitches are arranged in terms of the ratios of their fundamental frequencies. Therefore equal-tempered pitches are arrange linearly only within a log scale. This is illustrated in Figure~\ref{fig:2-pitchplot}.
 \begin{figure}[htb]
 \centering
-\includegraphics[width=1\columnwidth, height=0.6\columnwidth]{2/figures/pitch-plot.eps}
+\includegraphics[width=1\columnwidth, height=0.8\columnwidth]{2/figures/pitch-plot.eps}
 \caption{Relationship between equal temperament note and frequency (note number from C0 to B8, totally 108 notes)}
 \label{fig:2-pitchplot}
 \end{figure}
-Using STFT to transform a musical audio easily leads to over-sampling of high frequency pitch, and under-sampling of low frequency pitch. A more fundamental reason behind this is that DFT transforms a time-domain signal with a fixed-size window over all frequencies \cite{oppenheim1983signals}, overlooking the fact that low frequency signals occupy longer time period to establish cycles.
+Using STFT to transform a musical audio easily leads to over-sampling of high frequency pitches, and under-sampling of low frequency pitches. The reason behind this is that DFT transforms a time-domain signal with a fixed-size window over all frequencies \cite{oppenheim1983signals}, overlooking the fact that low frequency signals occupy longer time period to establish cycles.
 
 A ``music friendly'' variant of DFT is proposed in 1991 by Brown \cite{brown1991calculation}, who uses variable length windows to capture a constant ``Q'' cycles in different frequencies:
 \begin{equation}
-X(k) = {1\over {N(k)}} \sum_{n=0}^{N(k)-1}{W(k,n)x(n)exp\{-j2\pi Qn/N(k)\}},
+X(k) = {1\over {N(k)}} \sum_{n=0}^{N(k)-1}{W(k,n)x(n)\exp\{-j2\pi Qn/N(k)\}},
 \end{equation}
-where $X(k)$ is the $k^{th}$ constant-Q spectrum bin, $N(k)$ is the $k^{th}$ window size, $W(k,\cdot)$ is the $k^{th}$ window and $x(n)$ is the $n^{th}$ input sample.
+where $Q$ is a constant, $X(k)$ is the $k^{th}$ constant-Q spectrum bin, $N(k)$ is the $k^{th}$ window size, $W(k,\cdot)$ is the $k^{th}$ window and $x(n)$ is the $n^{th}$ input sample. This process is called \textit{constant-Q transformation} (CQT).
 
 The first ACE system to use this technique is published by Nawab et al. \cite{nawab2001identification}, who use the constant-Q spectra as a pool to peaking picking fundamental frequencies that belong to different chords. Later Bello and Pickens \cite{bello2005robust}, Harte and Sandler \cite{harte2005automatic} start to apply this in a more straightforward chromagram context, where they compute a chroma (Harte and Sandler also name it {\it harmonic pitch class profile} (HPCP)) directly from the constant-Q spectrum as:
 \begin{equation}\label{eq:cqt-chroma}
@@ -288,11 +288,11 @@ C(b) = \sum_{m=0}^M |X(b+mB)| ,\, b \in [1,B],
 \end{equation}
 where $C(\cdot)$ is the chroma, $X(\cdot)$ is the constant-Q spectrum and $B$ is the total number of chroma bins. Depending on the value of $B$, the chroma may have different level of pitch resolution. Normal value of $B$ is 36 \cite{bello2005robust,harte2005automatic,oudre2010template,reed2009minimum,weil2009automatic,humphrey2012rethinking,cho2014improved}, corresponding to 3 bins per semitone, but other values such as 48, 96 or even not multiple of 12 are also possible.
 
-Mauch proposes a ``log-frequency spectrum'' approach \cite{mauch2010automatic} that resembles a constant-Q transformation but with slightly different flavor. He starts by noticing that:
+To solve a similar problem that CQT does, Mauch \cite{mauch2010automatic} instead proposes a ``log-frequency spectrum'' approach. He starts by noticing that:
 \begin{quote}
 The main problem in mapping the spectrum to a log-frequency representation is that in the low frequency range several log-frequency bins may fall between two DFT bins, while in high frequency regions the reverse is true.
 \end{quote}
-Thus he upsamples the DFT representation at first, and then downsamples it again in log-frequency scale. In order to perform the upsampling and downsampling, he uses two cosine interpolation kernels. The first kernel is:
+Thus his algorithm upsamples the DFT representation first, and then downsamples it again in log-frequency scale. In order to perform the upsampling and downsampling, the algorithm uses two cosine interpolation kernels. The first kernel is:
 \begin{equation}
 h(f,f_i) = 
 \begin{cases}
@@ -304,9 +304,7 @@ where $N_F$ is the DFT frame length and $f_i$ is the $i^{th}$ digital frequency 
 \begin{equation}
 M_f = \sum_{i=0}^{N_F} {h(f,f_i)X_i},
 \end{equation}
-where $X_i$ is the $i^{th}$ DFT bin.
-
-The second kernel is:
+where $X_i$ is the $i^{th}$ DFT bin. The second kernel is:
 \begin{equation}
 h_l(f,f_k) = 
 \begin{cases}
@@ -318,55 +316,55 @@ where $f_k$ is the $k^{th}$ downsampled digital frequency, and $\delta f(f)$ is 
 \begin{equation}
 \delta f(f) = f/Q,
 \end{equation}
-where in a 36 bins per octave case, as the author indicates, $Q=36/ln2 \approx 51.94$. $\delta f(f)$ makes sure that the upsampled spectrum will be mapped to a log-frequency spectrum as the kernel applies to it:
+where in a 36 bins per octave case, as Mauch indicates, $Q=36/ln2 \approx 51.94$. $\delta f(f)$ makes sure that the upsampled spectrum will be mapped to a log-frequency spectrum as the kernel applies to it:
 \begin{equation}
 Y_k = \sum_f h_l(f,f_k)M_f,
 \end{equation}
-where $Y_k$ is the final log-frequency spectrum. This approach, albeit not as theoretically sound as constant-Q transform, works very well in practice. Combining two kernels into a single operation, it becomes a linear-log transformation matrix as illustrated in Figure~\ref{fig:2-linearlog}.
+where $Y_k$ is the final log-frequency spectrum. This approach, albeit not as theoretically sound as constant-Q transform, works very well in practice. Combining two kernels into a single operation, it becomes a linear-log transformation matrix as illustrated in Figure~\ref{fig:2-linearlog}. Note that in many columns there are multiple non-zero entries.
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\columnwidth]{2/figures/linearlog.png}
+\includegraphics[width=0.7\columnwidth]{2/figures/linearlog.png}
 \caption{Linear-log transformation matrix}
 \label{fig:2-linearlog}
 \end{figure}
 
 %\Hsection{Tonal Centroid}
-As an effort to model the ``intervals'' instead of ``pitch classes'', and to further reduce the feature dimension, Harte et al. propose {\it tonal centroid} \cite{harte2006detecting}, which is inspired by Chew's ``Spiral Array'' \cite{chew2000towards}. It is a point in 6-dimension space, so that when a 12-dimension pitch class is mapped onto it, ``close harmonic relations such as fifths and thirds appear as small Euclidean distances''. Theoretically sound though, only a few authors explore this feature in their ACE systems \cite{lee2008acoustic,humphrey2012learning}.
+As an effort to model the ``intervals'' instead of ``pitch classes'', and to further reduce the feature dimension, Harte et al. propose {\it tonal centroid} \cite{harte2006detecting}, which is inspired by Chew's ``Spiral Array'' \cite{chew2000towards}. It is a point in 6-dimension space, so that when a 12-dimension pitch class is mapped onto it, ``close harmonic relations such as fifths and thirds appear as small Euclidean distances''. Technically sound though, only a few authors explore this feature in their ACE systems \cite{lee2008acoustic,humphrey2012learning}.
  
 \Hsection{Noise Removal}
-Another concern is that the noise within the audio will get into the chroma. It can be reduced along the time dimension, such as feature smoothing with a mean filter \cite{harte2005automatic,humphrey2012rethinking} or median filter \cite{khadkevich2009use,mauch2008discrete}, which applies to the feature across a number frames. Perhaps a more intuitive way to reduce noise from a time perspective is ``beat-averaging''\cite{bello2005robust,mauch2010approximate}, since the onsets and offsets of chords often coincide with beats \cite{goto1999real}. Moreover, structural information can also be leveraged \cite{mauch2009using,cho2011feature,cho2014improved} to smooth out noise within the audio feature.
+Another concern is that the noise within an audio will get into the chroma. It can be reduced along the time dimension, such as by smoothing with a mean filter \cite{harte2005automatic,humphrey2012rethinking} or median filter \cite{khadkevich2009use,mauch2008discrete}, which applies to the feature across a number frames. Perhaps a more intuitive way to reduce noise from a time perspective is by ``beat-averaging''\cite{bello2005robust,mauch2010approximate}, since the onsets and offsets of chords often coincide with beats \cite{goto1999real}. Moreover, structural information can also be leveraged \cite{mauch2009using,cho2011feature,cho2014improved} to smooth out noise within the audio feature.
 
-It can also be alleviated along the frequency dimension in several ways. Catteau et al. \cite{catteau2007probabilistic} subtracts from the original log-frequency spectrum a ``background spectrum'', which is computed by convolving the log-frequency spectrum with a 1-octave wide Hamming window. Alternatively, Varewyck et al. \cite{varewyck2008novel} computes the background spectrum by ``filtering the amplitude spectrum with a median filter''. Noticing that the source of noise is often the percussive instruments, Reed et al. \cite{reed2009minimum} attempts to remove noise by doing harmonic-percussive separation \cite{ono2008separation}. This method is also welcomed by later works such as \cite{ni2012end} and \cite{ueda2010hmm}.
+Noise can also be alleviated along the frequency dimension in several ways. Catteau et al. \cite{catteau2007probabilistic} subtracts from the original log-frequency spectrum a ``background spectrum'', which is computed by convolving the log-frequency spectrum with an one-octave wide Hamming window. Alternatively, Varewyck et al. \cite{varewyck2008novel} computes the background spectrum by ``filtering the amplitude spectrum with a median filter''. Noticing that the noise often comes from percussive instruments, Reed et al. \cite{reed2009minimum} attempts to remove noise by doing harmonic-percussive separation \cite{ono2008separation}. This method is also adopted in later works such as \cite{ni2012end} and \cite{ueda2010hmm}.
 
 Mauch \cite{mauch2010automatic} puts forward a ``standardization'' process that tries to reshape the spectra along frequency dimension. In this process, every log-frequency spectrum is first subtracted from its ``running mean'' similar to Catteau's background spectrum removal; it is then divided by the ``running standard'' similar to Klapuri's spectral whitening technique \cite{klapuri2006multiple}.
 
 \Hsection{Harmonics Removal}
-Harmonics could be considered another type of ``noise'' in chord estimation problem, since intuitively, human auditory system identify a chord by first identifying all the notes being played. Removing the harmonics from the signal is to some extent equivalent to recovering the true note activations, or fundamental frequencies.
+Harmonics could be considered another type of ``noise'' in chord estimation problem. This is because human auditory system identifies a chord by first identifying fundamental frequencies of all notes being played. Removing harmonics from the signal is to some extent equivalent to recovering the true note activations, or extracting fundamental frequencies.
 
 Lee proposes the {\it enhanced pitch class profile} (EPCP) \cite{lee2006automatic}. In his approach, the DFT spectrum is first transformed to a {\it harmonic product spectrum} (HPS) through the following process:
 \begin{equation}
 HPS(k) = \prod_{m=0}^M |X(2^mk)|,
 \end{equation}
-where $X(\cdot)$ is the DFT spectrum. In practice this process performs certain level of harmonics reduction to the original spectrum, resulting in a new spectrum that is more focused on the fundamental frequencies of the activated notes. The EPCP is then computed using the same equation~\ref{eq:cqt-chroma}.
+where $X(\cdot)$ is the DFT spectrum. In practice this process performs certain level of harmonics reduction to the original spectrum, resulting in a new spectrum that is more focused on the fundamental frequencies of the activated notes. The EPCP is then computed using equation~\ref{eq:cqt-chroma}.
 
-Similarly, Ryynänen and Klapuri invent another approach \cite{ryynanen2008automatic} with a similar consideration in mind. At the beginning of the feature extraction step, ``the salience, or strength, of each F0 candidate is calculated as a weighted sum of the amplitudes of its harmonic partials in a spectrally whitened signal frame'', where F0 means the fundamental frequency.
+Similarly, Ryynanen and Klapuri invent another approach \cite{ryynanen2008automatic} with a similar consideration in mind. At the beginning of the feature extraction step, ``the salience, or strength, of each F0 candidate is calculated as a weighted sum of the amplitudes of its harmonic partials in a spectrally whitened signal frame'', where F0 means the fundamental frequency.
 
 A more computation intensive yet theoretically sound approach is the ``approximate note transcription'' approach, which is a non-negative-least-square (NNLS) fitting process put forward by Mauch \cite{mauch2010approximate}. The process tries to fit the best linear combination of a predefined note harmonic series profiles to the log-frequency spectrum. Concretely, the log-spectrum $Y$ can be expressed as:
 \begin{equation} \label{eq:2-nnls}
 Y \approx Ex,
 \end{equation}
-where $E$ is a dictionary of note profiles, and $x$ is the note activation variable to be fit. Each entry of $E$ is a geometrically declining overtone amplitudes \cite{gomez2006tonal_b}:
+where $E$ is a dictionary of note profiles, and $x$ is the note activation variable to be fit. Each entry of $E$ is a sequence of geometrically declining overtone amplitudes \cite{gomez2006tonal_b}:
 \begin{equation}
 a_k=s^{k-1},\,s\in(0,1),
 \end{equation}
-where $k$ indicates the $k^{th}$ upper partials. A large $s$ means a slower decline. Normally $s$ is within $[0.6, 0.9]$. In order to find out an $x$ that minimize the difference between $Y$ and $Ex$, an NNLS method \cite{lawson1995solving} is used. The output of this process is usually called NNLS chroma.
+where $k$ indicates the $k^{th}$ upper partials. A larger $s$ means a slower decline. Normally $s$ is within $[0.6, 0.9]$. In order to find out an $x$ that minimizes the difference between $Y$ and $Ex$, an NNLS method \cite{lawson1995solving} is used. The output of this process is usually called NNLS chroma.
 
 \Hsection{Tuning Compensation}
-Despite standardized as $A4 = 440\,Hz$, the actual tuning of musical pieces differ from this from time to time. This is on one hand because of the difficulty of absolutely adjusting a pitch at a high frequency resolution, while on the other hand some pieces are actually deviating from the standard tuning deliberately. For example, as pointed out by Harte \cite{harte2010towards}, ``many of the Beatles songs deviate from this tuning (the standard tuning)''.
+Despite standardized as $A4 = 440\,Hz$, the actual tuning of musical pieces differ from this from time to time. This is on one hand because of the difficulty of absolutely adjusting a pitch at a high frequency resolution, and on the other hand some pieces are actually deviating from the standard tuning deliberately. For example, as pointed out by Harte \cite{harte2010towards}, ``many of the Beatles songs deviate from this tuning (the standard tuning)''.
 
-Human auditory system could easily neglect the slight detuning as it relates together the pitches with similar fundamental frequencies. But for a computer system, in an acoustic engineering perspective, the detuning phenomenon needs to be compensated. Sheh and Ellis \cite{sheh2003chord} are among the first to recognize this and use a 24-bin PCP instead of 12-bin to ``give some flexibility in accounting for slight variations in tuning''. Later, Harte \cite{harte2005automatic} introduces a tuning algorithm. This algorithm first quadratic interpolates on each 36-bin constant-Q spectrum, peak-picking them across every semitone, and then adjusts the chromagram bins according to the ``center tuning value'', which is determined as the maximum value of the histogram of the peaks. This algorithm is also adopted in subsequent works such as \cite{bello2005robust} and \cite{harte2006detecting}.
+Human auditory system could easily neglect the slight detuning as it easily relates together the pitches whose fundamental frequencies are close. But for a computer system, in an acoustic engineering perspective, the detuning phenomenon needs to be compensated. Sheh and Ellis \cite{sheh2003chord} are among the first to recognize this and use a 24-bin PCP instead of 12-bin to ``give some flexibility in accounting for slight variations in tuning''. Later, Harte \cite{harte2005automatic} introduces a tuning compensation algorithm. This algorithm first quadratic interpolates on each 36-bin constant-Q spectrum, peak-picks them across every semitone, and then adjusts the chromagram bins according to the ``center tuning value'', which is determined as the maximum value of the histogram of the peaks. This algorithm is adopted in subsequent works such as \cite{bello2005robust} and \cite{harte2006detecting}.
 
-Instead of ``histogram of peaks'' way of estimating detuning, there is anther type solution, first proposed by Dressler and Streich \cite{dressler2007tuning}, that interpret detuning as an angle within $[-\pi,\pi)$, where $\pi$ corresponds to half-semitone. Particularly, Mauch \cite{mauch2010automatic} implement a version of this scheme within his ACE system, where the amount of detuning is estimated as:
+Instead of estimating detuning as a ``histogram of peaks'', there is anther solution, first proposed by Dressler and Streich \cite{dressler2007tuning}, that interprets detuning as an angle within $[-\pi,\pi)$, where $\pi$ corresponds to half-semitone. Particularly, Mauch \cite{mauch2010automatic} implements a version of this solution within his ACE system, where the amount of detuning is estimated as:
 \begin{equation}\label{eq:2-tuning}
 \delta = { {wrap(-\varphi-{2\pi}/3)} \over {2\pi} },
 \end{equation}
@@ -374,20 +372,19 @@ where $wrap$ is a function wrapping its input to $[-\pi,\pi)$, and $\varphi$ is 
 \begin{equation}
 \tau=440\cdot2^{\delta/12},
 \end{equation}
-and the original tuning is thus updated by interpolating the original $N$-bin spectrogram $Y_i$ at $Y_{i+p}$, where:
+and the detuning is thus compensated by interpolating the original $N$-bin spectrogram $Y_i$ at $Y_{i+p}$, where:
 \begin{equation}
 p = (\log(\tau / 440) / \log(2)) \times N
 \end{equation}
-
 This angle based tuning compensation method is adopted in many ACE works such as \cite{papadopoulos2007large}, \cite{papadopoulos2008simultaneous}, \cite{mauch2008discrete}, \cite{reed2009minimum} and \cite{noland2009influences}.
 
 \Hsection{Bass Information}
-Human chord annotators sometimes recognize the chord bass before they figure out the chord itself. Therefore it is conceivably justifiable that an ACE system can treat high range and low range pitches differently. This leads to a separate consideration for bass information, which is first discussed by Yoshioka et al. \cite{yoshioka2004automatic}. Later, Sumi et al. \cite{sumi2008automatic} explore this again by adding a bass probability cue to Yoshioka's model.
+Human chord annotators sometimes recognize the chord bass before they figure out the chord itself. Therefore it is conceivably justifiable that an ACE system can treat high range and low range pitches differently. This leads to special consideration for bass information, which is first discussed by Yoshioka et al. \cite{yoshioka2004automatic}. Later, Sumi et al. \cite{sumi2008automatic} explore this again by adding a bass probability cue to Yoshioka's model.
 
-Ryynänen and Klapuri \cite{ryynanen2008automatic}, augment the chroma vector to be 24-bin, which contains a 12-bin low-frequency chroma and a 12-bin high-frequency chroma. The bass information in this approach is achieve by an explicit bass line transcription process. Mauch and Dixon \cite{mauch2010approximate,mauch2010simultaneous} look at a 24-dimension chromagram as a concatenation of a bass chromagram and a treble chromagram, where two chroma are computed by weighting an NNLS chroma with different profiles.
+Ryynanen and Klapuri \cite{ryynanen2008automatic}, augment the chroma vector to be 24-bin, which contains a 12-bin low-frequency chroma and a 12-bin high-frequency chroma. The bass information in this approach is gathered by an explicit bass line transcription process. Mauch and Dixon \cite{mauch2010approximate,mauch2010simultaneous} look at a 24-dimension chromagram as the concatenation of a bass chromagram and a treble chromagram, where each of them are computed by weighting a NNLS chromagram with different profiles.
 
 \Hsection{Short Summary}
-There are a few review articles on ACE feature extractions. Cho et al. \cite{cho2010exploring} explore some common variations in ACE systems, including different pre and post-filtering techniques mentioned previously. Jiang et al. \cite{jiang2011analyzing} analyze the effect of different chroma feature types on two popular pattern matching techniques. Finally, McVicar et al. \cite{mcvicar2014automatic} give a detailed technical review of all the feature extraction techniques, including various noise reduction and harmonic removal methods, up to 2013.
+There are a few review articles on ACE feature extractions. Cho et al. \cite{cho2010exploring} explore some common variations in ACE systems, including different pre- and post-filtering techniques mentioned previously. Jiang et al. \cite{jiang2011analyzing} analyze the effect of different chroma feature types on two popular pattern matching techniques. Finally, McVicar et al. \cite{mcvicar2014automatic} give a detailed technical review of most ACE feature extraction techniques, including various noise reduction and harmonic removal methods, up to 2013.
 
 %It is worth noting that, except for \cite{mauch2010approximate}, all the feature extraction approaches overlook the fact that bass information can help distinguishing root position chords from their inversions.
 
