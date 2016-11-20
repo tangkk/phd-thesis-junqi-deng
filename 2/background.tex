@@ -389,16 +389,16 @@ There are a few review articles on ACE feature extractions. Cho et al. \cite{cho
 %It is worth noting that, except for \cite{mauch2010approximate}, all the feature extraction approaches overlook the fact that bass information can help distinguishing root position chords from their inversions.
 
 \subsection{Feature Learning} \label{sec:2-fl}
-All the above discussed techniques are regarded as ``feature engineering'', in which manually designed features are extracted via handcrafted transformations. However, with various machine learning techniques, these features can actually be learned from the data \cite{bengio2009learning}, and these have been widely applied in numerous pattern recognition field such as computer vision \cite{hinton2006reducing}, automatic speech recognition and natural language processing \cite{deng2014deep}.
+All the above discussed techniques are regarded as ``feature engineering'', in which manually designed features are extracted via handcrafted transformations. However, with various machine learning techniques, these features can actually be learned from the data \cite{bengio2009learning}, and these have been widely applied in numerous pattern recognition fields such as computer vision \cite{hinton2006reducing}, automatic speech recognition and natural language processing \cite{deng2014deep}.
 
-Different from a machine learning classification problem, feature learning targets at the intermediate representations instead of the output labels. Therefore this process can be achieved by many unsupervised learning algorithms such as {\it principle component analysis} (PCA) \cite{jolliffe2002principal}, {\it independent component analysis} (ICA) \cite{hyvarinen2004independent}, and {\it k-means clustering} \cite{macqueen1967some}. It can also be done by neural networks or deep learning based models such as {\it deep belief network} (DBN) and {\it deep autoencoder} (DAE) \cite{bengio2009learning}. These algorithms normally do no require labeled data. Features can be learned using the unlabeled raw data.
+Different from a machine learning classification problem, feature learning targets at the intermediate representations instead of the output labels. Therefore this process can be achieved by many unsupervised learning algorithms such as {\it principle component analysis} (PCA) \cite{jolliffe2002principal}, {\it independent component analysis} (ICA) \cite{hyvarinen2004independent}, and {\it k-means clustering} \cite{macqueen1967some}. It can also be done by deep neural nets such as {\it deep belief network} (DBN) \cite{hinton2006fast} and {\it deep autoencoder} (DAE) \cite{bengio2009learning}. These algorithms normally do no require labeled data. Features can be learned using the unlabeled raw data.
 
-Certainly, supervised learning algorithms can also do this task. These include {\it logistic regression}, {\it support vector machines} and some deep learning models like {\it multilayer perceptrons} (MLP) and {\it recurrent neural network} (RNN). Since these are all discriminative models, they solely rely on the labeled data to learn, disregarding huge amount of information in the raw data themselves. Hence the features they learn will be good for classification purpose, but may not be sensible.
+Certainly, supervised learning algorithms are also suitable for this task. These algorithms/models include {\it logistic regression}, {\it support vector machines} and some deep learning models like {\it multilayer perceptrons} (MLP) and {\it recurrent neural network} (RNN). Since these are all discriminative models, they rely on the labeled data to learn, disregarding huge amount of information in the raw data itself. Hence the features they learn should be good for classification purpose, but may not be sensible for generative purpose.
 
-The following will discuss two important deep learning models that are recently used in ACE for feature learning purpose.
+The following will discuss two important deep learning models (or deep neural nets) that are recently used in ACE for feature learning purpose.
 
 \Hsection{Multilayer Perceptron}
-Multilayer Perceptron or feedforward neural network, is probably the most basic deep learning model that other models are built upon. Note that multilayer perceptrons may have a different meaning from feedforward neural network because the classical perceptron model \cite{rosenblatt1958perceptron} is different from a differentiable model (e.g., logistic, tanh, etc.) within a typical feedforward network \cite{rumelhart1988parallel}. But in this thesis, MLP is used to stand for a feedforward neural network, in order to avoid a sometimes confusing term {\it deep neural network} (DNN) \cite{deng2014deep}, which may refer to any type of neural network powered by deep learning technologies.
+Multilayer perceptron or feedforward neural network, is probably the most basic deep learning model that other models are built upon. Note that multilayer perceptron may have a different meaning from feedforward neural network because the classical ``perceptron'' model \cite{rosenblatt1958perceptron} is not the differentiable model (e.g., logistic, tanh, etc.) within a typical feedforward network \cite{rumelhart1988parallel}. But in this thesis, as in many other literatures, MLP is used to stand for a feedforward neural network, in order to avoid a sometimes confusing term {\it deep neural network} (DNN) \cite{deng2014deep}, which may refer to any type of neural network powered by deep learning technologies.
 
 \begin{figure}[htb]
 \centering
@@ -408,34 +408,34 @@ Multilayer Perceptron or feedforward neural network, is probably the most basic 
 \end{figure}
 Figure~\ref{fig:2-dbn-ft} shows a MLP with three hidden layers. Each layer contain a set of {\it artificial neurons}. Each neuron will carry out the following procedures:
 \begin{enumerate}
-\item take the sum of their inputs weighted by the incoming connections (Optionally, a bias input may also apply);
-\item perform a non-linear function on the weighted sum;
+\item take the sum of their inputs weighted by the incoming connections (optionally, a bias input may also apply);
+\item apply a non-linear function on the weighted sum;
 \item generate an {\it activation}, which is equal to the output of the above step, to all outgoing connections.
 \end{enumerate}
 Alternatively, a neuron can be formalized as:
 \begin{equation}
 Y = \sigma(WX+b),
 \end{equation}
-where $Y$ is the activation, $X$ is the input, $W$ is the weight vector and $b$ is the bias input. The $\sigma$ function has a wide range of choices \cite{sigtia2014improved} such as {\it logistic function} ($sigmoid$), {\it hyperbolic tangent function} ($tanh$), or {\it rectified linear unit} (ReLU). One common point of these non-linear functions is that their output will be closer to 1 with larger input, and closer to 0 otherwise.
+where $Y$ is the activation, $X$ is the input, $W$ is the weight vector and $b$ is the bias input. The $\sigma$ function has a wide range of choices \cite{sigtia2014improved} such as {\it logistic function} ($sigmoid$), {\it hyperbolic tangent function} ($tanh$) \cite{lecun2012efficient}, or {\it rectified linear unit} (ReLU) \cite{hahnloser2000digital}. One common point of these non-linear functions is that their output will be closer to 1 with larger input, and closer to 0 otherwise.
 
 Normally a {\it softmax} or {\it normalized exponential} operation is applied to the output layer:
 \begin{equation}
 y_j = softmax(z_j)={e^{z_j} \over \sum_{k=1}^K e^{z_k}},
 \end{equation}
-where $z_j$ is pre-softmax input of the $j^{th}$ neuron. The activation is squashed within $(0,1)$ range, and the sum of all activations is 1. The softmax output $Y(y_1,y_2,...,y_N)$ can be regarded as a posterior probability conditioned on the visible input - $P(Y|X)$.
+where $z_j$ is the pre-softmax input of the $j^{th}$ neuron. The activation is squashed within $(0,1)$ range, and the sum of all activations is 1. The softmax output $Y(y_1,y_2,...,y_N)$ can be regarded as a posterior probability conditioned on the visible input - $P(Y|X)$.
 
 When training the network, normally the {\it cross entropy} cost function \cite{murphy2012machine} is used:
 \begin{equation}\label{eq:2-crossentropy}
 cost = -\sum_{j=1}^N g_j\log y_j + (1-g_j)\log(1-y_j),
 \end{equation}
-where $g_j$ is the $j^{th}$ ground truth label, and $y_j$ is the posterior probability of the $j^{th}$ class. The network weights can be updated through gradient descent along the direction provided by the differentiation of the cross entropy cost with respect to the weights. Through this process, the error appear at the output layer will ``back-propagate'' to the whole network. Hence this method is called gradient descent with {\it back-propagation} \cite{rumelhart1988learning}.
+where $g_j$ is the ground truth prediction on the $j^{th}$ class, and $y_j$ is the posterior probability of the $j^{th}$ class given the input feature. The network weights can be updated through gradient descent along the direction provided by the differentiation of the cross entropy cost with respect to the weights. Through this process, the error appears at the output layer will ``back-propagate'' to the whole network. Hence this method is called gradient descent with {\it back-propagation} \cite{rumelhart1988learning}.
 
-The most common training practice is called {\it stochastic gradient descent} (SGD). It is an iterative training process. At each iteration a batch of samples are randomly drawn from the training dataset, and then a gradient descent with back-propagation is performed to update the network connections once. This process is repeated until convergence or the stopping criteria is satisfied.
+The most common training practice is called {\it stochastic gradient descent} (SGD). It is an iterative training process. At each iteration a batch of samples are randomly drawn from the training dataset, and then a gradient descent with back-propagation is performed to update the network connections once. This process is repeated until convergence or when the stopping criteria is satisfied.
 
 Another very popular feedforward architecture is the {\it convolutional neural network} (CNN), which is a sparsely connected MLP with weight sharing and layer output pooling operations \cite{lecun1995convolutional}.
 
 \Hsection{Deep Belief Network}
-A DBN is a generative model that captures the joint probability distribution of several layers of latent variables and the visible variables that they generate. Figure~\ref{fig:2-dbn} illustrates a DBN with three hidden layers.
+Deep belief network is a generative model that captures the joint probability distribution of several layers of latent variables and the visible variables that they generate. Figure~\ref{fig:2-dbn} illustrates a DBN with three hidden layers, and an extra output layer can be added on top of the last hidden layer with feedforward connections in order to turn it into a discriminative model.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\columnwidth, height=0.5\columnwidth]{2/figures/dbn.pdf}
@@ -444,10 +444,9 @@ A DBN is a generative model that captures the joint probability distribution of 
 \end{figure}
 Note that the top two hidden layers have undirected connections, while the others have top-down directed connections.
 
-A DBN is trained in two phases. Firstly, it is {\it pre-trained} as a generative mode using unlabeled data. This is an unsupervised training phase that aims at reconstructing the visible input. Then it is {\it fine-tuned} as a discriminative model using labeled data. This is a supervised training phase that on one hand tries to fine-tune the reconstruction weight, and on the other hand aims at label classification.
+A discriminative DBN is trained in two phases. Firstly, it is {\it pre-trained} as a generative mode using unlabeled data. This is an unsupervised training phase that aims at reconstructing the visible input. Then it is {\it fine-tuned} as a discriminative model using labeled data. This is a supervised training phase that on one hand tries to fine-tune the reconstruction weight, and on the other hand aims at label classification.
 
-
-The generative pre-training process is conducted by training several {\it restricted Boltzmann machines} (RBM) in series \cite{hinton2006fast}. A RBM \cite{smolensky1986information} is an energy based probabilistic model, visualized as a {\it undirected bipartite graph}, that is able to learn the joint distribution all its variables. A trained RBM can reconstruct a previously seen input solely by the network connections and the hidden units. In practice, this property makes it suitable to do representation transformation.
+The generative pre-training process is conducted by training several {\it restricted Boltzmann machines} (RBM) in series \cite{hinton2006fast}. A RBM \cite{smolensky1986information} is an energy based probabilistic model, visualized as an {\it undirected bipartite graph}, that is able to learn a joint distribution of all its nodes. A trained RBM can reconstruct a previously seen input solely by the network connections and the hidden units. In practice, this property makes it suitable for representation transformation.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.7\columnwidth, height=0.18\columnwidth]{2/figures/rbm.pdf}
@@ -455,7 +454,7 @@ The generative pre-training process is conducted by training several {\it restri
 \label{fig:2-rbm}
 \end{figure}
 
-Figure~\ref{fig:2-rbm} shows a RBM. The {\it energy} of the network is defined as the negative of dot product in both directions:
+Figure~\ref{fig:2-rbm} shows a RBM. The {\it energy} of the network is defined as:
 \begin{equation}
 -E(v,h) = \sum_i a_iv_i + \sum_j b_jh_j + \sum_i\sum_j v_iw_{i,j}h_j,
 \end{equation}
@@ -479,13 +478,13 @@ P(v_i=1|h) = \sigma(a_i+\sum_j w_{i,j}h_j).
 \end{split}
 \end{equation}
 
-Unlike back-propagation, the gradient of RBM's reconstruction error with respect to the weights can be expressed easily as:
+Unlike the feedforward neural network, the gradient of RBM's reconstruction error with respect to the weights can be expressed easily as:
 \begin{equation}
 {\partial \log p(v) \over \partial w_{i,j}} = <v_ih_j>_{data} - <v_ih_j>_{model}
 \end{equation}
-where ``angle brackets are used to denote expectations under the distribution specified by the subscript that follows'' \cite{hinton2010practical}. But the difficulty of computing this gradient is that $<v_ih_j>_{model}$ actually is a inherit value of the model itself, which takes a long time to converge.
+where ``angle brackets are used to denote expectations under the distribution specified by the subscript that follows'' \cite{hinton2010practical}. But the difficulty of computing this gradient is that $<v_ih_j>_{model}$ is a inherit value of the model itself, which takes a long time to converge.
 
-The practical way to train a RBM is by SGD with {\it contrastive-divergence} \cite{hinton2010practical} (CD) or {\it persistent-contrastive-divergence} (PCD) \cite{tieleman2008training}. Both methods compute an approximation of $<v_ih_j>_{model}$ by taking only a few steps of the {\it Markov chain} of $(v_0- h_0-v_1-h_1-...-v_t-h_t)$, without waiting for convergence.
+A practical way to train a RBM is by SGD with {\it contrastive-divergence} \cite{hinton2010practical} (CD) or {\it persistent-contrastive-divergence} (PCD) \cite{tieleman2008training}. Both methods compute an approximation of $<v_ih_j>_{model}$ by taking only a few steps of the {\it Markov chain} of $(v_0\rightarrow h_0\rightarrow v_1\rightarrow h_1\rightarrow...\rightarrow v_t\rightarrow h_t)$, without waiting for convergence.
 
 \begin{figure}[htb]
 \centering
@@ -495,18 +494,17 @@ The practical way to train a RBM is by SGD with {\it contrastive-divergence} \ci
 \end{figure}
 Pre-training the DBN in Figure~\ref{fig:2-dbn-pt} takes the following steps:
 \begin{enumerate}
-\item Regard every adjacent pair of layers as a RBM, and order them in bottom-up way;
+\item Regard every adjacent pair of layers as a RBM, and order them bottom-up;
 \item Train the first RBM (formed by input layer and hidden layer 1)
 \item Transform the input bottom-up by all trained RBMs and train the next RBM;
-\item Repeat the previous step until no RBM left.
+\item Repeat the previous step until there is no RBM left.
 \end{enumerate}
-
-The fine-tuning phase is actually similar to training a {\it feed forward neural network}, or {\it multilayer perceptron} (MLP), with the network weights initialized by the outcome of the pre-training phase. 
+The fine-tuning phase is similar to training a MLP. The network weights are first initialized by the outcome of the pre-training phase, then all weights will be turned into feedforward and the classification cost from the output layer will back-propagate to update the network's feedforward weights.
 
 \Hsection{Feature Learning in ACE}
 Hamel and Eck \cite{hamel2010learning} are among the first to introduce feature learning techniques into MIR. Specifically, their task is music genre classification, where a DBN is used to learn features from the raw data. They start by training the DBN as a frame-wise genre classifier, and then take the activation of the last hidden layer as the learned feature. Later, Humphrey et al. \cite{humphrey2013feature} explore the theoretical underpinnings of feature learning in music informatics. Sigtia and Dixon \cite{sigtia2014improved} summarize previous works and introduce more such technologies in the MIR field.
 
-The first feature learning approach in ACE is proposed by Humphrey and Bello \cite{humphrey2012rethinking}, who use a CNN to extract features. Instead of learning an ``intermediate'' feature representation, the CNN actually outputs a ``probability surface'', which is actually the posterior probabilities of chord classes conditioned on the CNN input ``time-pitch'' constant-Q spectra. In this work, there is no concept of ``chroma'' involved, but there is ``pitch class'' presented in the constant-Q spectra.
+The first feature learning approach in ACE is proposed by Humphrey and Bello \cite{humphrey2012rethinking}, who use a CNN to extract features. Instead of learning an ``intermediate'' feature representation, the CNN outputs a ``probability surface'', which is actually the posterior probabilities of chord classes conditioned on the CNN's ``time-pitch'' constant-Q spectra input. In this work, there is no concept of ``chroma'' involved, but there is ``pitch class'' presented in the constant-Q spectra.
 
 Boulanger et al. \cite{boulanger2013audio} take a DBN based approach similar to Hamel and Eck's. They first perform a PCA to a STFT spectrogram to reduce input dimensionality. Then they train a DBN to predict the output at each frame. Instead of taking these predictions to the pattern matching machine, they use the activation of the last hidden layer as the ``feature''. There is neither concept of ``chroma'' nor ``pitch class'' in this work. The ``pitch class'' is avoided by the PCA preprocessing stage. Later, Zhou and Lerch \cite{zhou2015chord} augment this process with a time-frequency splicing function inserted between the PCA and the DBN in order to exploit similarities of neighboring frames.
 
