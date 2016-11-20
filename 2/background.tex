@@ -606,15 +606,15 @@ This network has only three sets of weights, namely, $A$, $B$ and $R$. Normally,
 \begin{equation}
 H^t = \sigma(\sum_j A_{i,j}X_j + \sum_{i'} R_{i,i'}H^{t-1}_{i'}),
 \end{equation}
-where $R$ is a square matrix, and $\sigma$ is a differentiable non-linear function used for a neuron. The network output $Y^t$ is:
+where $R$ is a square matrix, and $\sigma$ is an activation function. The network output $Y^t$ is:
 \begin{equation}
 Y^t = softmax(\sum_i B_{i,k}H^t_i).
 \end{equation}
-Similar to a MLP, a RNN is a discriminative model that captures the conditional probability of the output sequence $Y (Y^1,Y^2,...)$ given the input sequence $X (X^1, X^2,...)$:
+Similar to MLP, RNN is a discriminative model that captures the conditional probability of the output sequence $Y (Y^1,Y^2,...)$ given the input sequence $X (X^1, X^2,...)$:
 \begin{equation}
 P(Y|X) = RNN(X).
 \end{equation}
-Different from a MLP, a RNN models this probability in a sequential manner, so that every frame of the output sequence $Y^t$ is conditioned on not only the current input frame $X^t$ but also all previous input frames $X^{1:t}$. It can be even made conditioned on the whole input sequence $X$ if a backward hidden layer is also implemented. This is called a {\it bidirectional recurrent neural network} (BRNN), as illustrated in Figure~\ref{fig:2-brnn}.
+Different from MLP, RNN models this probability in a sequential manner, so that every frame of the output sequence $Y^t$ is conditioned on not only the current input frame $X^t$ but also all previous input frames $X^{1:t}$. It can be even made conditioned on the whole input sequence $X$ if a backward hidden layer is also implemented. This is called a {\it bidirectional recurrent neural network} (BRNN), as illustrated in Figure~\ref{fig:2-brnn}.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\columnwidth, height=0.45\columnwidth]{2/figures/brnn.pdf}
@@ -631,7 +631,7 @@ To train the network, a cross entropy lost function similar to equation~\ref{eq:
 \caption{Long-short-term-memory}
 \label{fig:2-lstmunit}
 \end{figure}
-Figure \ref{fig:2-lstmunit} shows the structure of a basic LSTM unit\cite{graves2012supervised} in the context of a simple logistic regression. The input data path has 4 identical copies for input gate $I$, output gate $O$, forget gate $F$ and the input port. Each gate or port will activate an output between 0 and 1 according to its input and activation function. The input gate activation is multiplied with the input port activation to become an input value to the LSTM cell. The forget gate activation is multiplied with the cell value from the previous time step to become another input to the cell. The current cell value is determined by the sum of the these two cell inputs. The output of the unit is given by the multiplication of output gate activation and the current cell value. Note that in some configuration the cell value can be feedback into the gates.
+Figure \ref{fig:2-lstmunit} shows the structure of a basic LSTM unit \cite{graves2012supervised} in the context of a simple logistic regression. The input data path has 4 identical copies for input gate $I$, output gate $O$, forget gate $F$ and the input port. Each gate or port will activate an output between 0 and 1 according to its input and activation function. The input gate activation is multiplied with the input port activation to become an input value to the LSTM cell. The forget gate activation is multiplied with the cell value from the previous time step to become another input to the cell. The current cell value is determined by the sum of the these two cell inputs. The output of the unit is given by the multiplication of the output gate activation and the current cell value. Note that in some configuration the cell value can be feedback into the gates.
 
 Assuming the RNN in Figure~\ref{fig:2-rnn} is implemented with LSTM hidden layer. The input matrix $A$ will be separated into four different matrices $A_i$, $A_f$, $A_o$ and $A_c$, for input gate, forget gate, output gate and input port respectively. Similarly, the recurrent matrix $R$ will have four different copies $R_i$, $R_f$, $R_o$ and $R_c$. Let $b$ be the bias input to each gate and port. Formally, the input gate activation at time $t$ is computed as follows:
 \begin{equation}
@@ -660,13 +660,13 @@ H^t = o_t*\sigma(C^t).
 All $*$ stands for element-wise multiplication, and all ``summation over index'' operations are replaced by matrix multiplications for brevity. 
 
 \Hsection{Deep Learning in Pattern Matching}
-For chord sequence pattern matching task, there are so far three types of modeling topologies, each has at least one corresponding literature in recent years.
+For chord sequence pattern matching task, there are so far three types of deep learning model topologies, each has at least one corresponding literature in recent years.
 
 Humphrey and Bello \cite{humphrey2012rethinking} propose a model that performs CNN chord classification at each constant-Q frame, and then applies median-filtering to smooth the classification results into segments. The CNN outputs a ``probability surface'', which is the posterior chord probabilities given the input frame, so that it actually performs both feature learning and pattern matching. Consider that the role of CNN here can be replaced by any type of DNN, this is a ``local (DNN) classification - global smoothing'' approach.
 
-Boulanger et al. \cite{boulanger2013audio} perform feature learning via a STFT-PCA-DBN chain, and take the activation of the last DBN hidden layer as the feature. A sequence of such feature is then classified by an RNN, and the output posteriors are further smoothed using a HMM with Viterbi decoding, or {\it beam search} with dynamic programming. This can be regarded as a ``local feature learning - global (RNN) classification - global smoothing'' approach. Sigtia et al. \cite{sigtia2015audio} follow up this by applying LSTM to the RNN, and augmenting the beam search with a hashed beam search.
+Boulanger et al. \cite{boulanger2013audio} perform feature learning via a STFT-PCA-DBN chain, and take the activation of the last DBN hidden layer as the feature representation. A sequence of such features is then classified by an RNN, and the output posteriors are further smoothed using a HMM with Viterbi decoding, or {\it beam search} with dynamic programming. This can be regarded as a ``local feature learning - global (RNN) classification - global smoothing'' approach. Sigtia et al. \cite{sigtia2015audio} follow up this by applying LSTM to the RNN, and augmenting the beam search with a hashed beam search.
 
-Zhou and Lerch \cite{zhou2015chord} put forward another system that resembles Boulanger's in terms of feature learning, but instead they use a SVM to classified the learned features locally, and use a HMM to perform sequence decoding and smoothing. This belongs to a ``local feature learning - local classification - global smoothing'' approach.
+Zhou and Lerch \cite{zhou2015chord} put forward another system that resembles Boulanger's in terms of feature learning, but instead they use a SVM to classify the learned features locally, and use a HMM to perform sequence decoding and smoothing. This belongs to a ``local feature learning - local classification - global smoothing'' approach.
 
 Certainly there could be more deep learning architectures for ACE that could possibly work more efficiently, and this will be one of the main topics in the following chapters.
 
