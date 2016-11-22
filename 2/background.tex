@@ -731,40 +731,63 @@ in which the core idea of this format is revealed. Basically, a chord label is p
 This section is going to review several issues regarding the evaluation of ACE systems. First of all the system performance metrics will be discussed. Then under the context of a yearly music information retrieval exchange event, the actual application of the metrics to different chord matching functions will be elaborated. The section is concluded by a fundamental issue of ACE that is closely related to evaluation - human annotation subjectivity.
 
 \subsection{Estimation Accuracy Metrics}
-In his pioneering ACE paper, Fujishima \cite{fujishima1999realtime} scores the system by
-\begin{equation}
+In his pioneering ACE paper, Fujishima \cite{fujishima1999realtime} scores the system with:
+\begin{equation}\label{eq:2-fujiscore}
 \mathit{score = {\#\,correct\,guesses\over\#\,all\,guesses},}
 \end{equation}
 where a $guess$ is made on every frame. This is later coined as {\it frame-based chord symbol recall} \cite{harte2010towards}, {\it average overlap score} \cite{oudre2010template}, or {\it relative correct overlap} (RCO) \cite{mauch2010automatic}. Generally, the scores given by these method can all be regarded as {\it chord symbol recall} (CSR), formulated as:
 
-\begin{equation}
-\mathit{CSR={|\text{correctly identified frames}| \over |\text{total frames}|}\times 100\%,}
+\begin{equation}\label{eq:2-csr-}
+\mathit{CSR={|\text{correctly identified frames}| \over |\text{total number of frames}|}\times 100\%}.
 \end{equation}
-This is a waste of computation by noting that a chord label actually remains the same for hundreds or thousands of frames. Instead of computing the CSR in a frame-based way, Harte \cite{harte2010towards} introduces a {\it segment-based chord symbol recall}:
+It is better to clarify why this can be called a \textit{recall}. As we know, ``recall'' can be expressed as:
+\begin{equation}
+recall = {TP \over {TP + FN}},
+\end{equation}
+where $TP$ is true positives, and $FN$ is false negatives. For example, regarding the $Cmaj$ chord in a piece, $TP$ stands for the portion where the $Cmaj$ classifications match the $Cmaj$ ground truths, and $FN$ is the portion where the ground truths are $Cmaj$s but the classifications do not match them (see Section~\ref{sec:2-chordmatch} for more about ``match''). Thus the recall for $Cmaj$ can be written as:
+\begin{equation}
+recall_C = {TP_C \over {TP_C + FN_C}}.
+\end{equation}
+Note that a multi-class classification problem can be reduced to a one-v.s.-all classification problems when looking at just one specific class such as $Cmaj$. And since the total number of $Cmaj$ chords in this piece is $N_C = TP_C + FN_C$,
+\begin{equation}
+recall_C = {TP_C \over N_C}.
+\end{equation}
+The same is also true for the other chords, such as $Am$:
+\begin{equation}
+recall_{Am}= {TP_{Am} \over N_{Am}}.
+\end{equation}
+Assuming there are only these two chords in the piece, the overall recall could be regarded as the sum of the two recalls weighted by their portions:
+\begin{equation}
+recall = {{N_C * recall_C + N_{Am} * recall_{Am}} \over {N_C + N_{Am}}} = {{TP_C + TP_{Am}} \over {\#\,of\,frames}},
+\end{equation}
+which is equivalent to Equation~\ref{eq:2-fujiscore} and ~\ref{eq:2-csr-}. But strictly speaking this is better termed as the \textit{accuracy} metric, which is defined exactly as the correctly classified samples divided by the total number of samples. It is worth noting that the above ``weighted sum'' process in deriving the overall recall is actually a ``bias'', that classes with larger portions are more important than those with smaller portions. This bias should always be reminded whenever we interpret ACE results reported in CSRs.
+
+%This is a waste of computation by noting that a chord label actually remains the same for hundreds or thousands of frames.
+Instead of computing the CSR in a frame-based way, Harte \cite{harte2010towards} introduces a {\it segment-based chord symbol recall}:
 
 \begin{equation}
 \mathit{CSR = {|S\cap S^*|\over|S^*|} \times 100\%,}
 \label{eq:2-csr}
 \end{equation}
-where $S$ is automatic estimated segments, $S^*$ is ground truth annotated segments, and the intersection of $S$ and $S^*$ results in the part where they: 1, overlap and 2, have equal chord annotations. A segment is usually represented as a tuple of ``(start time, end time)''. Verbally, it can be re-expressed as \footnote{\url{http://www.music-ir.org/mirex/wiki/2015:Audio\_Chord\_Estimation}}:
+where $S$ stands for automatic estimated segments, $S^*$ is ground truth annotated segments, and the intersection of $S$ and $S^*$ results in the part where they overlap and have equal chord annotations. A segment is usually represented as a $(start time, end time)$ tuple. Verbally, Equation~\ref{eq:2-csr} can be re-expressed as \footnote{\url{http://www.music-ir.org/mirex/wiki/2015:Audio\_Chord\_Estimation}}:
 
 \begin{equation}\footnotesize
 \mathit{CSR = {\text{total duration of segments where chord annotation equals chord estimation}\over\text{the total duration of annotated segments}} \times 100\%,}
 \label{eq:2-csrv}
 \end{equation}
 
-For multiple track estimation, the overall performance is usually calculated by {\it weighted chord symbol recall} (WCSR):
+For multiple tracks estimation, the overall performance is usually calculated by {\it weighted chord symbol recall} (WCSR):
 
 \begin{equation}
 \mathit{WCSR = {\sum_i{Length(Track_i)*CSR_i} \over \sum_i{Length(Track_i)}}\times 100\%,}
 \label{eq:2-wcsr}
 \end{equation}
-where the subscript $i$ denotes the track number. It is the weighted average of all tracks' CSRs by the lengths of these tracks. This corresponds to the {\it total relative correct overlap} (TRCO) used by McVicar \cite{mcvicar2013machine}. Another approach is to simply take the average CSRs of all tracks without weighting, and this is called {\it average relative correct overlap} (ARCO).
+where subscript $i$ denotes the track number. It is the weighted average of all tracks' CSRs by the lengths of these tracks. This is equivalent to the {\it total relative correct overlap} (TRCO) used by McVicar \cite{mcvicar2013machine}. Another approach is to simply take the average CSRs of all tracks without weighting, and this is called {\it average relative correct overlap} (ARCO).
 
-Instead of an overall performance metric, ACE researchers also report such CSR scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}.
+Instead of an overall performance metric, ACE researchers also report CSR scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}.
 
-\subsection{Chord Matching Functions}
-All above metrics compute effect score only if a {\it chord matching function} is defined so that the evaluation algorithm knows what is ``equal'' or ``correct''. Such function takes the form of \cite{harte2010towards}:
+\subsection{Chord Matching Functions}\label{sec:2-chordmatch}
+All above metrics compute scores only if a {\it chord matching function} is defined so that the evaluation algorithm knows what is a ``match''. Such function takes the form of \cite{harte2010towards}:
 \begin{equation}
 M(C_G,C_E)=
 \begin{cases}
@@ -772,30 +795,30 @@ M(C_G,C_E)=
 0 \quad \text{otherwise}
 \end{cases}
 \end{equation}
-where $C_G$ is the ground truth label and $C_E$ is the estimated label. At the early years of ACE, chords are matched as they are \cite{fujishima1999realtime,sheh2003chord,bello2005robust}. Two labels are the same if and only if they are the same label. Since then, different $M$ has been used notably in MIREX (Music Information Retrieval Evaluation Exchange) \footnote{\url{http://www.music-ir.org/mirex/wiki/MIREX\_HOME}} \cite{downie2008music}, which is a yearly event that aims at advancing various MIR technologies through extensive evaluations. ACE has been one of the MIREX tasks since 2008. Because different systems may support different vocabularies, various $M$s has been proposed to try to make a fair comparison between them.
+where $C_G$ is the ground truth label and $C_E$ is the estimated label. At the early years of ACE, chords are matched as they are \cite{fujishima1999realtime,sheh2003chord,bello2005robust}. Two labels are the same if and only if they are the same label. Since then, different $M$s have been used in MIREX (Music Information Retrieval Evaluation Exchange) \footnote{\url{http://www.music-ir.org/mirex/wiki/MIREX\_HOME}} \cite{downie2008music}, which is a yearly event that aims at advancing various MIR technologies through extensive open evaluations. ACE has been one of the MIREX tasks since 2008. Because different systems may support different vocabularies, various $M$s have been proposed to try to make a fair comparison between them.
 
-MIREX ACE 2008 and 2009 targets the evaluation on $majmin$ vocabulary. A pre-processing stage maps all chords to $majmin$ following predefined rules set up by the MIREX officials \cite{harte2010towards}. The most common ``rules'' are to map all ``maj'' type chords (e.g. $7$, $9$, $maj7$, $maj9$, etc.) to $maj$, and all ``min'' type chords to $min$, but disagreement may occur regarding chords such as $aug$, $dim$, $sus4$ and $sus2$.
+MIREX ACE 2008 and 2009 target the evaluation on $majmin$ vocabulary. A pre-processing stage maps all chords to $majmin$ following predefined rules set up by the MIREX officials \cite{harte2010towards}. The most common ``rules'' are to map all ``maj'' type chords (e.g. $7$, $9$, $maj7$, $maj9$, etc.) to $maj$, and all ``min'' type chords to $min$, but disagreements may occur regarding chords such as $aug$, $dim$, $sus4$ and $sus2$.
 
-From 2010 to 2012, MIREX ACE takes a different $M$. No $majmin$ mapping is introduced, instead, it uses a ``bag of chroma'' matching strategy. As discussed by Pauwel and Peeters \cite{pauwels2013evaluating}, in MIREX 2010, a chord is first expanded as binary pitch class chroma, and two chords match each other if their chroma intersection has 3 or more bins. Similar function is also used in 2011 and 2012. This scheme is criticized by Pauwel and Peeters \cite{pauwels2013evaluating} as:
+From 2010 to 2012, MIREX ACE takes a different $M$. No $majmin$ mapping is introduced, instead, it uses a ``bag of chroma'' matching strategy. As discussed by Pauwel and Peeters \cite{pauwels2013evaluating}, in MIREX 2010, a chord is first expanded as binary pitch class chroma, and two chords match each other if their chroma intersection has 3 or more bins. A similar function is also used in 2011 and 2012. This scheme is criticized by Pauwel and Peeters \cite{pauwels2013evaluating} as:
 \begin{itemize}
 \item not able to distinguish chords with same chroma but different roots;
 \item not able to penalize a chord with superfluous chroma
 \end{itemize}
 
-Both the $majmin$ mapping and ``bag of chroma'' chord matching functions are essentially stemming from a fact that the ground truth manual annotation is with unlimited vocabulary, while the ACE output is not. This contradiction takes effect when the chord estimations are to be compared against the manual annotation. Mechanisms must be invented to make sure that they are reasonably comparable in any case. In this sense, unless an ACE system can nicely support an unlimited vocabulary, any chord matching function will be an approximation. $majmin$ mapping simplifies everything to be $maj$ and $min$, neglects all subtle different flavors of chords, and the results will inevitably favor those who only generate $majmin$; ``bag of chroma'', to the other extreme, tries to avoid the above mentioned contradiction altogether, but actually disregards the importance of chord voicing \footnote{the way a chord is organized vertically (along pitch dimension)}, chord naming, and the containing relationships among chords, as the results will bias towards those systems that pay little attention to these issues. Nevertheless, researchers continue to look for better evaluation methods, or approximations, which is consented \footnote{\url{http://www.music-ir.org/mirex/wiki/The\_Utrecht\_Agreement\_on\_Chord\_Evaluation}} to be an essential key to better ACE systems.
+Both the $majmin$ mapping and ``bag of chroma'' chord matching functions are essentially stemming from a fact: while the ground truth has a vocabulary of unlimited (or very large) size, the ACE output has not. This contradiction takes effect when the chord estimations are to be compared against the manual annotation. Mechanisms must be invented to make sure that they are reasonably comparable in any case. In this sense, unless an ACE system can nicely support an unlimited vocabulary, any chord matching function will be an approximation. $majmin$ mapping simplifies everything to be $maj$ and $min$, neglecting all subtle different flavors of chords, and the results will inevitably favor those systems who only generate $majmin$; ``bag of chroma'', to the other extreme, tries to avoid the above mentioned contradiction altogether, but actually disregards the importance of chord voicing \footnote{the way a chord is organized vertically (along pitch dimension)}, chord naming, and the containing relationships among chords, as the results will bias towards those systems that pay little attention to these issues. Nevertheless, researchers continue to look for better evaluation methods, or approximations, which is consented \footnote{\url{http://www.music-ir.org/mirex/wiki/The\_Utrecht\_Agreement\_on\_Chord\_Evaluation}} to be an essential key to better ACE systems.
 
 In 2013, MIREX ACE adopted a new evaluation scheme \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}} \cite{pauwels2013evaluating}. The major difference of this method is that it computes the WCSR of four different vocabularies:
 \begin{quote}
 \begin{itemize}
-\item Chord root note only ({\it Root});
-\item Chord bass note only ({\it Bass});
+%\item Chord root note only ({\it Root});
+%\item Chord bass note only ({\it Bass});
 \item Major and minor ({\it MajMin});
 \item Seventh chords ({\it Sevenths});
 \item Major and minor with inversions ({\it MajMinInv} or {\it MajMinBass});
 \item Seventh chords with inversions ({\it SeventhsInv} or {\it SeventhsBass}).
 \end{itemize}
 \end{quote}
-Here are more original quotes from the MIREX website \footnote{\url{http://www.music-ir.org/mirex/wiki/2013:Audio\_Chord\_Estimation\_Results\_MIREX\_2009}} regarding these ``advanced chord vocabularies'' and the evaluation scheme:
+Here are more original quotes from the MIREX website \footnote{\url{http://www.music-ir.org/mirex/wiki/2013:Audio\_Chord\_Estimation\_Results\_MIREX\_2009}} regarding these chord vocabularies and the evaluation scheme:
 \begin{quote}
 \begin{itemize}
 \item With the exception of no-chords, calculating the vocabulary mapping involves examining the root note, the bass note, and the relative interval structure of the chord labels.
@@ -805,47 +828,46 @@ Here are more original quotes from the MIREX website \footnote{\url{http://www.m
 \item Our recommendations are motivated by the frequencies of chord qualities in the Billboard corpus of American popular music \cite{burgoyne2011expert}
 \end{itemize}
 \end{quote}
-
 Despite the chord mappings, in many ways this is a much better approximation to an ideal evaluation method. It provides more perspectives into the system performance by considering a spectrum of different chord matching scenarios. Moreover, it is the first evaluation scheme to incorporate segmentation quality and chord inversions. The segmentation quality (SQ), according to the quote above, is computed as {\it directional Hamming distance} (DHD). Assuming $S^*$ and $S$ are the segmentations of the ground truth and the estimation respectively, the DHD from $S^*$ to $S$ is:
 \begin{equation}
 h(S^*||S) = \sum_{i=1}^{N_{S^*}}(|S_i|-\max_j|S_i^* \cap S_j|),
 \end{equation}
-where subscription $i$ indicates the $i^{th}$ segment. Note that the distance is not commutable, which means $h(S^*||S)$ and $h(S||S^*)$ represent two different distances. Conventionally, $h(S^*||S)$ measures {\it under-segmentation} and $h(S||S^*)$ measures {\it over-segmentation}. In either case, a good transcription is indicated by a small value. When reported as scores, they are usually normalized by the lengths of the tracks, and minus by 1, in order to make it similar to the $[0,1]$ style of the WCSR score. Harte instead suggests to report the 1 minus the maximum of the two normalized scores, yielding:
+where subscription $i$ indicates the $i^{th}$ segment. Note that the distance is not commutable, which means $h(S^*||S)$ and $h(S||S^*)$ represent two different distances. Conventionally, $h(S^*||S)$ measures {\it under-segmentation} and $h(S||S^*)$ measures {\it over-segmentation}. In either case, a better segmentation is indicated by a smaller value. When reported as scores, they are usually normalized by the lengths of the tracks, and minus by 1, in order to make it in the $[0,1]$ range similar to the WCSR score. Harte \cite{harte2010towards} instead suggests to report one minus the maximum of the two normalized scores, yielding:
 \begin{equation}
 h(S^*,S)=1-{1\over T}\max\{h(S^*||S), h(S||S^*)\} \in [0,1].
 \end{equation}
 This is officially taken as the MIREX segmentation quality score.
 
 \subsection{Human Annotation Subjectivity} \label{sec:2-subjectivity}
-An even more fundamental problem of ACE evaluation would be ``is the ground truth annotation a gold standard?''. Unfortunately, and maybe unsurprisingly, both Ni et al. \cite{ni2013understanding} and Humphrey and Bello \cite{humphreyfour} find out there exists a certain degree of disagreement between two musicians annotating the same dataset, as the latter conclude in the paper that ``the subjective nature of chord perception may render objective ground truth and evaluation untenable.''
+An even more fundamental problem in ACE evaluation would be ``is the ground truth annotation a gold standard?''. Unfortunately, and maybe unsurprisingly, both Ni et al. \cite{ni2013understanding} and Humphrey and Bello \cite{humphreyfour} find out there exists a certain degree of disagreement between two musicians annotating the same dataset, as the latter article concludes that ``the subjective nature of chord perception may render objective ground truth and evaluation untenable.''
 
 Inevitably, due to difference in musical training, human annotators sometimes disagree, especially on long-tail chords \cite{humphreyfour}. In a very strict sense, there is not any ``gold standard'' if human might disagree with each other. But in a loose sense, theoretically there could be a ``gold standard'' if:
 \begin{itemize}
 \item $G1$: all annotations are done by only one annotator, or
 \item $G2$: all annotations are done by multiple annotators (much more than two).
 \end{itemize}
-In the former case $G1$, that only annotator ``dictates'' a local ``gold standard'', so that whenever a machine tries to learn from the data, it actually targets at this annotator's ``style''. In the latter case $G2$, multiple annotators decide a ``gold standard'' in a way such as majority vote, consensus approach \cite{ni2013understanding} or data fusion \cite{koopsintegration,klein2004sensor}, so that a trained model actually aims at the optimal ``style'' that minimizes the objections within these annotators. Therefore, although the ``gold standard'' is indeed an important issue, designing a system that ``learns well'' remains another big part of the same problem.
+In the former case $G1$, that only annotator ``dictates'' a local ``gold standard'', so that whenever a machine tries to learn from the data, it actually targets at this annotator's ``style''. In the latter case $G2$, multiple annotators collectively decide a ``gold standard'' in a way such as majority vote, consensus approach \cite{ni2013understanding} or data fusion \cite{koopsintegration,klein2004sensor}, so that a trained model will aim at the optimal ``style'' that minimizes the objections within these annotators. Therefore, although the ``gold standard'' is indeed an important issue, designing a system that ``learns well'' remains another big part of the same problem.
 
-In view of all these issues \cite{humphreyfour,ni2013understanding}, given a test dataset that is somewhere between or a mixture of $G1$ and $G2$, perhaps the most ``objective'' evaluation method is by ``subjective'' evaluation, that is, to be examined and marked by multiple human annotators, as has been correctly pointed out by Humphrey and Bello:
+In view of all these issues \cite{humphreyfour,ni2013understanding}, given a test dataset that is somewhere between or a mixture of $G1$ and $G2$, perhaps the most ``objective'' evaluation method is by ``subjective'' evaluation. Such evaluation asks for each piece of ACE output to be examined and marked by multiple human annotators, as has been correctly pointed out by Humphrey and Bello:
 \begin{quote}
 ...qualitative evaluation should play a larger role in the assessment of automatic systems intended for userfacing applications. If nothing else, users studies can help identify objective measures that align well with subjective experience.
 \end{quote}
 
 \section{Summary} \label{sec:2-summary}
-This chapter gives a thorough review of ACE, including the musical fundamentals, implementation variants and evaluation methodologies. By re-examining most of the ACE related works, at least three research gaps can be spot.
+This chapter gives a thorough review of ACE, including the musical fundamentals, system design variants and evaluation methodologies. By re-examining most of the ACE related works, at least four research gaps can be spot.
 
 Firstly, large vocabulary ACE system is generally overlooked. The concern about disadvantages of large vocabulary ACE is expounded in Section~\ref{sec:2-vocab}, and the subjectivity issue in Section~\ref{sec:2-subjectivity} also contributes to a negative concern. Nevertheless, the counterarguments against both concerns are also clear that:
 \begin{enumerate}
 \item to date there are much more training data on long-tail chords;
 \item parallel to the subjectivity issue, it is as crucial to design a system that ``learns well''.
 \end{enumerate}
-Eventually ACE algorithm should perform comparably with human musician, hence there is no excuses to stop pursuing large vocabulary systems. In addition, it is fully reasonable to design a system to support exactly the vocabulary currently being used in a standard evaluation method. But unfortunately, except for Chordino \cite{cannam2010sonic}, there is no system that handles large vocabulary with inversions, proposed in MIREX ACE 2013 as ``SeventhsBass'' \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}} (most other MIREX submissions support $majmin$, and some with larger vocabulary without inversions). Therefore, a ``SeventhsBass'' supportable system that improves on Chordino's performance is currently desirable.
+Eventually ACE algorithms should perform comparably with human musicians, hence there is no reason stop pursuing large vocabulary systems. In addition, it is fully reasonable to design a system to support exactly the vocabulary currently being used in a standard evaluation method. But unfortunately, except for Chordino \cite{cannam2010sonic}, there is no system that handles large vocabulary with inversions, proposed in MIREX ACE 2013 as ``SeventhsBass'' (most other MIREX submissions support $majmin$, and some with larger vocabulary without inversions). Therefore, a ``SeventhsBass'' supportable system that improves on Chordino's performance is currently desirable.
 
-Secondly, balanced performance on all chord categories is overlooked. It is no need to mention that systems with small vocabulary, such as $majmin$, do not have a balanced performance over a practical set of vocabulary. Even a system that supports a large vocabulary can also over-fit on ordinary chords \cite{deng2016hybrid}. Under imbalanced datasets, it is necessary to design proper scheme to keep performances on different classes as balanced as possible.
+Secondly, balanced performance on all chord categories is overlooked. It is no need to mention that systems with small vocabulary, such as $majmin$, do not have a balanced performance over a practical set of vocabulary. Even a system that supports a large vocabulary can also over-fit on ordinary chords \cite{deng2016hybrid}. Under imbalanced datasets, it is necessary to design proper schemes to keep performances on different classes as balanced as possible.
 
-Thirdly, the chord segmentation information is under-exploited. Evidences have shown that the recent ACE systems have similar segmentation quality performances \cite{burgoyne2014comparative}, given that they all perform segmentations and classifications in one single pass. Chords being rhythmically segmented is a fundamental difference of ACE from ASR. Such property could definitely be leverage for a better ACE system.
+Thirdly, the chord segmentation information is under-exploited. Evidences have shown that the recent ACE systems have similar segmentation quality performances \cite{burgoyne2014comparative}, given that they all perform segmentations and classifications in one single pass. The fact that chords are rhythmically segmented is a fundamental difference between ACE and ASR. Such nice property could definitely be leveraged to build a better ACE system.
 
-Fourthly, all deep learning pattern matching approaches incorporate ``global smoothing'', which is a type of prior domain knowledge injecting to the problem solution. It is desirable to devise a truly ``end-to-end'' deep learning approach, with a more dedicated training scheme, that transcribe chord sequence from raw feature spectra and avoid such manual post-filtering.
+Fourthly, all deep learning pattern matching approaches incorporate ``global smoothing'', which is a type of prior domain knowledge injecting to the problem solution. It is desirable to devise a truly ``end-to-end'' deep learning approach, with a more dedicated training scheme, that transcribes chord sequence from raw feature spectra and avoids manual post-filtering.
 
 This thesis, as contributions, tries to fill in these research gaps by a few novel ACE system designs.
 
