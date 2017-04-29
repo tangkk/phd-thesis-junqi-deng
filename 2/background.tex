@@ -393,20 +393,20 @@ All the above discussed techniques are regarded as ``feature engineering'', in w
 
 Different from a machine learning classification problem, feature learning targets at the intermediate representations instead of the output labels. Therefore this process can be achieved by many unsupervised learning algorithms such as {\it principle component analysis} (PCA) \cite{jolliffe2002principal}, {\it independent component analysis} (ICA) \cite{hyvarinen2004independent}, and {\it k-means clustering} \cite{macqueen1967some}. It can also be done by deep neural nets such as {\it deep belief network} (DBN) \cite{hinton2006fast} and {\it deep autoencoder} (DAE) \cite{bengio2009learning}. These algorithms normally do no require labeled data. Features can be learned using the unlabeled raw data.
 
-Certainly, supervised learning algorithms are also suitable for this task. These algorithms/models include {\it logistic regression}, {\it support vector machines} and some deep learning models like {\it multilayer perceptrons} (MLP) and {\it recurrent neural network} (RNN). Since these are all discriminative models, they rely on the labeled data to learn, disregarding huge amount of information in the raw data itself. Hence the features they learn should be good for classification purpose, but may not be sensible for generative purpose.
+Certainly, supervised learning algorithms are also suitable for this task. These algorithms/models include {\it logistic regression}, {\it support vector machines} and some deep learning models like {\it fully-connected neural network} (FCNN) and {\it recurrent neural network} (RNN). Since these are all discriminative models, they rely on the labeled data to learn, disregarding huge amount of information in the raw data itself. Hence the features they learn should be good for classification purpose, but may not be sensible for generative purpose.
 
 The following will discuss two important deep learning models (or deep neural nets) that are recently used in ACE for feature learning purpose.
 
-\Hsection{Multilayer Perceptron}
-Multilayer perceptron or feedforward neural network, is probably the most basic deep learning model that other models are built upon. Note that multilayer perceptron may have a different meaning from feedforward neural network because the classical ``perceptron'' model \cite{rosenblatt1958perceptron} is not the differentiable model (e.g., logistic, tanh, etc.) within a typical feedforward network \cite{rumelhart1988parallel}. But in this thesis, as in many other literatures, MLP is used to stand for a feedforward neural network, in order to avoid a sometimes confusing term {\it deep neural network} (DNN) \cite{deng2014deep}, which may refer to any type of neural network powered by deep learning technologies.
+\Hsection{Fully-connected Neural Network}
+Fully-connected Neural Network, is probably the most basic deep learning model that other models are built upon. Note that fully-connected neural network may have a different meaning from feedforward neural network because the classical ``perceptron'' model \cite{rosenblatt1958perceptron} is not the differentiable model (e.g., logistic, tanh, etc.) within a typical feedforward network \cite{rumelhart1988parallel}. But in this thesis, as in many other literatures, FCNN is used to stand for a feedforward neural network, in order to avoid a sometimes confusing term {\it deep neural network} (DNN) \cite{deng2014deep}, which may refer to any type of neural network powered by deep learning technologies.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\columnwidth, height=0.4\columnwidth]{2/figures/dbn-ft.pdf}
-\caption{feedforward neural network - multilayer perceptron}
+\caption{fully-connected neural network}
 \label{fig:2-dbn-ft}
 \end{figure}
-Figure~\ref{fig:2-dbn-ft} shows a MLP with three hidden layers. Each layer contain a set of {\it artificial neurons}. Each neuron will carry out the following procedures:
+Figure~\ref{fig:2-dbn-ft} shows an FCNN with three hidden layers. Each layer contain a set of {\it artificial neurons}. Each neuron will carry out the following procedures:
 \begin{enumerate}
 \item take the sum of their inputs weighted by the incoming connections (optionally, a bias input may also apply);
 \item apply a non-linear function on the weighted sum;
@@ -432,7 +432,7 @@ where $g_j$ is the ground truth prediction on the $j^{th}$ class, and $y_j$ is t
 
 The most common training practice is called {\it stochastic gradient descent} (SGD). It is an iterative training process. At each iteration a batch of samples are randomly drawn from the training dataset, and then a gradient descent with back-propagation is performed to update the network connections once. This process is repeated until convergence or when the stopping criteria is satisfied.
 
-Another very popular feedforward architecture is the {\it convolutional neural network} (CNN), which is a sparsely connected MLP with weight sharing and layer output pooling operations \cite{lecun1995convolutional}.
+Another very popular feedforward architecture is the {\it convolutional neural network} (CNN), which is a sparsely connected FCNN with weight sharing and layer output pooling operations \cite{lecun1995convolutional}.
 
 \Hsection{Deep Belief Network}
 Deep belief network is a generative model that captures the joint probability distribution of several layers of latent variables and the visible variables that they generate. Figure~\ref{fig:2-dbn} illustrates a DBN with three hidden layers, and an extra output layer can be added on top of the last hidden layer with feedforward connections in order to turn it into a discriminative model.
@@ -499,7 +499,7 @@ Pre-training the DBN in Figure~\ref{fig:2-dbn-pt} takes the following steps:
 \item Transform the input bottom-up by all trained RBMs and train the next RBM;
 \item Repeat the previous step until there is no RBM left.
 \end{enumerate}
-The fine-tuning phase is similar to training a MLP. The network weights are first initialized by the outcome of the pre-training phase, then all weights will be turned into feedforward and the classification cost from the output layer will back-propagate to update the network's feedforward weights.
+The fine-tuning phase is similar to training a FCNN. The network weights are first initialized by the outcome of the pre-training phase, then all weights will be turned into feedforward and the classification cost from the output layer will back-propagate to update the network's feedforward weights.
 
 \Hsection{Feature Learning in ACE}
 Hamel and Eck \cite{hamel2010learning} are among the first to introduce feature learning techniques into MIR. Specifically, their task is music genre classification, where a DBN is used to learn features from the raw data. They start by training the DBN as a frame-wise genre classifier, and then take the activation of the last hidden layer as the learned feature. Later, Humphrey et al. \cite{humphrey2013feature} explore the theoretical underpinnings of feature learning in music informatics. Sigtia and Dixon \cite{sigtia2014improved} summarize previous works and introduce more such technologies in the MIR field.
@@ -508,7 +508,7 @@ The first feature learning approach in ACE is proposed by Humphrey and Bello \ci
 
 Boulanger et al. \cite{boulanger2013audio} take a DBN based approach similar to Hamel and Eck's. They first perform a PCA to a STFT spectrogram to reduce input dimensionality. Then they train a DBN to predict the output at each frame. Instead of taking these predictions to the pattern matching machine, they use the activation of the last hidden layer as the ``feature''. There is neither concept of ``chroma'' nor ``pitch class'' in this work. The ``pitch class'' is avoided by the PCA preprocessing stage. Later, Zhou and Lerch \cite{zhou2015chord} augment this process with a time-frequency splicing function inserted between the PCA and the DBN in order to exploit similarities of neighboring frames.
 
-Sigtia et al. \cite{sigtia2015audio} use a simple MLP to classify chord labels for each frame. They also take the activation of the last hidden layer as features. But instead of plugging it directly to the pattern matching engine, they perform a ``pre-processing'' stage of mean pooling, similar to the mean-filtering applied to a chromagram.
+Sigtia et al. \cite{sigtia2015audio} use a simple FCNN to classify chord labels for each frame. They also take the activation of the last hidden layer as features. But instead of plugging it directly to the pattern matching engine, they perform a ``pre-processing'' stage of mean pooling, similar to the mean-filtering applied to a chromagram.
 
 
 \subsection{Pattern Matching} \label{sec:2-pm}
@@ -610,11 +610,11 @@ where $R$ is a square matrix, and $\sigma$ is an activation function. The networ
 \begin{equation}
 Y^t = softmax(\sum_i B_{i,k}H^t_i).
 \end{equation}
-Similar to MLP, RNN is a discriminative model that captures the conditional probability of the output sequence $Y (Y^1,Y^2,...)$ given the input sequence $X (X^1, X^2,...)$:
+Similar to FCNN, RNN is a discriminative model that captures the conditional probability of the output sequence $Y (Y^1,Y^2,...)$ given the input sequence $X (X^1, X^2,...)$:
 \begin{equation}
 P(Y|X) = RNN(X).
 \end{equation}
-Different from MLP, RNN models this probability in a sequential manner, so that every frame of the output sequence $Y^t$ is conditioned on not only the current input frame $X^t$ but also all previous input frames $X^{1:t}$. It can be even made conditioned on the whole input sequence $X$ if a backward hidden layer is also implemented. This is called a {\it bidirectional recurrent neural network} (BRNN), as illustrated in Figure~\ref{fig:2-brnn}.
+Different from FCNN, RNN models this probability in a sequential manner, so that every frame of the output sequence $Y^t$ is conditioned on not only the current input frame $X^t$ but also all previous input frames $X^{1:t}$. It can be even made conditioned on the whole input sequence $X$ if a backward hidden layer is also implemented. This is called a {\it bidirectional recurrent neural network} (BRNN), as illustrated in Figure~\ref{fig:2-brnn}.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\columnwidth, height=0.45\columnwidth]{2/figures/brnn.pdf}
@@ -730,12 +730,12 @@ in which the core idea of this format is revealed. Basically, a chord label is p
 \section{Review of ACE Evaluation} \label{sec:2-eval}
 This section is going to review several issues regarding the evaluation of ACE systems. First of all the system performance metrics will be discussed. Then under the context of a yearly music information retrieval exchange event, the actual application of the metrics to different chord matching functions will be elaborated. The section is concluded by a fundamental issue of ACE that is closely related to evaluation - human annotation subjectivity.
 
-\subsection{Estimation Accuracy Metrics}
+\subsection{Estimation Accuracy Metrics} \label{subsec:2-metrics}
 In his pioneering ACE paper, Fujishima \cite{fujishima1999realtime} scores the system with:
 \begin{equation}\label{eq:2-fujiscore}
 \mathit{score = {\#\,correct\,guesses\over\#\,all\,guesses},}
 \end{equation}
-where a $guess$ is made on every frame. This is later coined as {\it frame-based chord symbol recall} \cite{harte2010towards}, {\it average overlap score} \cite{oudre2010template}, or {\it relative correct overlap} (RCO) \cite{mauch2010automatic}. Generally, the scores given by these method can all be regarded as {\it chord symbol recall} (CSR), formulated as:
+where a $guess$ is made on every frame. This is later coined as {\it frame-based chord symbol recall} \cite{harte2010towards}, {\it average overlap score} \cite{oudre2010template}, or {\it relative correct overlap} (\textit{RCO}) \cite{mauch2010automatic}. Generally, the scores given by these method can all be regarded as {\it chord symbol recall} (\textit{CSR}), formulated as:
 
 \begin{equation}\label{eq:2-csr-}
 \mathit{CSR={|\text{correctly identified frames}| \over |\text{total number of frames}|}\times 100\%}.
@@ -760,10 +760,10 @@ Assuming there are only these two chords in the piece, the overall recall could 
 \begin{equation}
 recall = {{N_C * recall_C + N_{Am} * recall_{Am}} \over {N_C + N_{Am}}} = {{TP_C + TP_{Am}} \over {\#\,of\,frames}},
 \end{equation}
-which is equivalent to Equation~\ref{eq:2-fujiscore} and ~\ref{eq:2-csr-}. But strictly speaking this is better termed as the \textit{accuracy} metric, which is defined exactly as the correctly classified samples divided by the total number of samples. It is worth noting that the above ``weighted sum'' process in deriving the overall recall is actually a ``bias'', that classes with larger portions are more important than those with smaller portions. This bias should always be reminded whenever we interpret ACE results reported in CSRs.
+which is equivalent to Equation~\ref{eq:2-fujiscore} and ~\ref{eq:2-csr-}. But strictly speaking this is better termed as the \textit{accuracy} metric, which is defined exactly as the correctly classified samples divided by the total number of samples. It is worth noting that the above ``weighted sum'' process in deriving the overall recall is actually a ``bias'', that classes with larger portions are more important than those with smaller portions. This bias should always be reminded whenever we interpret ACE results reported in \textit{CSR}s.
 
 %This is a waste of computation by noting that a chord label actually remains the same for hundreds or thousands of frames.
-Instead of computing the CSR in a frame-based way, Harte \cite{harte2010towards} introduces a {\it segment-based chord symbol recall}:
+Instead of computing the \textit{CSR} in a frame-based way, Harte \cite{harte2010towards} introduces a {\it segment-based chord symbol recall}:
 
 \begin{equation}
 \mathit{CSR = {|S\cap S^*|\over|S^*|} \times 100\%,}
@@ -782,9 +782,16 @@ For multiple tracks estimation, the overall performance is usually calculated by
 \mathit{WCSR = {\sum_i{Length(Track_i)*CSR_i} \over \sum_i{Length(Track_i)}}\times 100\%,}
 \label{eq:2-wcsr}
 \end{equation}
-where subscript $i$ denotes the track number. It is the weighted average of all tracks' CSRs by the lengths of these tracks. This is equivalent to the {\it total relative correct overlap} (TRCO) used by McVicar \cite{mcvicar2013machine}. Another approach is to simply take the average CSRs of all tracks without weighting, and this is called {\it average relative correct overlap} (ARCO).
+where subscript $i$ denotes the track number. It is the weighted average of all tracks' CSRs by the lengths of these tracks. This is equivalent to the {\it total relative correct overlap} (\textit{TRCO}) used by McVicar \cite{mcvicar2013machine}.
 
-Instead of an overall performance metric, ACE researchers also report CSR scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}.
+Another approach is to simply take the average CSRs of all tracks without weighting, and this is called {\it average relative correct overlap} (\textit{ARCO}). This could measure the well-roundedness or balanced performance of a model. Equivalently, we could use ``Average Chord Quality Accuracy''(\textit{ACQA}) \cite{cho2014improved}, which averages the \textit{WCSR}s of all chord types in the test vocabulary with equal weights:
+\begin{equation}
+\mathit{ACQA = {{\sum{WCSR_{C}}} \over {\#\,of\,chords}}}.
+\label{eq:2-acqa}
+\end{equation}
+Models that over-fit on a few chord types tend to get lower \textit{ACQA}s, while those well balanced ones will have higher \textit{ACQA}s.
+
+Instead of an overall performance metric, ACE researchers also report \textit{CSR} scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}.
 
 \subsection{Chord Matching Functions}\label{sec:2-chordmatch}
 All above metrics compute scores only if a {\it chord matching function} is defined so that the evaluation algorithm knows what is a ``match''. Such function takes the form of \cite{harte2010towards}:
@@ -807,7 +814,7 @@ From 2010 to 2012, MIREX ACE takes a different $M$. No $majmin$ mapping is intro
 
 Both the $majmin$ mapping and ``bag of chroma'' chord matching functions are essentially stemming from a fact: while the ground truth has a vocabulary of unlimited (or very large) size, the ACE output has not. This contradiction takes effect when the chord estimations are to be compared against the manual annotation. Mechanisms must be invented to make sure that they are reasonably comparable in any case. In this sense, unless an ACE system can nicely support an unlimited vocabulary, any chord matching function will be an approximation. $majmin$ mapping simplifies everything to be $maj$ and $min$, neglecting all subtle different flavors of chords, and the results will inevitably favor those systems who only generate $majmin$; ``bag of chroma'', to the other extreme, tries to avoid the above mentioned contradiction altogether, but actually disregards the importance of chord voicing \footnote{the way a chord is organized vertically (along pitch dimension)}, chord naming, and the containing relationships among chords, as the results will bias towards those systems that pay little attention to these issues. Nevertheless, researchers continue to look for better evaluation methods, or approximations, which is consented \footnote{\url{http://www.music-ir.org/mirex/wiki/The\_Utrecht\_Agreement\_on\_Chord\_Evaluation}} to be an essential key to better ACE systems.
 
-In 2013, MIREX ACE adopted a new evaluation scheme \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}} \cite{pauwels2013evaluating}. The major difference of this method is that it computes the WCSR of four different vocabularies:
+In 2013, MIREX ACE adopted a new evaluation scheme \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}} \cite{pauwels2013evaluating}. The major difference of this method is that it computes the \textit{WCSR} of four different vocabularies:
 \begin{quote}
 \begin{itemize}
 %\item Chord root note only ({\it Root});
@@ -828,11 +835,11 @@ Here are more original quotes from the MIREX website \footnote{\url{http://www.m
 \item Our recommendations are motivated by the frequencies of chord qualities in the Billboard corpus of American popular music \cite{burgoyne2011expert}
 \end{itemize}
 \end{quote}
-Despite the chord mappings, in many ways this is a much better approximation to an ideal evaluation method. It provides more perspectives into the system performance by considering a spectrum of different chord matching scenarios. Moreover, it is the first evaluation scheme to incorporate segmentation quality and chord inversions. The segmentation quality (SQ), according to the quote above, is computed as {\it directional Hamming distance} (DHD). Assuming $S^*$ and $S$ are the segmentations of the ground truth and the estimation respectively, the DHD from $S^*$ to $S$ is:
+Despite the chord mappings, in many ways this is a much better approximation to an ideal evaluation method. It provides more perspectives into the system performance by considering a spectrum of different chord matching scenarios. Moreover, it is the first evaluation scheme to incorporate segmentation quality and chord inversions. The segmentation quality (\textit{SQ}), according to the quote above, is computed as {\it directional Hamming distance} (\textit{DHD}). Assuming $S^*$ and $S$ are the segmentations of the ground truth and the estimation respectively, the \textit{DHD} from $S^*$ to $S$ is:
 \begin{equation}
 h(S^*||S) = \sum_{i=1}^{N_{S^*}}(|S_i|-\max_j|S_i^* \cap S_j|),
 \end{equation}
-where subscription $i$ indicates the $i^{th}$ segment. Note that the distance is not commutable, which means $h(S^*||S)$ and $h(S||S^*)$ represent two different distances. Conventionally, $h(S^*||S)$ measures {\it under-segmentation} and $h(S||S^*)$ measures {\it over-segmentation}. In either case, a better segmentation is indicated by a smaller value. When reported as scores, they are usually normalized by the lengths of the tracks, and minus by 1, in order to make it in the $[0,1]$ range similar to the WCSR score. Harte \cite{harte2010towards} instead suggests to report one minus the maximum of the two normalized scores, yielding:
+where subscription $i$ indicates the $i^{th}$ segment. Note that the distance is not commutable, which means $h(S^*||S)$ and $h(S||S^*)$ represent two different distances. Conventionally, $h(S^*||S)$ measures {\it under-segmentation} and $h(S||S^*)$ measures {\it over-segmentation}. In either case, a better segmentation is indicated by a smaller value. When reported as scores, they are usually normalized by the lengths of the tracks, and minus by 1, in order to make it in the $[0,1]$ range similar to the \textit{WCSR} score. Harte \cite{harte2010towards} instead suggests to report one minus the maximum of the two normalized scores, yielding:
 \begin{equation}
 h(S^*,S)=1-{1\over T}\max\{h(S^*||S), h(S||S^*)\} \in [0,1].
 \end{equation}
