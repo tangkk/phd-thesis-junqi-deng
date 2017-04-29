@@ -8,7 +8,7 @@
 % ----------------------- paths to graphics ------------------------
 
 
-Previous chapters have explored ACE in SeventhsBass vocabulary, which contains a limited amount of sevenths and inversions. This vocabulary is most used in music styles such as pop, rock, and folk songs. But chord types such as sevenths extensions, suspensions and alternations are not included in SeventhsBass. This chapter, following the original large vocabulary spirit of Fujishima \cite{fujishima1999realtime} and Sheh \cite{sheh2003chord}, tries a preliminary ACE solution that covers a much larger vocabulary, and beyond that, puts together a ``chord-scale'' estimation system that could be deployed in an automated jazz improvisation platform.
+Previous chapters have explored ACE in \textit{SeventhsBass} vocabulary, which contains a limited amount of sevenths and inversions. This vocabulary is most used in music styles such as pop, rock, and folk songs. But chord types such as sevenths extensions, suspensions and alternations are not included in \textit{SeventhsBass}. This chapter, following the original large vocabulary spirit of Fujishima \cite{fujishima1999realtime} and Sheh \cite{sheh2003chord}, tries a preliminary ACE solution that covers a much larger vocabulary, and beyond that, puts together a ``chord-scale'' estimation system that could be deployed in an automated jazz improvisation platform.
 
 % ----------------------- contents from here ------------------------
 \section{Jazz Fundamentals} \label{sec:5-jazzfund}
@@ -26,7 +26,7 @@ As jazz is an improvisation based music style, extracting chord progressions and
 \begin{quote}
 a linear rendering of a complex chord - an extended chord structure, with tensions and non-chord tones arrayed within an octave.
 \end{quote}
-Each chord-scale is constructed by a root and a scale, where the root is similar to the root of a chord. As for the scale, there are seven commonly used scales in jazz that are derived from the major scale, each of those is called a {\it mode} or {\it modal scale}. They are:
+Each chord-scale is constructed by a root and a scale, where the root is similar to the root of a chord. As for the scale, there are seven commonly used scales in jazz that are derived from the \textit{major} scale, each of those is called a {\it mode} or {\it modal scale}. They are:
 \begin{enumerate}
 \item Ionian: $WWHWWWH$
 \item Dorian: $WHWWWHW$
@@ -36,7 +36,7 @@ Each chord-scale is constructed by a root and a scale, where the root is similar
 \item Aeolian: $WHWWHWW$
 \item Locrian: $HWWHWWW$
 \end{enumerate}
-The ``W'' and ``H'' indicate the seven sequential whole/half step intervals within the scale (note that $W$ = $2*H$). These modes, from 1 to 7, can be memorized as left-circular shifting the major scale ($WWHWWWH$) one note at a time. Similarly, modes can also be built based on {\it harmonic minor scale} ($WHWWHW^+H$) or {\it melodic minor scale} ($WHWWWWH$). Alternatively, there could be other scales out of this construction methodology, such as the {\it whole-half diminished scale} ($WHWHWHWH$), {\it half-whole diminished scale} ($HWHWHWHW$), {\it whole-tone scale} ($WWWWWW$) or {\it chromatic scale} ($HHHHHHHHHHHH$).
+The ``W'' and ``H'' indicate the seven sequential whole/half step intervals within the scale (note that $W$ = $2*H$). These modes, from 1 to 7, can be memorized as left-circular shifting the \textit{major} scale ($WWHWWWH$) one note at a time. Similarly, modes can also be built based on {\it harmonic minor scale} ($WHWWHW^+H$) or {\it melodic minor scale} ($WHWWWWH$). Alternatively, there could be other scales out of this construction methodology, such as the {\it whole-half diminished scale} ($WHWHWHWH$), {\it half-whole diminished scale} ($HWHWHWHW$), {\it whole-tone scale} ($WWWWWW$) or {\it chromatic scale} ($HHHHHHHHHHHH$).
 
 Normally, a chord-scale is chosen based on the current musical key context, which is determined by the underlying {\it harmonic functional group} \cite{hojnackijazz,levine2011jazztheory}. Table~\ref{tab:5-chordscale} show some choices suggested by a jazz guitar tutorial book \cite{jazzguitarbook}. For a specific chord type, there could be multiple choices of scales, but the best picks will be determined by the musical key context, where the scale of choice cannot strongly indicate otherwise.
 \begin{table}
@@ -44,14 +44,14 @@ Normally, a chord-scale is chosen based on the current musical key context, whic
 \footnotesize
 \begin{tabular}{|c|c|} \hline
 Chord & Scale \\ \hline
-7 & Mixolydian, Phrygian-Dominant, Whole-tone \\ \hline
-maj7 & Lydian, Lydian-Dominant, Ionian, Ionian\#5 \\ \hline
-min7 & Dorian, Phrygian, Aeolian \\ \hline
-min7b5 & Locrian, Locrian\#2 \\ \hline
-7b9 & Phrygian-Dominant \\ \hline
-maj7\#11 & Lydian \\ \hline
-maj7\#5 & Ionian\#5 \\ \hline
-dim7 & Whole-half Diminished \\ \hline
+\textit{7} & Mixolydian, Phrygian-Dominant, Whole-tone \\ \hline
+\textit{maj7} & Lydian, Lydian-Dominant, Ionian, Ionian\#5 \\ \hline
+\textit{min7} & Dorian, Phrygian, Aeolian \\ \hline
+\textit{min7b5} & Locrian, Locrian\#2 \\ \hline
+\textit{7b9} & Phrygian-Dominant \\ \hline
+\textit{maj7\#11} & Lydian \\ \hline
+\textit{maj7\#5} & Ionian\#5 \\ \hline
+\textit{dim7} & Whole-half Diminished \\ \hline
 \end{tabular}
 \caption{Chord-scale choices examples}
 \label{tab:5-chordscale}
@@ -74,7 +74,7 @@ Table~\ref{tab:5-aceconfig} shows all ACE configurations considered in the exper
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
 Dimension & Configuration \\ \hline
-Deep learning system & MLP, DBN, BLSTM-RNN\\ \hline
+Deep learning system & FCNN, DBN, BLSTM-RNN\\ \hline
 Hidden layers & (800,800)\\ \hline
 Segment tiling & 6\\ \hline
 Feature level & tuned notegrame(-ns), chromagram (-ch) \\ \hline
@@ -93,7 +93,7 @@ All training data are to be used at either tuned notegram (-ns) or chromagram (-
 Note that inversions are not considered in this preliminary jazz ACE study because: 1. there are very few inversion notations in the currently used datasets; 2. it results in a huge number of classes.
 
 \subsection{Results and Discussion}
-Following the MIREX ACE convention, system performance on jazz chord vocabulary is evaluated based on WCSR. The WCSR computing procedure in its fairest/strictest sense should regard each chord as it is without applying any sort of mapping scheme, as happens to SeventhsBass. In the following each system is evaluated in this way. The baseline is an augmented Chordino with jazz vocabulary extension (Jazz-Chordino). The augmentation is done within its GMM-HMM engine by applying the jazz chord dictionary to the Gaussian model, whose setting is given in Table \ref{tab:5-jcgau}.
+Following the MIREX ACE convention, system performance on jazz chord vocabulary is evaluated based on \textit{WCSR}. The \textit{WCSR} computing procedure in its fairest/strictest sense should regard each chord as it is without applying any sort of mapping scheme, as happens to \textit{SeventhsBass}. In the following each system is evaluated in this way. The baseline is an augmented Chordino with jazz vocabulary extension (Jazz-Chordino). The augmentation is done within its GMM-HMM engine by applying the jazz chord dictionary to the Gaussian model, whose setting is given in Table \ref{tab:5-jcgau}.
 \begin{table}[h]
 \centering
 \footnotesize
@@ -108,7 +108,7 @@ Neither bass nor treble & 0 & 0.2 \\ \hline
 \label{tab:5-jcgau}
 \end{table}
 
-All systems are tested using GaryBurton7 dataset \footnote{Composition of chords in GaryBurton7: maj:0.09; min7:0.13; 7:0.22; min7b5:0.12; 7b9:0.06; min:0.1; maj:0.14; others:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to SeventhsBass', but the results are in a sense more convincing, since the test set is not dominated by chords like major and minor. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
+All systems are tested using GaryBurton7 dataset \footnote{Composition of chords in GaryBurton7: \textit{maj}:0.09; \textit{min7}:0.13; \textit{7}:0.22; \textit{min7b5}:0.12; \textit{7b9}:0.06; \textit{min}:0.1; \textit{maj}:0.14; \textit{}:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to \textit{SeventhsBass}', but the results are in a sense more convincing, since the test set is not dominated by chords like \textit{major} and \textit{minor}. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
 
 Meanwhile, notice that the SQ (segmentation quality) of these systems are all relatively high, and these are achieved in pure jazz test audio. All systems use Jazz-Chordino's GMM-HMM as segmentation engine. The differences between SQ scores are caused by different merging of consecutive chord boundaries in different systems. Obviously the success of Jazz-BLSTM owes to the success of the GMM-HMM segmentation at the beginning; then based on the segmentation it performs classifications without taking care of chord progression context.
 %This task is comfortable to deal with by a fixed-length input deep learning model. The advantage may not be obvious under a small chord vocabulary, but is obvious under a large chord vocabulary.
@@ -117,12 +117,12 @@ Meanwhile, notice that the SQ (segmentation quality) of these systems are all re
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
-systems & WCSR & SQ\\ \hline
+systems & \textit{WCSR} & \textit{SQ}\\ \hline
 Jazz-Chordino & 57.99 & 81.68\\ \hline
-Jazz-MLP-ns & 61.81& 76.18\\ \hline
+Jazz-FCNN-ns & 61.81& 76.18\\ \hline
 Jazz-DBN-ns & 62.33& 80.73\\ \hline
 \textbf{Jazz-BLSTM-ns} & \textbf{66.41} & 80.78\\ \hline
-\textbf{Jazz-MLP-ch} & \textbf{65.65} & 81.94\\ \hline
+\textbf{Jazz-FCNN-ch} & \textbf{65.65} & 81.94\\ \hline
 Jazz-DBN-ch & 4.56& 20.42\\ \hline
 Jazz-BLSTM-ch & 63.72 & 82.22\\ \hline
 \end{tabular}

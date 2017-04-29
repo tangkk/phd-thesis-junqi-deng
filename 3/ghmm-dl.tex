@@ -13,9 +13,9 @@ As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically three types
 \end{itemize}
 All these approaches apply similar deep learning methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
 
-This chapter introduces a new ACE approach that leverages this property of chords. Particularly, the method described here can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region.
-
 Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification in one single pass at the same time, which leads to the belief that setting apart the two will bring more benefit to ACE system performance.
+
+This chapter introduces a new ACE approach that leverages this property of chords. Particularly, the method described here can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region. This approach is applied in an LVACE scenario, and it shows preliminary success.
 
 %: ----------------------- contents from here ------------------------
 
@@ -1088,7 +1088,6 @@ At last the proposed approach is compared with the baseline approach - Chordino.
 	nodes near coords align={vertical},
 	legend style={font=\scriptsize},
 	]
-	%\addplot [ybar,fill=black,draw=black] coordinates {(FCNN,288.1)(DBN,244.1)(BLSTM-RNN,330.1)(Chordino,299.0)};
 	\addplot [ybar,fill=black,draw=black] coordinates {(FCNN,12.6)(DBN,10.8)(BLSTM-RNN,22.6)(Chordino,20.9)};
 	\end{axis}
 	\end{tikzpicture}
@@ -1276,14 +1275,11 @@ It is difficult to make any conclusive statement out of these three different ta
 
 
 \section{Summary} \label{sec:3-concln}
-This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in LVACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable large vocabulary segmentation-classification ACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
+This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable segmentation-classification LVACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
 
-Within the range of the experiments in Section~\ref{sec:3-res}, the results indicate that among the three proposed deep learning models, BLSTM-RNN is the most balanced one for large vocabulary ACE solution, while both FCNN and DBN tend to over-fit the most common chords. The bass-treble chromagram (-ch) feature contains strong prior knowledge about chord classification that could highly affect the performance of the related models. In contrast, the notegram (-ns) feature is more suitable for deep learning tasks. Both FCNN and BLSTM-RNN benefits from more training data at the -ns level.
+Within the range of the experiments in Section~\ref{sec:3-res}, the results indicate that among the three proposed deep learning models, BLSTM-RNN is the most balanced one for LVACE solution, while both FCNN and DBN tend to over-fit the most common chords. The bass-treble chromagram (-ch) feature contains strong prior knowledge about chord classification that could highly affect the performance of the related models. In contrast, the notegram (-ns) feature is more suitable for deep learning tasks. Both FCNN and BLSTM-RNN benefits from more training data at the -ns level.
 
 Despite the best proposed systems outperform the baseline system in large vocabulary, all the testing scores presented in this chapter are far less than 100\%. There are at least three reasons as explained in the following.
-
-% while BLSTM-RNN generalize better in all categories.
-%Unlike FCNN and DBN, it takes most advantage of low level features, and generalizes better and better towards both common and long-tail chords given more and more training data.
 
 
 Firstly, the performance of the proposed framework is upper-bounded by the segmentation performance of the GMM-HMM process introduced in Section~\ref{sec:3-sg}, and the performance of this process on the test set is about 84\%.
@@ -1298,8 +1294,6 @@ Thirdly, there is non-negligible amount of noise in the ground truth annotations
 In the former case, the only annotator ``dictates'' a local ``gold standard'', so that whenever a machine tries to learn from the data, it actually targets at this annotator's ``style''. In the latter case, multiple annotators decide a ``gold standard'' in a way such as majority vote or data fusion \cite{koopsintegration,klein2004sensor}, so that a trained model actually aims at the optimal ``style'' that minimizes the objections within these annotators. Therefore, although the ``gold standard'' is indeed an important issue, designing a system that ``learns well'' remains another big part of the same problem.
 
 The author believes that the next step of ACE research should try to focus more on improving uncommon chords recognition accuracies. That is, instead of considering the overall \textit{WCSR} of a large vocabulary, attention should also be given to the versatility metric, such as \textit{ACQA}. Although the Chapter has pointed out that BLSTM-RNN model is very promising for handling large vocabulary with inversions, it is yet to explore possible ways to train the network under such ``imbalanced class population '' scenario \cite{chawla2004editorial}, which is an important future work.
-
-%It should be pointed out that the ultimate goal of ACE is to device a computer program that comes as close as possible to human musician's ability to chord transcription. Differentiating between long-tail chords and ordinary chords is undoubtedly what differentiates a musician from an amateur. Now that there are already good systems that match an amateur level \cite{ni2013understanding}, it is a good moment to start to pursuit systems at musician level.
 
 Finally, as a potential application scenario, a piece of timed chord sequence output can be combined with the \textit{.lrc} file \footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. This combination process is implemented \footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output.
 \begin{figure}[h]
