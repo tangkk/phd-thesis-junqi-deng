@@ -66,7 +66,7 @@ Considering a skewed distribution of chord classes in the training datasets \cit
 	\label{alg:4-ectrain}
 	\begin{algorithmic}
 		\REQUIRE
-		training data set - $(X,y)$;
+		training dataset - $(X,y)$;
 		number of chord classes - $nclass$;
 		early stopping flag - $es$.
 		\STATE % empty line
@@ -90,7 +90,7 @@ The core of this procedure is the ``\textit{BalancedDict}'' which computes for a
 	\label{alg:4-bod}
 	\begin{algorithmic}
 		\REQUIRE
-		labels of training data set - $y$;
+		labels of training dataset - $y$;
 		number of chord classes - $nclass$.
 		\STATE % empty line
 		\FOR {each class $i$ from $0$ to $nclass-1$}
@@ -125,7 +125,7 @@ For evaluation, five-fold cross-validation (CV) is performed throughout all expe
 \begin{table}[htb]
 	\caption{Variants considered in this study.}
 	\centering
-	\footnotesize
+	\scriptsize
 	\begin{tabular}{|c|c|c|} \hline
 		Dimension & Configurations \\ \hline
 		training scheme & completely random (CR); even chance (EC) \\ \hline
@@ -145,16 +145,16 @@ Table~\ref{tab:4-acqa} shows the comparison between CR and EC training schemes o
 \begin{table}[htb]
 	\caption{Comparison between CR and EC: seventh chords, inversions and ACQA scores; Dataset: JKURB; Input: notegram}
 	\centering
-	\footnotesize
+	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
 		& \textit{maj7} & \textit{7} & \textit{min7} & \textit{maj/5} & \textit{maj/3} & \textit{7/b7} & \textit{ACQA} \\ \hline
 		CR & 7.3 & 6.6 & 24.1 & 4.5 & 24.5 & 0.0 & 10.8 \\ \hline
-		EC &  14.6 & 9.9 & 30.9 & 12.0 & 32.4 & 7.8 & 13.2 \\ \hline
+		EC &  \textbf{14.6} & \textbf{9.9} & \textbf{30.9 }& \textbf{12.0} & \textbf{32.4} & \textbf{7.8} & \textbf{13.2} \\ \hline
 	\end{tabular}
 	\label{tab:4-acqa}
 \end{table}
 
-The results indicate that EC outscores CR in all the listed categories, some of which by very large amount such as \textit{maj/5} and \textit{maj/3}. Although not all chord types' comparison results are shown, the \textit{ACQA} comparison suggests that the EC training scheme could lead to a much more balanced LVACE system under a skewed class scenario.
+The results indicate that EC outscores CR in all the listed categories, some of which by very large amount such as \textit{maj/5} and \textit{maj/3}. Although not all chord types' comparison results are shown, the \textit{ACQA} comparison suggests that the EC training scheme could lead to a much more balanced LVACE system under a skewed class distribution scenario.
 
 \subsection{Major, Minor and WCSR}
 
@@ -162,10 +162,10 @@ The EC trained system has a more balanced performance than the CR's, however, it
 \begin{table}[htb]
 	\caption{Comparison between CR and EC: major, minor and WCSR scores; Dataset: JKURB; Input: notegram}
 	\centering
-	\footnotesize
+	\scriptsize
 	\begin{tabular}{|c|c|c|c|} \hline
 		& \textit{maj} & \textit{min} & \textit{WCSR} \\ \hline
-		CR & 74.2 & 52.2 & 52.0 \\ \hline
+		CR & \textbf{74.2} & \textbf{52.2} & \textbf{52.0} \\ \hline
 		EC &  67.8 & 51.4 & 50.6 \\ \hline
 	\end{tabular}
 	\label{tab:sb}
@@ -178,17 +178,17 @@ For more convincing comparison results, the same experiment are run 4 times usin
 \begin{table}[htb]
 	\caption{Comparison between CR and EC: WCSR and ACQA on different datasets. Input: notegram}
 	\centering
-	\footnotesize
+	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|} \hline
 		& CR-\textit{WCSR} & EC-\textit{WCSR} & CR-\textit{ACQA} & EC-\textit{ACQA} \\ \hline
-		JK & 46.4 & 46.4 & 13.5 & 15.5 \\ \hline
-		JKU & 50.4 & 49.1 & 11.2 & 13.5 \\ \hline
-		JKUR & 50.1 & 49.6 & 12.8 & 14.5 \\ \hline
-		JKURB & 52.0 & 50.6 & 10.8 & 13.2 \\ \hline
+		JK & 46.4 & 46.4 & 13.5 & \textbf{15.5} \\ \hline
+		JKU & \textbf{50.4} & 49.1 & 11.2 & \textbf{13.5} \\ \hline
+		JKUR & \textbf{50.1} & 49.6 & 12.8 & \textbf{14.5} \\ \hline
+		JKURB & \textbf{52.0} & 50.6 & 10.8 & \textbf{13.2} \\ \hline
 	\end{tabular}
 	\label{tab:datasize}
 \end{table}
-In each experiments, EC gets higher \textit{ACQA}, but less or equal \textit{WCSR}, than CR. It is sufficient to say that EC is a better scheme at training a balanced performing LVACE system in a skewed class scenario, while CR is better at training an LVACE system with higher overall performance.
+In each experiments, EC gets higher \textit{ACQA}, but less or equal \textit{WCSR}, than CR. It is sufficient to say that EC is a better scheme at training a balanced performing LVACE system in a skewed class distribution scenario, while CR is better at training an LVACE system with higher overall performance.
 
 For both training schemes, it could be also noticed that the increment of training data will lead to the increase of \textit{WCSR}, but the same thing does not happen in \textit{ACQA}. Assuming that every dataset contains a certain amount of noise (that is, mis-labeled, mis-segmented, or disagreed chord regions), this phenomenon could be tentatively explained as follows.
 
@@ -228,7 +228,7 @@ With these, the other three vocabularies' scores can be interpreted as follows. 
 \end{itemize}
 The rationale behind these tolerations is that if such confusions happen, the general harmony may still be acceptable by some music listening subjects.
 
-Within the \textit{SeventhsBass} column, there is a trend that for both training schemes, system performances increase with the increasing amount of training data. When the data set is fixed, the EC systems' \textit{SeventhsBass} score are fairly comparable or slightly higher than the CR systems'. The same observations can also be found in columns of \textit{MajMin}, \textit{MajMinBass} and \textit{Sevenths}. From this set of results it is difficult to draw any conclusions in terms of \textit{WCSR} performances between CR and EC schemes, but in Section~\ref{sec:4-scper} it could be seen that the their real difference lies in the long-tail and balanced performances.
+Within the \textit{SeventhsBass} column, there is a trend that for both training schemes, system performances increase with the increasing amount of training data. When the dataset is fixed, the EC systems' \textit{SeventhsBass} score are fairly comparable or slightly higher than the CR systems'. The same observations can also be found in columns of \textit{MajMin}, \textit{MajMinBass} and \textit{Sevenths}. From this set of results it is difficult to draw any conclusions in terms of \textit{WCSR} performances between CR and EC schemes, but in Section~\ref{sec:4-scper} it could be seen that the their real difference lies in the long-tail and balanced performances.
 
 For segmentation quality, CR systems are found to be consistently scoring slightly higher the EC systems. This might be due to the fact that the CR training scheme draws a batch from a random starting point which could be in the middle of a segment, while EC scheme always draws a batch from the start of a segment. This deviation eventually leads to the CR models more exposure to segment boundaries during training, and thus they will have a slightly better ``understanding'' of segments. The segmentation score in effect sets an upper bound for all other \textit{WCSR} scores, and one could expect a higher \textit{WCSR} of each vocabulary if the segmentation score is boosted.
 
@@ -347,7 +347,7 @@ It should be pointed out that in the above table neither the performance of a sp
 	\label{fig:4-datavsmaj5}
 \end{figure}
 
-A reasonable conjecture of why this might happen in EC is that the ground-truth labeling of chords, specifically in data sets U and B, are not consistent. Particularly, some inversion chords may be mislabeled as root positions or vice versa (for example, $maj/3$ labeled as $maj$ or vice versa) as they are sometimes easily confusable. There is a very good chance that this might happen and thus it introduces noise in the data, which could eventually blur the trained model's classification boundaries between these confusing chord pairs.
+A reasonable conjecture of why this might happen in EC is that the ground-truth labeling of chords, specifically in datasets U and B, are not consistent. Particularly, some inversion chords may be mislabeled as root positions or vice versa (for example, $maj/3$ labeled as $maj$ or vice versa) as they are sometimes easily confusable. There is a very good chance that this might happen and thus it introduces noise in the data, which could eventually blur the trained model's classification boundaries between these confusing chord pairs.
 %While this conjecture might be true, a more solid justification demands a much deeper investigation into the labels of these datasets and the chord confusion matrices between these confusing pairs mentioned above. (say it when you have the data)
 
 
@@ -392,7 +392,7 @@ This chapter proposes an end-to-end ``local feature extraction - global classifi
 
 Through detail analysis of the results, a plausible issue of annotation inconsistency is identified. As suggested in Chapter~\ref{cp:background}, a workaround would be to always use annotations provided by one single source/annotator, or, to the other extreme, always use multiple annotators and apply majority vote or data fusion. But eventually, the ultimate evaluation tool may remain a fully subjective one, that let user experience to judge system performance.
 
-Even chance training has been demonstrated very efficient in improving long-tail recognition accuracies. It also boosts some VERY long-tail cases from zero score to non-zero. However, it sacrifices the performances of large population chords, and thus downgrades the overall performances in all but the versatility category.
+Even chance training has been demonstrated very efficient in improving long-tail symbol recalls. It also boosts some VERY long-tail cases from zero score to non-zero. However, it sacrifices the performances of large population chords, and thus downgrades the overall performances in all but the versatility category.
 
 To improve this system, the key thing to be done is to improve RNN's segmentation quality, since it determines an upper-bound of all other system performance, and the scores of all other metrics scale in proportion to segmentation quality. This can possibly be done through a dedicated segmentation training pass, a deeper RNN model, or combination of a segmentation-RNN with a annotation-RNN in a hierarchical way.
 

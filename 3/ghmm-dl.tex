@@ -40,7 +40,7 @@ Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in this c
 Feature extraction starts by resampling the raw audio input at 11025 Hz, then followed by a short-time-Fourier-transform (STFT) with 4096-point Hamming window and 512-point hop size. It then proceeds to transform the linear-frequency spectrogram (2049-bin) to log-frequency spectrogram (252-bin, 3 bins per semitone ranging from MIDI note 21 to 104) using two cosine interpolation kernels proposed in \cite{mauch2010automatic}. The output at this step is a log-frequency-spectrogram, or log-spectrogram, $Y_{k,m}$, where $k$ is the index of frequency bins, and $m$ is the index of time frames. The total number of frames is $M$, and the total number of bins in each spectrum is $K$ (in this context $K$ = 252).
 
 The amount of deviation from standard tuning is estimated using the algorithm in \cite{dressler2007tuning}, where the amount of detuning is estimated as:
-\begin{equation}\label{eq:2-tuning}
+\begin{equation}\label{eq:3-tuning}
 	\delta = { {wrap(-\varphi-{2\pi}/3)} \over {2\pi} },
 \end{equation}
 where $wrap$ is a function wrapping its input to $[-\pi,\pi)$. $\varphi$ is the phase angle at $2\pi/3$ of the discrete-Fourier-transform (DFT) of ${\sum_m Y_{k,m}} / M$. The tuning frequency $\tau$ is then computed as:
@@ -147,7 +147,7 @@ Similar to \cite{cannam2013mirex}, the segmentation process is implemented as an
  Bass - not bass & 0 & 0.1 \\ \hline
  Treble - chord note & 1 & 0.2  \\ \hline
  Treble - not chord note & 0 & 0.2 \\ \hline
- No Chord (for all notes)  & 1 & 0.2  \\ \hline
+ N.C. (for all notes)  & 1 & 0.2  \\ \hline
 \end{tabular}
 \label{tab:3-gaussian}
 \end{table}
@@ -946,49 +946,20 @@ Compared BLSTM-RNN-ch with BLSTM-RNN-ns at JKURB, one could notice that although
 
 \subsection{Skewed classes}\label{sec:3-p7}
 
-A detail investigation of skewed chords (chords that constitute the minor population) performances reveals the true potential of BLSTM-RNN that makes us believe it to be a better neural network at handling LVACE under the proposed framework. In short: 1) BLSTM-RNN performs much better than FCNN and DBN on skewed chords as well as some common chords (chords that constitute the major population); 2) BLSTM-RNN scores much better in a balanced performance metric.
-\begin{figure*}[htb]
+A detail investigation of uncommon chords (chords that constitute the minor population) performances reveals the true potential of BLSTM-RNN that makes us believe it to be a better neural network at handling LVACE under the proposed framework. In short: 1) BLSTM-RNN performs much better than FCNN and DBN on uncommon chords as well as some common chords (chords that constitute the major population); 2) BLSTM-RNN scores much better in a balanced performance metric.
+\begin{figure}[htb]
 	\centering
-	\pgfplotsset{width=18cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={Average per chord performance from all 6seg-[800*2] models},
-	title style = {font=\scriptsize},
-	ybar=3pt,
-	bar width=5pt,
-	enlargelimits=0.15,
-	legend style={at={(0.5,-0.4)},
-		anchor=north,legend columns=-1},
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	symbolic x coords={maj, min, maj/3, maj/5, maj7, dom7, min/b3, min/5, min7, 7/b7},
-	x tick label style={rotate=30,anchor=east, font=\scriptsize},
-	xtick=data,
-	ymin=10, ymax=75,
-	%nodes near coords,
-	nodes near coords align={vertical},
-	legend style={font=\scriptsize},
-	]
-	\addplot [ybar,fill=white,draw=black] coordinates {(maj,72.6)(min,49.8)(maj/3,26.6)(maj/5,13.5)(maj7,13.0)(dom7,7.5)(min/b3,3.6)(min/5,5.3)(min7,32.9)(7/b7,23.7)};
-	
-	\addplot [ybar,fill=brown,draw=black] coordinates {(maj,74.0)(min,47.5)(maj/3,22.6)(maj/5,6.7)(maj7,4.8)(dom7,5.1)(min/b3,0)(min/5,0)(min7,25.0)(7/b7,0.1)};
-	
-	\addplot [ybar,fill=black,draw=black] coordinates {(maj,71.9)(min,56.9)(maj/3,49.9)(maj/5,27.8)(maj7,38.1)(dom7,23.9)(min/b3,15.1)(min/5,17.9)(min7,46.0)(7/b7,43.2)};
-	
-	\legend{FCNN,DBN,BLSTM-RNN}
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Comparison of common and skewed chords in different neural nets. All models are trained with 6seg-[800*2].}
+    \includegraphics[width=1\columnwidth]{3/res/13-av_skewed.pdf}
+	\caption{Comparison of common and uncommon chords in different neural nets. All models are trained with 6seg-[800*2].}
 	\label{fig:blstm-long-tail}
-\end{figure*}
+\end{figure}
 
 Figure~\ref{fig:blstm-long-tail} shows how different models perform on different chords (or ``chord types'', used interchangeably with ``chords'' in this context). These performances are reported as per chord \textit{WCSR}:
 \begin{equation}
 	\mathit{WCSR_{C} = {\sum{Length(C_i)*CSR_i} \over \sum{Length(C_i)}}},
 	\label{eq:wcsrchord}
 \end{equation}
-where the subscript $i$ denotes the $i^{th}$ instance of the chord $C$ within the data set. Among all chord types, \textit{maj}, \textit{min}, \textit{maj7}, \textit{min7} and \textit{7} are considered common chords, because they constitute the major population in pop/rock music \cite{burgoyne2011expert}. The other chords are considered as skewed chords. As demonstrated in Figure~\ref{fig:blstm-long-tail}, the advantage of FCNN and DBN over BLSTM-RNN appears only in \textit{maj}, but BLSTM-RNN outperforms them by large amounts in most skewed chords as well as other common chords.
-%Note that based on Equation~\ref{eq:csr} and~\ref{eq:wcsr}, even small advantages in common chords could eventually lead to large advantages in overall \textit{WCSR}s.
+where the subscript $i$ denotes the $i^{th}$ instance of the chord $C$ within the dataset. Among all chord types, \textit{maj}, \textit{min}, \textit{maj7}, \textit{min7} and \textit{7} are considered common chords, because they constitute the major population in pop/rock music \cite{burgoyne2011expert}. The other chords are considered as uncommon chords. As demonstrated in Figure~\ref{fig:blstm-long-tail}, the advantage of FCNN and DBN over BLSTM-RNN appears only in \textit{maj}, but BLSTM-RNN outperforms them by large amounts in most uncommon chords as well as other common chords.
 
 \begin{figure}[htb]
 	\centering
@@ -1111,16 +1082,15 @@ MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
 \subsection{Dataset and Vocabulary}
 It should be noted that except CM3, whose model parameters are all manually specified, all other systems involve extensive training:
 \begin{itemize}
-\item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has too high a SB score in Isophonic, while not as high in other test sets.
+\item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has too high a \textit{SeventhsBass} score in Isophonic, while not as high in other test sets.
 
 \item FK* are trained with the Isophonic, Robbie Williams \footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard \footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
 
 \item DK* are trained with USPop and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016.
 \end{itemize}
 
-In terms of chord vocabulary, both DK3, FK* and KO1 only support majmin, CM1 supports a large vocabulary including most types in SeventhsBass, and DK1\&2 support exactly the SeventhsBass.
-
-\begin{table*}[htb]
+In terms of chord vocabulary, both DK3, FK* and KO1 only support \textit{majmin}, CM1 supports a large vocabulary including most types in \textit{SeventhsBass}, and DK1\&2 support exactly the \textit{SeventhsBass}.
+\begin{table*}[h]
 \centering
 \scriptsize
 \caption{MIREX 2016 Results}
@@ -1174,51 +1144,53 @@ FK4 & 83.37 & 80.96 & 78.42 & 77.04 & 74.76 & 87.22 & 84.50 & 91.02\\ \hline
 KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 \end{tabular}
 \end{table*}
+
+
 \subsection{Results and Discussions}
-Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016 \footnote{B = Bass, Mm = MajMin, MmB = MajMinBass, R = Root, S = Sevenths, SB = SeventhsBass, Seg = Segmentation Quality}. Within the context of this thesis, the main focus of the results is the SeventhsBass column.
+Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016 (for brevity in the tables, B = \textit{Bass}, Mm = \textit{MajMin}, MmB = \textit{MajMinBass}, R = \textit{Root}, S = \textit{Sevenths}, SB = \textit{SeventhsBass}, Seg = \textit{Segmentation Quality}). Within the large vocabulary context of this thesis, the main focus of the results is the \textit{SeventhsBass} column.
 
 In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this test is not statistically valid to deduce any reasonable conclusions regarding these systems.
 
 In Billboard 2012 and 2013 tests, the best performances are both from DK1. Although FK* learn from part of the test set, they somehow does not outperform DK1. Moreover, DK1 outscore KO1 by about 3 points in both tests, which demonstrates a better generalization capability in DK1 system.
 
-JayChou 2015 test is probably the most convincing one, since on one had none of the systems are learning this set, and on the other hand it has more than 20\% of chords other than maj, min and sevenths, much more than other test sets. The performance on this test could well demonstrate the system's vocabulary versatility. This can be noticed by making comparison within the DK* systems, where DK1 and DK2 perform much better than DK3 in SB. The best two systems in this test are DK1 and DK2, outscoring the FK* systems by around 10 points, and the KO1 system by about 8 points.
+JayChou 2015 test is probably the most convincing one, since none of the systems are learning this set, and on the other hand it has more than 20\% of chords other than \textit{maj}, \textit{min} and \textit{sevenths}, which is much more than those in other test sets. The performance on this test could well demonstrate the system's vocabulary versatility. This can be noticed by making comparison within the DK* systems, where DK1 and DK2 perform much better than DK3 in \textit{SeventhsBass}. The best two systems in this test are DK1 and DK2, outscoring the FK* systems by around 10 points, and the KO1 system by about 8 points.
 
-Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of maj, min and sevenths (probably > 90\%), which is very similar to the chord composition of the Isophonic set. Therefore systems that only support a small chord vocabulary will have a huge advantage by not being able to have confusions on long-tail chords.
+Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of \textit{maj}, \textit{min} and \textit{sevenths} (probably > 90\%), which is very similar to the chord composition of the Isophonic set. Therefore systems that only support a small chord vocabulary will have a huge advantage by not being able to have confusions on long-tail chords.
 
-\section{On Smaller Vocabulary}
-This chapter is mainly developed based on large vocabulary, specifically, the SeventhsBass vocabulary. In order to do a comparison between the proposed system framework and other approaches, a set of experiments are conducted using two smaller vocabularies: 1, MajMin; 2, Full121 vocabulary introduced by Mauch \cite{mauch2010automatic} (also mentioned in Section~\ref{sec:2-largevocab}). For MajMin system implementation, each label in the training set will be mapped to its MajMin form following a normal mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only MajMin labels. For Full121 implementation, a slightly modified version of chord mapping strategy \cite{mauch2010automatic} is followed.
+\section{On Smaller Vocabularies}
+This chapter is mainly developed based on large vocabulary, specifically, the \textit{SeventhsBass} vocabulary. In order to do a comparison between the proposed system framework and other approaches, a set of experiments are conducted using two smaller vocabularies: 1, \textit{MajMin}; 2, \textit{Full121} vocabulary introduced by Mauch \cite{mauch2010automatic} (also mentioned in Section~\ref{sec:2-largevocab}). For \textit{MajMin} system implementation, each label in the training set will be mapped to its \textit{MajMin} form following a normal chord mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only \textit{MajMin} labels. For \textit{Full121} implementation, a slightly modified version of chord mapping strategy \cite{mauch2010automatic} is followed.
 
 \subsection{On MajMin}
-Table~\ref{tab:3-overallres} shows a SeventhsBass evaluation comparison, where all systems, except for Chordino, only supports MajMin vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand the CQA of these systems are all much lower because of a much smaller vocabulary than Chordino.
+Table~\ref{tab:3-overallres} shows a \textit{SeventhsBass} evaluation comparison, where all systems, except for Chordino, only supports \textit{MajMin} vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand the \textit{ACQA} of these systems are all much lower because of a much smaller vocabulary than Chordino's.
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Overall WCSR scores; All systems are trained with CJKUR-(800,800), with only MajMin vocabulary support.}
+\caption{Overall WCSR scores; All systems, besides Chordino, are trained with CJKUR-[800*2], tested on the TheBeatles180 dataset, with only MajMin vocabulary support.}
 \label{tab:3-overallres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
-System & B & Mm & MmB & R & S & SB & Seg & CQA \\ \hline
-chordino & 76.41 & 74.30 & 71.40 & 77.19 & 52.99 & 50.60 & 83.87 & 299.01\\ \hline
-FCNN-ch & 74.71 & 73.25 & 71.22 & 75.74 & 65.08 & 63.18 & 83.57 & 151.57\\ \hline
-DBN-ch & 77.04 & 75.50 & 73.39 & 78.10 & 67.26 & 65.30 & 83.78 & 156.80\\ \hline
-BLSTM-RNN-ch & 76.88 & 75.05 & 72.84 & 78.11 & 66.58 & 64.50 & 83.74 & 157.46\\ \hline
-FCNN-ns & 72.65 & 70.00 & 68.14 & 73.35 & 62.72 & 60.98 & 83.59 & 140.57\\ \hline
-DBN-ns & 72.91 & 70.96 & 69.14 & 73.66 & 63.33 & 61.66 & 83.44 & 144.89\\ \hline
-BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 153.63\\ \hline
+System & B & Mm & MmB & R & S & SB & Seg & ACQA \\ \hline
+Chordino & 76.41 & 74.30 & 71.40 & 77.19 & 52.99 & 50.60 & 83.87 & 16.61\\ \hline
+FCNN-ch & 74.71 & 73.25 & 71.22 & 75.74 & 65.08 & 63.18 & 83.57 & 8.42\\ \hline
+DBN-ch & 77.04 & 75.50 & 73.39 & 78.10 & 67.26 & 65.30 & 83.78 & 8.71\\ \hline
+BLSTM-RNN-ch & 76.88 & 75.05 & 72.84 & 78.11 & 66.58 & 64.50 & 83.74 & 8.75\\ \hline
+FCNN-ns & 72.65 & 70.00 & 68.14 & 73.35 & 62.72 & 60.98 & 83.59 & 7.81\\ \hline
+DBN-ns & 72.91 & 70.96 & 69.14 & 73.66 & 63.33 & 61.66 & 83.44 & 8.05\\ \hline
+BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 8.54\\ \hline
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:3-detailres} shows the SeventhsBass categorical breakdown. Take DBN-ch as representative, since it only supports MajMin, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the data set population, that's why it has a much higher SB score. However, by relaxing the evaluation strength from SB to Mm, the performance difference between DBN-ch and Chordino becomes less and less.
+Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdown. Take DBN-ch as a representative, since it only supports \textit{MajMin}, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the dataset's population, that's why it has a much higher \textit{SeventhsBass} score in Table~\ref{tab:3-overallres}. However, by relaxing the evaluation strength from \textit{SeventhsBass} to \textit{Sevenths} and to \textit{MajMin}, the performance difference between DBN-ch and Chordino becomes less and less.
 
 \begin{landscape}
 \thispagestyle{plain}
 \begin{table*}[h]
 \scriptsize
-\caption{Detail SeventhsBass WCSR scores. All systems are trained with CJKUR-(800,800), with only MajMin vocabulary support. M = Major, m = minor, N = no chord. The \%B row shows the composition of chords in the test dataset.}
+\caption{Detail SeventhsBass WCSR scores. All systems, besides Chordino, are trained with CJKUR-[800*2], with only MajMin vocabulary support. M = major, m = minor, N = N.C (no chord). The \%B row shows the composition of chords in the test set.}
 \label{tab:3-detailres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
 \%B & 2.01 & 0.95 & 63.31 & 0.02 & 0.17 & 0.27 & 0.82 & 0.08 & 0.06 & 0.39 & 8.33 & 0.61 & 0.44 & 14.99 & 0.01 & 0.06 & 0.41 & 2.37 & 4.63\\ \hline
  & M/5 & M/3 & M & M7/5 & M7/3 & M7/7 & M7 & 7/5 & 7/3 & 7/b7 & 7 & m/5 & m/b3 & m & m7/5 & m7/b3 & m7/b7 & m7 & N\\ \hline
-chordino & 19.9 & 17.1 & 54.4 & 0.0 & 0.0 & 0.0 & 55.6 & 0.0 & 0.0 & 5.7 & 41.0 & 0.0 & 0.0 & 54.3 & 0.0 & 0.0 & 0.0 & 51.0 & 2.2\\ \hline
+Chordino & 19.9 & 17.1 & 54.4 & 0.0 & 0.0 & 0.0 & 55.6 & 0.0 & 0.0 & 5.7 & 41.0 & 0.0 & 0.0 & 54.3 & 0.0 & 0.0 & 0.0 & 51.0 & 2.2\\ \hline
 FCNN-ch & 0.0 & 0.0 & 77.6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 74.0 & 0.0 & 0.0 & 0.0 & 0.0 & 2.8\\ \hline
 DBN-ch & 0.0 & 0.0 & 80.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 76.8 & 0.0 & 0.0 & 0.0 & 0.0 & 3.0\\ \hline
 BLSTM-RNN-ch & 0.0 & 0.0 & 79.3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 78.2 & 0.0 & 0.0 & 0.0 & 0.0 & 2.5\\ \hline
@@ -1230,11 +1202,11 @@ BLSTM-RNN-ns & 0.0 & 0.0 & 79.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 
 \end{landscape}
 
 \subsection{On Full121}
-
+Table~\ref{tab:3-full} shows the WCSR results of \textit{Full121} vocabulary with the same test set. Table~\ref{tab:3-fullhp} and ~\ref{tab:3-fullmbk} shows the \textit{Full121} scores by other systems using a slightly larger 216-track Isophonic test set, which is extended from the 180-track TheBeatles test set. Table~\ref{tab:3-fullhp} is reported in a 3-fold cross-validation manner, while Table~\ref{tab:3-fullmbk} is in 5-fold.
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 WCSR scores. Tested on TheBeatles180 dataset (180 tracks out of the 216 tracks Isophonic 2009) All systems are trained with CJKUR-(800,800)-ch, with Full121 vocabulary support.}
+\caption{Full121 scores. Tested on TheBeatles180 dataset. All systems are trained with CJKUR-[800*2]-ch, with Full121 vocabulary support.}
 \label{tab:3-full}
 \begin{tabular}{|c|c|c|}\hline
 System & \textit{Full121} \textit{WCSR} & \textit{Seg} \\ \hline
@@ -1244,6 +1216,7 @@ BLSTM-RNN & 73.63 & 83.80 \\ \hline
 \end{tabular}
 \end{table}
 
+According to the descriptions \cite{ni2012end,mauch2010automatic}, the computational processes of both \textit{CP} and \textit{RCO} metrics are essentially similar to that of \textit{WCSR}, and they only accept ``exact chord match'' under the vocabulary.
 \begin{table}[h]
 \footnotesize
 \centering
@@ -1251,10 +1224,12 @@ BLSTM-RNN & 73.63 & 83.80 \\ \hline
 \label{tab:3-fullhp}
 \begin{tabular}{|c|c|c|}\hline
 System & Full121 Chord Precision (CP) & Seg \\ \hline
-CH(Chordino) & 50.31 & N/A \\ \hline
-HP(Harmonic Analyzer) & 70.26 & N/A\\ \hline
+CH (Chordino) & 50.31 & N/A \\ \hline
+HP (Harmonic Analyzer) & 70.26 & N/A\\ \hline
 \end{tabular}
 \end{table}
+
+It is difficult to make any conclusive statement out of these three different tables, from slightly different test sets, and reported in different ways. But it is reasonably fair to say that the proposed system framework is not bad at all in handling the \textit{Full121} vocabulary.
 
 \begin{table}[h]
 \footnotesize
@@ -1268,10 +1243,6 @@ MBK & 56.7 & 77.9 \\ \hline
 MBK-NNLS & 61.8 & N/A \\ \hline
 \end{tabular}
 \end{table}
-
-Table~\ref{tab:3-full} shows results of \textit{Full121} vocabulary with the same test set. Table~\ref{tab:3-fullhp} and ~\ref{tab:3-fullmbk} shows Full121 scores by other systems using a slightly larger 216-track test set, which includes the 180-track test set used throughout this chapter. Table~\ref{tab:3-fullhp} is reported in a 3-fold cross-validation manner, while Table~\ref{tab:3-fullhp} is in 5-fold. According to the descriptions \cite{ni2012end,mauch2010automatic}, the computation processes of both \textit{CP} and \textit{RCO} metrics are essentially similar to that of \textit{WCSR}, and they only accept ``exact chord match'' under the vocabulary.
-
-It is difficult to make any conclusive statement out of these three different tables, from slightly different test sets, and reported in different ways. But it is reasonably fair to say that the proposed system framework is not bad at all in handling the \textit{Full121} vocabulary.
 
 
 \section{Summary} \label{sec:3-concln}
@@ -1295,7 +1266,7 @@ In the former case, the only annotator ``dictates'' a local ``gold standard'', s
 
 The author believes that the next step of ACE research should try to focus more on improving uncommon chords recognition accuracies. That is, instead of considering the overall \textit{WCSR} of a large vocabulary, attention should also be given to the versatility metric, such as \textit{ACQA}. Although the Chapter has pointed out that BLSTM-RNN model is very promising for handling large vocabulary with inversions, it is yet to explore possible ways to train the network under such ``imbalanced class population '' scenario \cite{chawla2004editorial}, which is an important future work.
 
-Finally, as a potential application scenario, a piece of timed chord sequence output can be combined with the \textit{.lrc} file \footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. This combination process is implemented \footnote{\url{https://github.com/tangkk/songtranspose}} by the author of this thesis. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output.
+Finally, as a potential application scenario, a piece of timed chord sequence output can be combined with the \textit{.lrc} file \footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output \footnote{\url{https://github.com/tangkk/songtranspose}}.
 \begin{figure}[h]
     \centering
         \includegraphics[trim={0 6cm 0 0},clip,width=1.2\columnwidth]{3/figures/aihenjiandan.pdf}

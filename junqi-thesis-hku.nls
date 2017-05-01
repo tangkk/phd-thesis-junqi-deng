@@ -22,6 +22,8 @@
 		\nompageref{xvii}
   \item [{CSR}]\begingroup chord symbol recall\nomeqref {{\rm  0}.0}
 		\nompageref{xvii}
+  \item [{CV}]\begingroup cross validation\nomeqref {{\rm  0}.0}
+		\nompageref{xvii}
   \item [{DBN}]\begingroup deep belief network\nomeqref {{\rm  0}.0}
 		\nompageref{xvii}
   \item [{DFT}]\begingroup discrete Fourier transform\nomeqref {{\rm  0}.0}
@@ -29,6 +31,8 @@
   \item [{DNN}]\begingroup deep neural network\nomeqref {{\rm  0}.0}
 		\nompageref{xvii}
   \item [{DYBM}]\begingroup dynamic Bayesian network\nomeqref {{\rm  0}.0}
+		\nompageref{xvii}
+  \item [{FCNN}]\begingroup fully-connected neural networks\nomeqref {{\rm  0}.0}
 		\nompageref{xvii}
   \item [{GMM}]\begingroup Gaussian mixture model\nomeqref {{\rm  0}.0}
 		\nompageref{xvii}
