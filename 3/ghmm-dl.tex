@@ -11,6 +11,8 @@ As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically three types
 \item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
 \item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
 \end{itemize}
+Note that the global smoothing process is actually equivalent to a global segmentation process and a global classification process running at the same time.
+
 All these approaches apply similar deep learning methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
 
 Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification in one single pass at the same time, which leads to the belief that setting apart the two will bring more benefit to ACE system performance.
@@ -304,7 +306,6 @@ Throughout the following discussion, the model behaviors are analyzed from a bia
 \subsection{Network configurations} \label{sec:3-p2}
 
 \Hsection{-ch level}
-
 Figure~\ref{fig:dbn-ch-configs} shows the scores of a set of 6seg-ch models with different neural nets and network configurations. As shown in the top Figure, FCNN models peaks when the network has two layers, and its performance downgrades as the network becomes deeper. Note that its activations are ReLUs, but somehow they are not able to boost or at least stabilize the performance with a deeper network.
 
 As for DBN models in the bottom Figure, due to strong regularization imposed by the pre-training process, the curves are almost unchanged. In this group of experiments, the training and validation scores are very close to each other.
@@ -1074,7 +1075,7 @@ In terms of versatility (Figure~\ref{fig:acqachordino}), Chordino is not bad at 
 MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
 \begin{itemize}
 \item CM1: Chordino, from Queen Mary University of London;
-\item DK*: features three variants of the ACE approach proposed in this chapter (note that DK4, which is from another design approach, is skipped in the following discussion);
+\item DK*: features three variants of the LVACE approach proposed in this chapter (note that DK4, which is from another design approach, is skipped in the following discussion);
 \item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two previous papers \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
 \item KO1: shineChords, a time-frequency reassign approach proposed by Khadkevich and Omologo \cite{khadkevich2011time}.
 \end{itemize}
