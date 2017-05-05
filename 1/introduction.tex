@@ -30,14 +30,14 @@ Automatic chord estimation, or ACE, within the context of this thesis, refers to
 \label{fig:1-acemir}
 \end{figure}
 
-\section{Motivation} \label{sec:1-moti}
+\section{Motivation for ACE} \label{sec:1-moti}
 ACE has been one of the most important problems in MIR. The motivation for ACE research is four-fold, explained as follows:
 
 \subsection{ACE as submodule to other tasks}
 ACE is a subproblem in other tasks such as cover song identification \cite{bello2007audio,lee2006identifying,serra2010audio} (which makes use of chord sequences similarity), music structural segmentation \cite{bello2005robust} (where structure is cued by repetitions of a chord sequence), and genre classification \cite{cheng2008automatic,perez2009genre} (where the chord sequence itself carries genre information). It also has a critical role in problems such as audio key detection \cite{papadopoulos2012modeling,pauwels2010integrating} and downbeat estimation \cite{papadopoulos2008simultaneous,mauch2010simultaneous}, where in the former problem the estimated chord sequence often serves as a lower level harmonic information to infer the key or key sequence, while in the latter the chord and downbeat estimation are sometimes a dual problem within one single algorithmic framework.
 
 \subsection{ACE's own merit as chord transcription engine}
-For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish among similar chords (e.g., $C7$, $C9$ and $C7/G$), is a common way to demonstrate sophisticated musicianship. People with chord transcription abilities help power the popular chords-lyrics websites such as UltimateGuitar \footnote{\url{ultimate-guitar.com}}, E-chords \footnote{\url{e-chords.com}} and many others \footnote{\url{polygonguitar.blogspot.hk}; \url{chords-haven.blogspot.hk}; \url{azchords.com}}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance), those chords are often captured in great details, with large vocabulary (LV) including the suspensions, extensions, inversions and even the alterations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. Figure~\ref{fig:1-humanchord} showcases some of the human chord annotation examples from the above mentioned websites.
+For human beings, recognizing and transcribing chords from audio, especially the ability to distinguish among similar chords (e.g., $C7$, $C9$ and $C7/G$), is a common way to demonstrate sophisticated musicianship. People with chord transcription abilities help power the popular chords-lyrics websites such as UltimateGuitar \footnote{\url{ultimate-guitar.com}}, E-chords \footnote{\url{e-chords.com}} and many others \footnote{\url{polygonguitar.blogspot.hk}; \url{chords-haven.blogspot.hk}; \url{azchords.com}}, where the chords of millions of songs can be found. For practical use (e.g., song covering, rehearsal, performance, busking), those chords are often captured in great details, with large vocabulary (LV) including the suspensions, extensions, inversions and even the alterations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations. Figure~\ref{fig:1-humanchord} showcases some of the human chord annotation examples from the above mentioned websites.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=1\columnwidth]{1/figures/humanchord.PNG}
@@ -68,8 +68,19 @@ Ear training, according to the EarMasterPro \footnote{\url{http://www.earmaster.
 \subsection{ACE inspires scientific researches on human audition and mind}
 Last but not the least, ACE research, in an algorithmic level, could shed light on the working mechanism of human auditory system or human perception towards music harmony. This similar motivation is shared by many other artificial intelligent tasks\cite{lecun1995convolutional,hinton1995wake}, where the exploration of algorithmic or machine learning solutions itself inspires the scientific researches on machineries of visual perception system within human brain.
 
+\section{Motivation for LVACE} %FIXME: please write a paragraph to motivate this before going to the next section
+% idea:
+% 1. to build more sophisticated chord transcription service;  to match human ACE performance
+% 2. for ultimate artificial musicianship
+Now that the motivation for ACE is clear, the motivation for LVACE could be focusing on the necessity of LV in various scenarios:
+\begin{itemize}
+	\item LV is necessary for a practical chord transcription service.
+	\item LV is necessary for the artificial musical ``ear'' to pass the Turing test \cite{turing1950computing}.
+\end{itemize}
+If an ACE system does not support LV (for example, only \textit{major} and \textit{minor} chords are supported), it misses a lot of harmony details of the original song's arrangement, thus its output will not be suitable for practical uses such as song covering, rehearsal, or busking. Furthermore, the absence of LV will make the system impossible to pass the Turing test since any human chord transcription experts could label chords with a large vocabulary (refer back to Figure~\ref{fig:1-humanchord}).
+
 \section{Thesis Structure} \label{sec:1-outline}
-This thesis focuses on deep learning based solutions to ACE. The main contributions of this thesis can be found in Chapter~\ref{cp:ghmm},~\ref{cp:endtoend} and \ref{cp:jazz}, where Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} are parallel sections presenting two different LVACE solutions, and Chapter~\ref{cp:jazz} takes one of them and build algorithmic music systems for jazz. Particularly:
+This thesis focuses on deep learning based solutions to LVACE. The main contributions of this thesis can be found in Chapter~\ref{cp:ghmm},~\ref{cp:endtoend} and \ref{cp:jazz}, where Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} are parallel sections presenting two different LVACE solutions, and Chapter~\ref{cp:jazz} takes one of them and build algorithmic music systems for jazz. Concretely:
 
 \Hsection{Chapter~\ref{cp:intro}} is an introduction to the whole thesis. It defines the ACE problem, motivates the need for LVACE from different perspectives, and sketches the thesis outline and contributions.
 

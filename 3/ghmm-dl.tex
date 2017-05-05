@@ -39,7 +39,7 @@ Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in this c
 \end{figure}
 
 \subsection{Feature Extraction} \label{sec:3-fe}
-Feature extraction starts by resampling the raw audio input at 11025 Hz, then followed by a short-time-Fourier-transform (STFT) with 4096-point Hamming window and 512-point hop size. It then proceeds to transform the linear-frequency spectrogram (2049-bin) to log-frequency spectrogram (252-bin, 3 bins per semitone ranging from MIDI note 21 to 104) using two cosine interpolation kernels proposed in \cite{mauch2010automatic}. The output at this step is a log-frequency-spectrogram, or log-spectrogram, $Y_{k,m}$, where $k$ is the index of frequency bins, and $m$ is the index of time frames. The total number of frames is $M$, and the total number of bins in each spectrum is $K$ (in this context $K$ = 252).
+Feature extraction starts by resampling the raw audio input at 11025 Hz, then followed by a short-time-Fourier-transform (STFT) with 4096-point Hamming window and 512-point hop size. It then proceeds to transform the linear-frequency spectrogram (2049-bin) to log-frequency spectrogram (252-bin, 3 bins per semitone ranging from MIDI note 21 to 104) using the two cosine interpolation kernels proposed in \cite{mauch2010automatic}. The output at this step is a log-frequency-spectrogram, or log-spectrogram, $Y_{k,m}$, where $k$ is the index of frequency bins, and $m$ is the index of time frames. The total number of frames is $M$, and the total number of bins in each spectrum is $K$ (in this context $K$ = 252).
 
 The amount of deviation from standard tuning is estimated using the algorithm in \cite{dressler2007tuning}, where the amount of detuning is estimated as:
 \begin{equation}\label{eq:3-tuning}
@@ -59,8 +59,8 @@ To enhance harmonic content and attenuate background noise, a standardization pr
 \begin{equation}
 	Y^{STD}_{k,\cdot} = 
 	\begin{cases}
-		{{Y_{k,\cdot} - \mu_{k,\cdot}} \over \sigma_{k,\cdot}}, \text{\quad\quad\quad if } Y_{k,\cdot} > \mu_{k,\cdot}\\
-		0 \quad\quad\quad\quad\quad\quad\quad\quad\quad\text{otherwise,}
+		{{Y_{k,\cdot} - \mu_{k,\cdot}} \over \sigma_{k,\cdot}}, \text{if } Y_{k,\cdot} > \mu_{k,\cdot}\\
+		0, \quad\quad\text{otherwise}
 	\end{cases}
 \end{equation}
 where $\mu_{k,\cdot}$ and $\sigma_{k,\cdot}$ are the mean and standard deviation of a half-octave window centered at $Y_{k,\cdot}$, respectively.
