@@ -408,7 +408,7 @@ Fully-connected Neural Network, is probably the most basic deep learning model t
 \end{figure}
 Figure~\ref{fig:2-dbn-ft} shows an FCNN with three hidden layers. Each layer contain a set of {\it artificial neurons}. Each neuron will carry out the following procedures:
 \begin{enumerate}
-\item take the sum of their inputs weighted by the incoming connections (optionally, a bias input may also apply);
+\item take the sum of their inputs weighted by the incoming connections (optionally, a sbias input may also apply);
 \item apply a non-linear function on the weighted sum;
 \item generate an {\it activation}, which is equal to the output of the above step, to all outgoing connections.
 \end{enumerate}
@@ -591,6 +591,8 @@ In view of that, Weller et al. \cite{weller2009structured} implements a solely d
 \Hsection{Short Summary}
 There are a few review articles on ACE pattern matching. Papadopoulos and Peeters \cite{papadopoulos2007large} review both the expert and trained systems with template matching, GMM-HMM, or music context constrained techniques under the same large-scale benchmark. McVicar et al. \cite{mcvicar2014automatic} compare an extensive list of seven types of models, where the high-order HMMs \cite{scholz2009robust,mauch2007discovering,khadkevich2009use,yoshii2011vocabulary}, and genre-specific models \cite{lee2008acoustic,lee2007system} are not expounded above.
 
+Here the author would like draw a tentative ACE taxonomy and classify these ``traditional feature extraction with template-based or GMM-HMM-alike smoothing'' approaches as ``local feature extraction - global smoothing'' approaches. In this discussion, ``\textbf{local}'' means that the process is run in a window based manner, that every time the process runs it sees the window of frames as the whole context of input; while ``\textbf{global}'' means the process is run with awareness of the full picture of input. In the following discussions this taxonomy will be filled in by other types of ACE approaches.
+
 \subsection{Deep Learning for Pattern Matching} \label{sec:2-rnnpm}
 As reviewed in Section~\ref{sec:2-fl}, deep learning technologies have been applied to ACE feature learning. It can be expected that it is not only suitable for feature extraction, but also pattern matching. Now the most frequently used deep learning model in sequence pattern matching is {\it recurrent neural network} (RNN) with {\it long-short-term-memory} (LSTM).
 
@@ -685,7 +687,7 @@ Large vocabulary systems originally considered by Fujishima, Sheh and Ellis \cit
 
 It is worth noting that large vocabulary is essential for any ACE system that targets practical use, including transcription for chord-lyrics websites, assisting chord transcription during a music rehearsal, or to provide aid for students in music education. The core of these practical scenarios is that an ACE system needs to perform at the same level as a human chord annotator, who tends to capture chords in great details, including the suspensions, extensions, inversions and alterations, that try to recover every subtle taste of the original recordings. There are numerous such examples on popular chord tabs websites such as UltimateGuitar \footnote{\url{ultimate-guitar.com}}, E-chords \footnote{\url{e-chords.com}} and many others \footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. Regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE is absolutely a significant part of the machine.
 
-Besides the above mentioned two, there are currently several other types of large vocabularies ever supported in ACE systems. Mauch \cite{mauch2010automatic} puts forward a vocabulary in his DYBN based system, which he name as ``full'', that contains $maj$, $min$, $maj/3$, $maj/5$, $maj6$, $7$, $maj7$, $min7$, $dim$, $aug$, totally 121 chord types. Note that this is a vocabulary with chord inversions $maj/3$ and $maj/5$. This vocabulary is adopted in systems such as \cite{ni2012end,mcvicar2014automatic,boulanger2013audio}.
+Besides the above mentioned two, there are currently several other types of large vocabularies ever supported in ACE systems. Mauch \cite{mauch2010automatic} puts forward a vocabulary in his DYBN based system, which he name as ``full'', that contains $maj$, $min$, $maj/3$, $maj/5$, $maj6$, $7$, $maj7$, $min7$, $dim$, $aug$, totally 121 chord types (later on this vocabulary is refereed to as Full121). Note that this is a vocabulary with chord inversions $maj/3$ and $maj/5$. This vocabulary is adopted in systems such as \cite{ni2012end,mcvicar2014automatic,boulanger2013audio}.
 
 Cho \cite{cho2014improved} proposes two lexicons with 61 chords \footnote{$maj$, $min$, $maj7$, $min7$, $7$} and 157 chords \footnote{$maj$, $min$, $maj7$, $min7$, $7$, $maj6$, $min6$, $dim$, $aug$, $sus4$, $sus2$, $hdim7$ and $dim7$} respectively, without inversions \cite{burgoyne2014comparative}. They are also used in Humphrey's deep learning based systems \cite{humphreyfour,humphrey2015exploration}.
 
@@ -710,19 +712,19 @@ Technically speaking, a system that supports inversions is musically more correc
 \Hsection{The Output Format}
 The output format of ACE is defined by Harte et al. \cite{harte2005symbolic}. The following is the ground truth annotation of the first few seconds of {\it Let it be},
 \begin{quote}\footnotesize \it
-0.000000 0.175157 N
+0.00 0.18 N
 
-0.175157 1.852358 C
+0.18 1.85 C
 
-1.852358 3.454535 G
+1.85 3.45 G
 
-3.454535 4.720022 A:min
+3.45 4.72 A:min
 
-4.720022 5.126371 A:min7/b7
+4.72 5.12 A:min7/b7
 
-5.126371 5.950680 F:maj7
+5.12 5.95 F:maj7
 
-5.950680 6.774988 F:maj6
+5.95 6.77 F:maj6
 \end{quote}
 in which the core idea of this format is revealed. Basically, a chord label is preceded by two time stamps, being the onset and offset time of the chord in terms of seconds. These time stamps are actually the chord ``segmentation''. As for the labels, a chord's root is first notated, followed by a semicolon ``:'' to separate the root and the quality. An inversion is notated by a slash ``/'', followed by the bass that is different from the root. If a chord is $maj$, it can be shorthanded notated as the root only.
 

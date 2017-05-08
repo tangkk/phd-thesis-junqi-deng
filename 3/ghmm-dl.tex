@@ -5,15 +5,16 @@
 \chapter{A Hybrid Approach of GMM-HMM and Deep Learning}\label{cp:ghmm} % top level followed by section, subsection
 
 
-As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically three types of deep learning approaches for ACE:
+As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically four types of approaches for ACE:
 \begin{itemize}
+\item local feature extraction - global smoothing \cite{fujishima1999realtime,sheh2003chord}
 \item local classification - global smoothing \cite{humphrey2012rethinking};
 \item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
 \item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
 \end{itemize}
-Note that the global smoothing process is actually equivalent to a global segmentation process and a global classification process running at the same time.
+Note that the global smoothing process is actually equivalent to a domain knowledge driven global segmentation process and a global classification process running at the same time.
 
-All these approaches apply similar deep learning methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
+All these approaches apply similar methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
 
 Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification in one single pass at the same time, which leads to the belief that setting apart the two will bring more benefit to ACE system performance.
 
@@ -217,11 +218,11 @@ This section describes a systematic approach to explore and evaluate different s
 For training/cross-validation, six datasets of 546 tracks in total are used. They contain both eastern and western pop/rock songs. They are:
 \begin{itemize}
 	\item 29 tracks from the JayChou dataset (JayChou29, or J) \cite{dengmirex};
-	\item 20 tracks from a Chinese pop song dataset (CNPop20, or C) \footnote{20 songs from Chinese background singer-songwriters};
+	\item 20 tracks from the Chinese pop song dataset (CNPop20, or C) \footnote{20 songs from Chinese background singer-songwriters};
 	\item 26 tracks from the Carole King + Queen dataset (K) dataset \footnote{\url{http://isophonics.net/datasets}};
 	\item 191 songs from the USPop dataset (U) \footnote{\url{https://github.com/tmc323/Chord-Annotations}};
 	\item 100 tracks from the RWC dataset (R) \footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}};
-	\item 180 tracks from the TheBeatles180 (B) dataset \cite{harte2010towards}. 
+	\item 180 tracks from the TheBeatles180 dataset (B) \cite{harte2010towards}. 
 \end{itemize}
 The combination of datasets is notated by concatenating their letter codes. For example, a combination of all datasets is denoted as ``CJKURB''.
 
@@ -1075,7 +1076,7 @@ In terms of versatility (Figure~\ref{fig:acqachordino}), Chordino is not bad at 
 MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
 \begin{itemize}
 \item CM1: Chordino, from Queen Mary University of London;
-\item DK*: features three variants of the LVACE approach proposed in this chapter (note that DK4, which is from another design approach, is skipped in the following discussion);
+\item DK*: features three variants of the LVACE approach proposed in this chapter \cite{deng2016mirex} (note that DK4, which is from another design approach, is skipped in the following discussion);
 \item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two previous papers \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
 \item KO1: shineChords, a time-frequency reassign approach proposed by Khadkevich and Omologo \cite{khadkevich2011time}.
 \end{itemize}
@@ -1087,7 +1088,7 @@ It should be noted that except CM3, whose model parameters are all manually spec
 
 \item FK* are trained with the Isophonic, Robbie Williams \footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard \footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
 
-\item DK* are trained with USPop and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016.
+\item DK* are trained with USPop and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016. Note that DK1 is the DBN-6seg-ch-[800,800]-UR system and DK2 is the BLSTM-RNN-6seg-ch-[800,800]-UR system.
 \end{itemize}
 
 In terms of chord vocabulary, both DK3, FK* and KO1 only support \textit{majmin}, CM1 supports a large vocabulary including most types in \textit{SeventhsBass}, and DK1\&2 support exactly the \textit{SeventhsBass}.

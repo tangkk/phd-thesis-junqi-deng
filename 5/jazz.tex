@@ -2,7 +2,7 @@
 % this file is called up by thesis.tex
 % content in this file will be fed into the main document
 
-\chapter{A Preliminary Approach to Automate Jazz Chord-Scale Estimation and Automatic Jazz Improvisation}\label{cp:jazz} % top level followed by section, subsection
+\chapter{A Preliminary Approach to Automate Jazz Chord-Scale Estimation and Jazz Improvisation}\label{cp:jazz} % top level followed by section, subsection
 
 
 % ----------------------- paths to graphics ------------------------
@@ -108,7 +108,7 @@ N.C. (for all notes)  & 1 & 0.2  \\ \hline
 \label{tab:5-jcgau}
 \end{table}
 
-All systems are tested using GaryBurton7 dataset \footnote{Composition of chords in GaryBurton7: \textit{maj}:0.09; \textit{min7}:0.13; \textit{7}:0.22; \textit{min7b5}:0.12; \textit{7b9}:0.06; \textit{min}:0.1; \textit{maj}:0.14; \textit{}:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to \textit{SeventhsBass}', but the results are in a sense more convincing, since the test set is not dominated by chords like \textit{major} and \textit{minor}. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
+All systems are tested using GaryBurton7 dataset \footnote{Composition of chords in GaryBurton7: \textit{maj}:0.09; \textit{min7}:0.13; \textit{7}:0.22; \textit{min7b5}:0.12; \textit{7b9}:0.06; \textit{min}:0.1; \textit{maj}:0.14; \textit{others}:0.14.}. Results are shown in Table \ref{tab:5-jazz-wcsr}. Jazz-BLSTM system performs the best, and outperforms Jazz-Chordino by about 10 points. The ranking is very similar to \textit{SeventhsBass}', but the results are in a sense more convincing, since the test set is not dominated by chords like \textit{major} and \textit{minor}. In fact the chord composition in GaryBurton7 is relatively balanced, though rare chords are still rare. These results demonstrate the advantage of the proposed system framework for very large chord vocabulary.
 
 Meanwhile, notice that the \textit{SQ} (segmentation quality) of these systems are all relatively high, and these are achieved in pure jazz test audio. All systems use Jazz-Chordino's GMM-HMM as segmentation engine. The differences between \textit{SQ} scores are caused by different merging of consecutive chord boundaries in different systems. Obviously the success of Jazz-BLSTM owes to the success of the GMM-HMM segmentation at the beginning; then based on the segmentation it performs classifications without taking care of chord progression context.
 %This task is comfortable to deal with by a fixed-length input deep learning model. The advantage may not be obvious under a small chord vocabulary, but is obvious under a large chord vocabulary.
