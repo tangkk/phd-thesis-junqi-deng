@@ -12,7 +12,7 @@ As recapped in Section~\ref{sec:2-rnnpm} that by now there are basically four ap
 \item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
 \item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
 \end{itemize}
-All of these approaches incorporate a ``global smoothing'' stage after classification. This is a step that requires prior domain knowledge which does not belong to the deep learning approach. Moreover, all these approaches, including those tradition ones, do not explicitly take into account the fact that the chords are distributed in a highly uneven way and that the chord classification problem is actually a skewed classes problem. If the similar approaches are used for LVACE, it is very probable that the systems will over-fit the chord types that are highly over-represented.
+All of these approaches incorporate a ``global smoothing'' stage after classification. This is a step that requires prior domain knowledge which does not belong to the deep learning approach. Moreover, all these approaches, including those tradition ones, overlook the fact that the chords are distributed in a highly uneven way and that the chord classification problem is actually a skewed classes problem. If the similar approaches are used for LVACE, it is very probable that the systems will over-fit the chord types that are highly over-represented.
 
 This chapter is going to study an ``end-to-end'' approach that tries to employ a new neural network training scheme to achieve a more balanced performance on both common and uncommon chords, and on the other hand avoid the need of ``global smoothing'' altogether. The system presented here belongs to the ``local feature extraction - global classification'' category.
 
@@ -273,7 +273,7 @@ It should be pointed out that in the above table neither the performance of a sp
 	x label style={font=\scriptsize},
 	x tick label style={font=\scriptsize},
 	xtick=data,
-	ylabel={CSR},
+	ylabel={WCSR $\times$ 100},
 	y label style={font=\scriptsize},
 	ymin=0, ymax=40,
 	symbolic x coords={JK, JKU, JKUR, JKURB},
@@ -302,7 +302,7 @@ It should be pointed out that in the above table neither the performance of a sp
 	\legend{CR, EC} 
 	\end{axis}
 	\end{tikzpicture}
-	\caption{$maj/3$ performance v.s. training data size}
+	\caption{$maj/3$ performance v.s. training data size. Input: chromagram}
 	\label{fig:4-datavsmaj3}
 \end{figure}
 
@@ -317,7 +317,7 @@ It should be pointed out that in the above table neither the performance of a sp
 	x label style={font=\scriptsize},
 	x tick label style={font=\scriptsize},
 	xtick=data,
-	ylabel={CSR},
+	ylabel={WCSR $\times$ 100},
 	y label style={font=\scriptsize},
 	ymin=35, ymax=55,
 	symbolic x coords={JK, JKU, JKUR, JKURB},

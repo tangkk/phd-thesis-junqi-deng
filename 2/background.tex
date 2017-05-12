@@ -843,9 +843,9 @@ h(S^*||S) = \sum_{i=1}^{N_{S^*}}(|S_i|-\max_j|S_i^* \cap S_j|),
 \end{equation}
 where subscription $i$ indicates the $i^{th}$ segment. Note that the distance is not commutable, which means $h(S^*||S)$ and $h(S||S^*)$ represent two different distances. Conventionally, $h(S^*||S)$ measures {\it under-segmentation} and $h(S||S^*)$ measures {\it over-segmentation}. In either case, a better segmentation is indicated by a smaller value. When reported as scores, they are usually normalized by the lengths of the tracks, and minus by 1, in order to make it in the $[0,1]$ range similar to the \textit{WCSR} score. Harte \cite{harte2010towards} instead suggests to report one minus the maximum of the two normalized scores, yielding:
 \begin{equation}
-h(S^*,S)=1-{1\over T}\max\{h(S^*||S), h(S||S^*)\} \in [0,1].
+h(S^*,S)=1-{1\over T}\max\{h(S^*||S), h(S||S^*)\} \in [0,1],
 \end{equation}
-This is officially taken as the MIREX segmentation quality score.
+where $T$ is the total duration of the input. This is officially taken as the MIREX segmentation quality score.
 
 \subsection{Human Annotation Subjectivity} \label{sec:2-subjectivity}
 An even more fundamental problem in ACE evaluation would be ``is the ground truth annotation a gold standard?''. Unfortunately, and maybe unsurprisingly, both Ni et al. \cite{ni2013understanding} and Humphrey and Bello \cite{humphreyfour} find out there exists a certain degree of disagreement between two musicians annotating the same dataset, as the latter article concludes that ``the subjective nature of chord perception may render objective ground truth and evaluation untenable.''
