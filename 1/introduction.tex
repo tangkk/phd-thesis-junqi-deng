@@ -89,7 +89,7 @@ This thesis focuses on deep learning based solutions to LVACE. The main contribu
 \Hsection{Chapter~\ref{cp:ghmm}} describes an LVACE approach that makes hybrid use of a manually designed segmentation process and a deep learning based classification process. The chapter also explores common variations under this system framework, and concludes with insights and pointers to general design guidelines.
 % It addresses the concrete design of the feature extraction and pattern matching modules, where the latter is realized through three deep neural networks. 
 
-\Hsection{Chapter~\ref{cp:endtoend}} describes an end-to-end LVACE approach, where the sequence segmentation and classification are all done by a single recurrent neural network. To accommodate large vocabulary implementation, a skewed classes oriented training scheme is used. This scheme is shown to be very effective in improving the system's vocabulary versatility.
+\Hsection{Chapter~\ref{cp:endtoend}} describes an recurrent neural network based LVACE approach, where the sequence segmentation and classification are all done by a single recurrent neural network. To accommodate large vocabulary implementation, a skewed classes oriented training scheme is used. This scheme is shown to be very effective in improving the system's vocabulary versatility.
 
 \Hsection{Chapter~\ref{cp:jazz}} extends the application of LVACE to jazz music. The chapter first introduces the musical fundamentals of jazz. Then it extends the approaches in the previous chapters to implement a jazz ACE system. It further adds on the system an extra ``scale'' estimation process to enable ``chord-scale'' recognition. Combining with a jazz improvisation interface, it allows novice users to make good improvisations out of jazz backings.
 %  (see Section~\ref{sec:5-jazzfund} for more details of these musical terms)
@@ -101,7 +101,7 @@ This thesis focuses on deep learning based solutions to LVACE. The main contribu
 The major contributions of this thesis are mainly on the deep learning methods for LVACE. Particularly, this thesis proposes two new ACE architectures and applies them to LVACE implementation and evaluation:
 \begin{enumerate}
 \item A hybrid ``manually designed segmentation + deep neural nets classification'' LVACE system framework;
-\item An end-to-end recurrent neural network based LVACE solution with even chance training scheme;
+\item A recurrent neural network based LVACE solution with even chance training scheme;
 %\item applies the above two systems to large vocabulary implementation and evaluation.
 \end{enumerate}
 

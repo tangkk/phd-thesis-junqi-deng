@@ -46,7 +46,7 @@ However, most of the ACE approaches to date do not consider large vocabulary. In
 
 There are three different DNN models under discussion: FCNN, DBN and BLSTM-RNN. The major takeaway from the experiment results is that the BLSTM-RNN implementation has the highest score in terms of versatility metrics, and has the greatest potential to handle both ordinary and long-tail chord in a well balanced way, while the FCNN and DBN both tend to over-fit on ordinary/popular/dominating chords.
 
-\Hsection{Chapter~\ref{cp:endtoend}} puts forwards an end-to-end BLSTM-RNN approach with even chance training scheme as a solution to LVACE. This approach belongs to the ``local feature extraction - global classification'' category. Specifically, frame-wise features are extracted using a set of classical transformations. These features are then segmented and classified at the same time by a BLSTM-RNN.
+\Hsection{Chapter~\ref{cp:endtoend}} puts forwards a BLSTM-RNN approach with even chance training scheme as a solution to LVACE. This approach belongs to the ``local feature extraction - global classification'' category. Specifically, frame-wise features are extracted using a set of classical transformations. These features are then segmented and classified at the same time by a BLSTM-RNN.
 
 To cater to long-tail chords, an even chance training scheme is introduced. This scheme tries to give the network equal attention to each target category. Two versions of BLSTM-RNN, with and without the scheme, are compared. Results demonstrate that it has positive effect on more balanced performance, while sacrificing scores in large population chords is the major drawback.
 

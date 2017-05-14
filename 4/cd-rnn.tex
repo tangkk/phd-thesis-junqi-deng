@@ -2,7 +2,7 @@
 % content in this file will be fed into the main document
 
 %: ----------------------- name of chapter  -------------------------
-\chapter{An End-to-end Recurrent Neural Network Approach with Even Chance Training}\label{cp:endtoend} % top level followed by section, subsection
+\chapter{A Recurrent Neural Network Approach with Even Chance Training}\label{cp:endtoend} % top level followed by section, subsection
 
 
 As recapped in Section~\ref{sec:2-rnnpm} that by now there are basically four approaches for ACE:
@@ -14,7 +14,7 @@ As recapped in Section~\ref{sec:2-rnnpm} that by now there are basically four ap
 \end{itemize}
 All of these approaches incorporate a ``global smoothing'' stage after classification. This is a step that requires prior domain knowledge which does not belong to the deep learning approach. Moreover, all these approaches, including those tradition ones, overlook the fact that the chords are distributed in a highly uneven way and that the chord classification problem is actually a skewed classes problem. If the similar approaches are used for LVACE, it is very probable that the systems will over-fit the chord types that are highly over-represented.
 
-This chapter is going to study an ``end-to-end'' approach that tries to employ a new neural network training scheme to achieve a more balanced performance on both common and uncommon chords, and on the other hand avoid the need of ``global smoothing'' altogether. The system presented here belongs to the ``local feature extraction - global classification'' category.
+This chapter is going to study an approach that tries to employ a new neural network training scheme to achieve a more balanced performance on both common and uncommon chords, and on the other hand avoid the need of ``global smoothing'' altogether. The system presented here belongs to the ``local feature extraction - global classification'' category.
 
 
 %: ----------------------- contents from here ------------------------
@@ -24,7 +24,7 @@ Figure \ref{fig:4-sysover} shows the system overview, which mainly contains a fe
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.4\columnwidth]{4/figures/sys.pdf}
-\caption{BLSTM-RNN end-to-end ACE System Overview. The raw audio is feature extracted into a piece of chromagram or notegram, and then decoded by a BLSTM-RNN into a segmented chord sequence.}
+\caption{BLSTM-RNN ACE System Overview. The raw audio is feature extracted into a piece of chromagram or notegram, and then decoded by a BLSTM-RNN into a segmented chord sequence.}
 \label{fig:4-sysover}
 \end{figure}
 
@@ -235,7 +235,7 @@ Within the \textit{SeventhsBass} column, there is a trend that for both training
 
 For segmentation quality, CR systems are found to be consistently scoring slightly higher the EC systems. This might be due to the fact that the CR training scheme draws a batch from a random starting point which could be in the middle of a segment, while EC scheme always draws a batch from the start of a segment. This deviation eventually leads to the CR models more exposure to segment boundaries during training, and thus they will have a slightly better ``understanding'' of segments. The segmentation score in effect sets an upper bound for all other \textit{WCSR} scores, and one could expect a higher \textit{WCSR} of each vocabulary if the segmentation score is boosted.
 
-Note that the proposed approach performs segmentation and annotation in one single BLSTM-RNN pass, and the model has been trained with the largest amount of data possible (i.e. JKURB) so far in the ACE community. The results presented here in a sense represents the best effort possible for an end-to-end BLSTM-RNN with the architecture described in Section~\ref{sec:blstmrnnarch}.
+Note that the proposed approach performs segmentation and annotation in one single BLSTM-RNN pass, and the model has been trained with the largest amount of data possible (i.e. JKURB) so far in the ACE community. The results presented here in a sense represents the best effort possible for a BLSTM-RNN with the architecture described in Section~\ref{sec:blstmrnnarch}.
 
 \subsection{Skewed classes performances} \label{sec:4-scper}
 
@@ -374,7 +374,7 @@ Finally, we would like to know how good is this LVACE approach compared with exi
 Table~\ref{tab:4-cpcd} shows the comparison, in which there are two systems trained with the largest possible amount of data with different training schemes. In terms of overall performances, the proposed systems slightly outperform Chordino in terms of the strictest \textit{SeventhsBass} score, but slightly underperform Chordino in the more relaxed \textit{MajMin} and \textit{MajMinBass} scores.
 
 % may need to change some wordings here, to sloppy
-A large margin is found in segmentation quality, in which Chordino scores 5.3 and 7 points higher than the proposed systems. As noted previously, the segmentation quality is indeed a problem in this end-to-end approach. One could expect a boost of overall performance as well as balanced performance if the segmentation quality score could be raised to at least Chordino's level.
+A large margin is found in segmentation quality, in which Chordino scores 5.3 and 7 points higher than the proposed systems. As noted previously, the segmentation quality is indeed a problem in this approach. One could expect a boost of overall performance as well as balanced performance if the segmentation quality score could be raised to at least Chordino's level.
 
 \begin{table}[htb]
 	\caption{Comparison between the proposed systems and Chordino - long-tail and balanced performance. Input: chromagram}
@@ -388,10 +388,10 @@ A large margin is found in segmentation quality, in which Chordino scores 5.3 an
 		Chordino & \textbf{ 27.6} & 29.8 & \textbf{24.4} & \textbf{20.9}\\ \hline
 	\end{tabular}
 \end{table}
-Table~\ref{tab:4-cpcd-2} shows another set of comparisons in terms of long-tail and balanced performance. The CR system underperforms Chordino in all the presented categories except for $maj/3$.	The EC system outperforms Chordino in $maj/3$ and gets very close to Chordino in both $7/b7$ and $ACQA$. The latter results are very promising as they showcase that an end-to-end large vocabulary chord sequence classifier (JKURB*) could achieve a long-tail and balanced performance close to a manually engineered expert system (Chordino), with the help of the proposed even chance training scheme.
+Table~\ref{tab:4-cpcd-2} shows another set of comparisons in terms of long-tail and balanced performance. The CR system underperforms Chordino in all the presented categories except for $maj/3$.	The EC system outperforms Chordino in $maj/3$ and gets very close to Chordino in both $7/b7$ and $ACQA$. The latter results are very promising as they showcase that a large vocabulary chord sequence classifier (JKURB*) could achieve a long-tail and balanced performance close to a manually engineered expert system (Chordino), with the help of the proposed even chance training scheme.
 
 \section{Summary}\label{sec:4-concln}
-This chapter proposes an end-to-end ``local feature extraction - global classification'' BLSTM-RNN based ACE system that supports SeventhsBass vocabulary. This system has a handcrafted feature extraction process, and can be compared with Chordino in a statistically fair way. To cater for large vocabulary recognition, an even chance training scheme is designed. Several variants of the system are trained and implemented. Evaluation results show some variants largely outperform Chordino in terms of large vocabulary scores, and they are almost as good as Chordino in terms of small vocabulary scores, despite having much worse segmentation qualities. It can be concluded that the proposed BLSTM-RNN architecture is better than the dedicated handcrafted GMM-HMM in terms of large vocabulary sequence modeling, but it suffers from bad sequence segmentation.
+This chapter proposes a ``local feature extraction - global classification'' BLSTM-RNN based ACE system that supports SeventhsBass vocabulary. This system has a handcrafted feature extraction process, and can be compared with Chordino in a statistically fair way. To cater for large vocabulary recognition, an even chance training scheme is designed. Several variants of the system are trained and implemented. Evaluation results show some variants largely outperform Chordino in terms of large vocabulary scores, and they are almost as good as Chordino in terms of small vocabulary scores, despite having much worse segmentation qualities. It can be concluded that the proposed BLSTM-RNN architecture is better than the dedicated handcrafted GMM-HMM in terms of large vocabulary sequence modeling, but it suffers from bad sequence segmentation.
 
 Through detail analysis of the results, a plausible issue of annotation inconsistency is identified. As suggested in Chapter~\ref{cp:background}, a workaround would be to always use annotations provided by one single source/annotator, or, to the other extreme, always use multiple annotators and apply majority vote or data fusion. But eventually, the ultimate evaluation tool may remain a fully subjective one, that let user experience to judge system performance.
 
