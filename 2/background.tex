@@ -804,14 +804,17 @@ For multiple tracks estimation, the overall performance can be reported as the {
 \end{equation}
 where subscript $i$ denotes the track number. It is the weighted average of all tracks' \textit{CSR}s by the lengths of these tracks. This is equivalent to the {\it total relative correct overlap} (\textit{TRCO}) used by McVicar \cite{mcvicar2013machine}.
 
-A different view towards the overall performance is to take the average \textit{CSR}s of all tracks without any weighting. This is called the {\it average relative correct overlap} (\textit{ARCO}), which could measure the well-roundedness or balanced performance of a model. Equivalently, we could use ``Average Chord Quality Accuracy''(\textit{ACQA}) \cite{cho2014improved}, which averages the \textit{WCSR}s of all chord types in the test vocabulary with equal weights:
+ACE researchers also report \textit{WCSR} scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}. The \textit{WCSR} of a specific chord type is:
+\begin{equation}
+\mathit{WCSR_{C} = {\sum{Length(C_i)*CSR_i} \over \sum{Length(C_i)}}},
+\label{eq:wcsrchord}
+\end{equation}
+where the subscript $i$ denotes the $i^{th}$ instance of chord $C$ within the data set. A different view towards the overall performance is to take the average \textit{WCSR}s of all chords without any weighting. This is called the \textit{Average Chord Quality Accuracy} (\textit{ACQA}) \cite{cho2014improved}, which could measure the well-roundedness or balanced performance of a model:
 \begin{equation}
 \mathit{ACQA = {{\sum{WCSR_{C}}} \over {\#\,of\,chords}}}.
 \label{eq:2-acqa}
 \end{equation}
 Models that over-fit on a few chord types tend to get lower \textit{ACQA}s, while those well balanced ones will have higher \textit{ACQA}s.
-
-Instead of an overall performance metric, ACE researchers also report \textit{CSR} scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}.
 
 \subsection{Chord Matching Functions}\label{sec:2-chordmatch}
 All the above metrics compute scores only if a {\it chord matching function} is defined so that the evaluation algorithm knows what is a ``match''. Such function takes the form of \cite{harte2010towards}:
