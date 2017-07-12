@@ -2,7 +2,7 @@
 % content in this file will be fed into the main document
 
 %: ----------------------- name of chapter  -------------------------
-\chapter{A Hybrid Approach of GMM-HMM and Deep Learning}\label{cp:ghmm} % top level followed by section, subsection
+\chapter{A Hybrid GMM-HMM and Deep Learning Approach}\label{cp:ghmm} % top level followed by section, subsection
 
 
 As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically four types of approaches for ACE:
@@ -725,105 +725,99 @@ Figure~\ref{fig:ch-data} shows the performances of different 6seg-ch-[800*2] mod
 \begin{figure}[htb]
 	\centering
 	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={SeventhsBass Performances within FCNN-6seg-ch-[800*2]},
-		title style = {font=\scriptsize},
-		x label style={font=\scriptsize},
-		symbolic x coords={JK,JKU,JKUR,JKURB},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=30, ymax=60,
-		ytick={30,40,50,60},
-		legend pos=south east,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(JK,41.7)(JKU,54.9)(JKUR,58.4)(JKURB,56.3)};
-		
-		\addplot[ % validation
-		color=black,
-		mark=square,
-		]
-		coordinates {(JK,39.7)(JKU,53.8)(JKUR,57.6)(JKURB,55.5)};
-		\legend{Training, Validation} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={SeventhsBass Performances within DBN-6seg-ch-[800*2]},
-		title style = {font=\scriptsize},
-		x label style={font=\scriptsize},
-		symbolic x coords={JK,JKU,JKUR,JKURB},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=30, ymax=60,
-		ytick={30,40,50,60},
-		legend pos=south east,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(JK,34.8)(JKU,50.9)(JKUR,56.2)(JKURB,55.4)};
-		
-		\addplot[ % validation
-		color=black,
-		mark=square,
-		]
-		coordinates {(JK,35.7)(JKU,50.5)(JKUR,56.2)(JKURB,55.0)};
-		\legend{Training, Validation} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={SeventhsBass Performances within BLSTM-RNN-6seg-ch-[800*2]},
-		title style = {font=\scriptsize},
-		x label style={font=\scriptsize},
-		symbolic x coords={JK,JKU,JKUR,JKURB},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=70,
-		ytick={50,60,70},
-		legend pos=north west,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(JK,58.2)(JKU,58.7)(JKUR,61.7)(JKURB,61.2)};
-		
-		\addplot[ % validation
-		color=black,
-		mark=square,
-		]
-		coordinates {(JK,54.7)(JKU,56.7)(JKUR,59.2)(JKURB,59.7)};
-		\legend{Training, Validation} 
-		\end{axis}
-		\end{tikzpicture}
-	}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={SeventhsBass Performances within FCNN-6seg-ch-[800*2]},
+	title style = {font=\scriptsize},
+	x label style={font=\scriptsize},
+	symbolic x coords={JK,JKU,JKUR,JKURB},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=30, ymax=60,
+	ytick={30,40,50,60},
+	legend pos=south east,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(JK,41.7)(JKU,54.9)(JKUR,58.4)(JKURB,56.3)};
+	
+	\addplot[ % validation
+	color=black,
+	mark=square,
+	]
+	coordinates {(JK,39.7)(JKU,53.8)(JKUR,57.6)(JKURB,55.5)};
+	\legend{Training, Validation} 
+	\end{axis}
+	\end{tikzpicture}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={SeventhsBass Performances within DBN-6seg-ch-[800*2]},
+	title style = {font=\scriptsize},
+	x label style={font=\scriptsize},
+	symbolic x coords={JK,JKU,JKUR,JKURB},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=30, ymax=60,
+	ytick={30,40,50,60},
+	legend pos=south east,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(JK,34.8)(JKU,50.9)(JKUR,56.2)(JKURB,55.4)};
+	
+	\addplot[ % validation
+	color=black,
+	mark=square,
+	]
+	coordinates {(JK,35.7)(JKU,50.5)(JKUR,56.2)(JKURB,55.0)};
+	\legend{Training, Validation} 
+	\end{axis}
+	\end{tikzpicture}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={SeventhsBass Performances within BLSTM-RNN-6seg-ch-[800*2]},
+	title style = {font=\scriptsize},
+	x label style={font=\scriptsize},
+	symbolic x coords={JK,JKU,JKUR,JKURB},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=70,
+	ytick={50,60,70},
+	legend pos=north west,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(JK,58.2)(JKU,58.7)(JKUR,61.7)(JKURB,61.2)};
+	
+	\addplot[ % validation
+	color=black,
+	mark=square,
+	]
+	coordinates {(JK,54.7)(JKU,56.7)(JKUR,59.2)(JKURB,59.7)};
+	\legend{Training, Validation} 
+	\end{axis}
+	\end{tikzpicture}
 	\caption{Exploring different training data size at -ch level. All models are trained with 6seg-ch-[800*2].}
 	\label{fig:ch-data}
 \end{figure}
@@ -834,107 +828,101 @@ Figure~\ref{fig:ns-data} shows the performances of different 6seg-ns-[800*2] mod
 \begin{figure}[htb]
 	\centering
 	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={SeventhsBass Performances within FCNN-6seg-ns-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={JK,JKU,JKUR,JKURB},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=40, ymax=60,
-		ytick={40,50,60},
-		legend pos=south east,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(JK,48.4)(JKU,52.7)(JKUR,56.7)(JKURB,57.5)};
-		
-		\addplot[ % validation
-		color=black,
-		mark=square,
-		]
-		coordinates {(JK,44.9)(JKU,49.7)(JKUR,52.9)(JKURB,49.9)};
-		\legend{Training, Validation} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={SeventhsBass Performances within DBN-6seg-ns-[800*2]},
-		title style = {font=\scriptsize},
-		%xlabel={Network Configuration},
-		x label style={font=\scriptsize},
-		symbolic x coords={JK,JKU,JKUR,JKURB},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=30, ymax=60,
-		ytick={30,40,50,60},
-		legend pos=south east,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(JK,33.2)(JKU,54.5)(JKUR,55.9)(JKURB,55.4)};
-		
-		\addplot[ % validation
-		color=black,
-		mark=square,
-		]
-		coordinates {(JK,32.6)(JKU,52.9)(JKUR,54.6)(JKURB,54.2)};
-		\legend{Training, Validation} 
-		\end{axis}
-		\end{tikzpicture}
-	}
-	\subfigure{
-		\begin{tikzpicture}
-		\begin{axis}[
-		title={SeventhsBass Performances within BLSTM-RNN-6seg-ns-[800*2]},
-		title style = {font=\scriptsize},
-		x label style={font=\scriptsize},
-		symbolic x coords={JK,JKU,JKUR,JKURB},
-		x tick label style={font=\scriptsize},
-		xtick=data,
-		ylabel={WCSR $\times$ 100},
-		y label style={font=\scriptsize},
-		ymin=50, ymax=70,
-		ytick={50,60,70},
-		legend pos=north west,
-		legend style={legend columns=-1, font=\scriptsize},
-		ymajorgrids=true,
-		grid style=dashed,
-		]
-		\addplot[ % Training
-		color=black,
-		mark=x,
-		]
-		coordinates {(JK,60.6)(JKU,63.4)(JKUR,63.3)(JKURB,64.2)};
-		
-		\addplot[ % validation
-		color=black,
-		mark=square,
-		]
-		coordinates {(JK,50.7)(JKU,54.9)(JKUR,56.9)(JKURB,58.4)};
-		\legend{Training, Validation} 
-		\end{axis}
-		\end{tikzpicture}
-	}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={SeventhsBass Performances within FCNN-6seg-ns-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={JK,JKU,JKUR,JKURB},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=40, ymax=60,
+	ytick={40,50,60},
+	legend pos=south east,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(JK,48.4)(JKU,52.7)(JKUR,56.7)(JKURB,57.5)};
+	
+	\addplot[ % validation
+	color=black,
+	mark=square,
+	]
+	coordinates {(JK,44.9)(JKU,49.7)(JKUR,52.9)(JKURB,49.9)};
+	\legend{Training, Validation} 
+	\end{axis}
+	\end{tikzpicture}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={SeventhsBass Performances within DBN-6seg-ns-[800*2]},
+	title style = {font=\scriptsize},
+	%xlabel={Network Configuration},
+	x label style={font=\scriptsize},
+	symbolic x coords={JK,JKU,JKUR,JKURB},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=30, ymax=60,
+	ytick={30,40,50,60},
+	legend pos=south east,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(JK,33.2)(JKU,54.5)(JKUR,55.9)(JKURB,55.4)};
+	
+	\addplot[ % validation
+	color=black,
+	mark=square,
+	]
+	coordinates {(JK,32.6)(JKU,52.9)(JKUR,54.6)(JKURB,54.2)};
+	\legend{Training, Validation} 
+	\end{axis}
+	\end{tikzpicture}
+	\begin{tikzpicture}
+	\begin{axis}[
+	title={SeventhsBass Performances within BLSTM-RNN-6seg-ns-[800*2]},
+	title style = {font=\scriptsize},
+	x label style={font=\scriptsize},
+	symbolic x coords={JK,JKU,JKUR,JKURB},
+	x tick label style={font=\scriptsize},
+	xtick=data,
+	ylabel={WCSR $\times$ 100},
+	y label style={font=\scriptsize},
+	ymin=50, ymax=70,
+	ytick={50,60,70},
+	legend pos=north west,
+	legend style={legend columns=-1, font=\scriptsize},
+	ymajorgrids=true,
+	grid style=dashed,
+	]
+	\addplot[ % Training
+	color=black,
+	mark=x,
+	]
+	coordinates {(JK,60.6)(JKU,63.4)(JKUR,63.3)(JKURB,64.2)};
+	
+	\addplot[ % validation
+	color=black,
+	mark=square,
+	]
+	coordinates {(JK,50.7)(JKU,54.9)(JKUR,56.9)(JKURB,58.4)};
+	\legend{Training, Validation} 
+	\end{axis}
+	\end{tikzpicture}
 	\caption{Exploring training data size at -ns level. All models are trained with 6seg-ns-[800*2].}
 	\label{fig:ns-data}
 \end{figure}
@@ -1248,7 +1236,7 @@ MBK-NNLS & 61.8 & N/A \\ \hline
 
 
 \section{Summary} \label{sec:3-concln}
-This chapter presents an in-depth discussion of a hybrid GMM-HMM-DNN ACE approach. The study is motivated by the current research gap in ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable segmentation-classification LVACE system implementation. This chapter then introduces the GMM-HMM-DNN system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
+This chapter presents an in-depth discussion of a hybrid GMM-HMM and deep neural nets ACE approach. The study is motivated by the current research gap in ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable segmentation-classification LVACE system implementation. This chapter then introduces the LVACE system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
 
 Within the range of the experiments in Section~\ref{sec:3-res}, the results indicate that among the three proposed deep learning models, BLSTM-RNN is the most balanced one for LVACE solution, while both FCNN and DBN tend to over-fit the most common chords. The bass-treble chromagram (-ch) feature contains strong prior knowledge about chord classification that could highly affect the performance of the related models. In contrast, the notegram (-ns) feature is more suitable for deep learning tasks. Both FCNN and BLSTM-RNN benefits from more training data at the -ns level.
 

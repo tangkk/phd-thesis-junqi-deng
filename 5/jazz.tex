@@ -3,7 +3,7 @@
 % content in this file will be fed into the main document
 
 \chapter{A Preliminary Approach to Automate Jazz Chord-Scale Estimation and Jazz Improvisation}\label{cp:jazz} % top level followed by section, subsection
-
+Features can not only be learned from chord labels, but also from chord templates. Fillip and Gerhard \cite{Korzeniowski2016feature} use binary chord templates as targets to train their feature extractor, i.e. the ``deep chroma extractor'', which is able to obtain highly clean chromagram from the audio.
 
 % ----------------------- paths to graphics ------------------------
 
@@ -176,7 +176,7 @@ But as pointed out in the same paper, such a guideline has its drawback:
 ... many of the simple-to-use computer interfaces proposed for musical control seem, after even a brief period of use, to have a toy-like
 character and do not invite continued musical evolution.
 \end{quote}
-Although the paper goes on to argue that this is only true for expert musicians, but ``balancing this trade-off is a key concern for designers", as pointed out in \cite{blaine2003collaborative}. This point is echoed in many other papers\cite{xambo2011multi}, emphasizing that ``provide novices with essential goals and experts with additional goals". Trying to meet this balance, WIJAM equips the players with an easy to learn and easy to play keyboard, while at the same time providing ``a knowledgeable person to stand by and assist the players" \cite{Blaine2003}--the master. The players performance bound is imposed upon by the master, which should give a large enough space for the players to show off their virtuosity.
+Although it goes on to argue that this is only true for expert musicians, but ``balancing this trade-off is a key concern for designers", as pointed out in \cite{blaine2003collaborative}. This point is echoed in many other papers\cite{xambo2011multi}, emphasizing that ``provide novices with essential goals and experts with additional goals". Trying to meet this balance, WIJAM equips the players with an easy to learn and easy to play keyboard, while at the same time providing ``a knowledgeable person to stand by and assist the players" \cite{Blaine2003}--the master. The players performance bound is imposed upon by the master, which should give a large enough space for the players to show off their virtuosity.
 
 \subsection{System Overview}
 Figure~\ref{fig:5-BigPicture} shows the big picture of WIJAM. There are two types of active entities: the master, who initiates and orchestrates the jamming, and the players who participate in the jamming. There is a passive entity: a loudspeaker system, which is connected to the master.
