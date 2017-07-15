@@ -2,8 +2,7 @@
 % content in this file will be fed into the main document
 
 %: ----------------------- name of chapter  -------------------------
-\chapter{A Hybrid GMM-HMM and Deep Learning Approach}\label{cp:ghmm} % top level followed by section, subsection
-
+\chapter{A Hybrid GMM-HMM and Deep Learning Approach}\label{cp:ghmm}
 
 As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically four types of approaches for ACE:
 \begin{itemize}
@@ -14,23 +13,25 @@ As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically four types 
 \end{itemize}
 Note that the global smoothing process is actually equivalent to a domain knowledge driven global segmentation process and a global classification process running at the same time.
 
-All these approaches apply similar methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords are sustaining much longer than phonemes. This crucial divergence could allow some different approaches for ACE.
+All these approaches apply similar methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords sustains much longer than phonemes. This crucial divergence could lead to some different approaches.
 
-Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, and all these systems perform segmentation and classification in one single pass at the same time, which leads to the belief that setting apart the two will bring more benefit to ACE system performance.
+%Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, while all these systems perform segmentation and classification in one single pass at the same time. which leads to the belief that setting apart the two will bring more benefit to ACE system performance.
 
-This chapter introduces a new ACE approach that leverages this property of chords. Particularly, the method described here can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, and only performs the latter within each segmented region. This approach is applied in an LVACE scenario, and it shows preliminary success.
+This chapter introduces an LVACE system framework that leverages this property of chords. It can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, which is implemented through deep neural nets. We would like to verify whether this approach could benefit the LVACE performance, in particular the performance on the \textit{SeventhsBass} vocabulary.
+
+Experimental results show that among the three proposed deep neural nets and a baseline model, the RNN based system has the best average chord quality accuracy that significantly outperforms the other considered models. Furthermore, our bias-variance analysis has identified a glass ceiling as a potential hindrance to future improvements of large vocabulary automatic chord estimation systems.
 
 %: ----------------------- contents from here ------------------------
 
 \section{System Framework} \label{sec:3-sysframe}
 
-Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in this chapter. The workflow is as follows%The training process is as follows:
-\begin{enumerate}
-	\item Feature extraction: both training and validation data share the same feature extraction module; features are extracted from each input track using a method similar to the one employed in the Chordino system~\cite{mauch2010automatic} (will be elaborated in Section~\ref{sec:3-fe}).
-	\item Segmentation: 1. for training, the feature sequence is segmented (in terms of chords) by ground truth annotations; 2. for validation, the feature sequence is segmented using a GMM-HMM process (will be discussed in Section~\ref{sec:3-sg}).
+Figure~\ref{fig:3-sysover} depicts the LVACE system framework in our study. The workflow is as follows:
+\begin{itemize}
+	\item Feature extraction: both training and validation data share the same feature extraction module; features are extracted from each input track using a method similar to the one employed in the Chordino system~\cite{mauch2010automatic} (to be elaborated in Section~\ref{sec:3-fe}).
+	\item Segmentation: 1. for training, the feature sequence is segmented by the ground truth annotations; 2. for validation, the feature sequence is segmented using a GMM-HMM process (to be discussed in Section~\ref{sec:3-sg}).
 	\item Segment tiling: each feature segment is tiled into a fixed number of sub-segments (see Section~\ref{sec:3-seg-tile}).
-	\item Neural nets' operation: 1. for training, a segment's sub-segments and its chord label are considered as one sample to train the deep neural nets (will be described in Section~\ref{sec:3-dlmodel}); 2. for validation, the already trained deep neural network is used to predict chord labels.
-\end{enumerate}
+	\item Deep neural nets: 1. for training, the segments and their chord labels are used to train the deep neural nets (will be described in Section~\ref{sec:3-dlmodel}); 2. for validation, the trained neural network is used to predict chord labels.
+\end{itemize}
 
 \begin{figure}
 \centering
@@ -40,7 +41,7 @@ Figure~\ref{fig:3-sysover} depicts the ACE system framework considered in this c
 \end{figure}
 
 \subsection{Feature Extraction} \label{sec:3-fe}
-Feature extraction starts by resampling the raw audio input at 11025 Hz, then followed by a short-time-Fourier-transform (STFT) with 4096-point Hamming window and 512-point hop size. It then proceeds to transform the linear-frequency spectrogram (2049-bin) to log-frequency spectrogram (252-bin, 3 bins per semitone ranging from MIDI note 21 to 104) using the two cosine interpolation kernels proposed in \cite{mauch2010automatic}. The output at this step is a log-frequency-spectrogram, or log-spectrogram, $Y_{k,m}$, where $k$ is the index of frequency bins, and $m$ is the index of time frames. The total number of frames is $M$, and the total number of bins in each spectrum is $K$ (in this context $K$ = 252).
+Feature extraction starts by resampling the raw audio input at 11025 Hz, which is followed by an STFT (with 4096-point Hamming window, 512-point hop size). It then proceeds to transform the linear-frequency spectrogram (2049-bin) to log-frequency spectrogram (252-bin, three bins per semitone ranging from MIDI note 21 to 104) using two cosine interpolation kernels \cite{mauch2010automatic}. The output at this step is a log-frequency-spectrogram, or log-spectrogram, $Y_{k,m}$, where $k$ is the index of frequency bins, and $m$ is the index of time frames. We denote the total number of frames as $M$, and the total number of bins in each spectrum as $K$ (in this context $K$ = 252).
 
 The amount of deviation from standard tuning is estimated using the algorithm in \cite{dressler2007tuning}, where the amount of detuning is estimated as:
 \begin{equation}\label{eq:3-tuning}
@@ -48,29 +49,31 @@ The amount of deviation from standard tuning is estimated using the algorithm in
 \end{equation}
 where $wrap$ is a function wrapping its input to $[-\pi,\pi)$. $\varphi$ is the phase angle at $2\pi/3$ of the discrete-Fourier-transform (DFT) of ${\sum_m Y_{k,m}} / M$. The tuning frequency $\tau$ is then computed as:
 \begin{equation}
-	\tau=440\cdot2^{\delta/12},
+\tau=440\cdot2^{\delta/12},
 \end{equation}
-and the original tuning is thus updated by interpolating the original spectrogram $Y_{k,\cdot}$ at $Y_{{k+p},\cdot}$, where:
+and the original tuning is updated by interpolating the original spectrogram $Y_{k,\cdot}$ at $Y_{{k+p},\cdot}$, where:
 \begin{equation}
-	p = (\log(\tau / 440) / \log(2)) \times 36.
+p = (\log(\tau / 440) / \log(2)) \times 36.
 \end{equation}
-and 36 indicates there are 36 bins per octave (3 bins per semitone) in $Y_{k,\cdot}$. The interpolation result will update the original $Y_{k,m}$, and the new $Y_{k,m}$ spectrogram will be referred to as ``notegram''.
+The ``36'' indicates that there are 36 bins per octave (3 bins per semitone) in $Y_{k,\cdot}$. The updated $Y_{k,m}$ spectrogram will be referred to as ``notegram'' in the following.
 
-To enhance harmonic content and attenuate background noise, a standardization process is performed by z-scoring along the frequency axis:
+To enhance harmonic content and attenuate background noise, a standardization process is performed along the frequency axis:
 \begin{equation}
-	Y^{STD}_{k,\cdot} = 
-	\begin{cases}
-		{{Y_{k,\cdot} - \mu_{k,\cdot}} \over \sigma_{k,\cdot}}, \text{if } Y_{k,\cdot} > \mu_{k,\cdot}\\
-		0, \quad\quad\text{otherwise}
-	\end{cases}
+Y^{STD}_{k,\cdot} = 
+\begin{cases}
+{{Y_{k,\cdot} - \mu_{k,\cdot}} \over \sigma_{k,\cdot}}, \text{\quad\quad\quad if } Y_{k,\cdot} > \mu_{k,\cdot}\\
+0 \quad\quad\quad\quad\quad\quad\quad\text{otherwise,}
+\end{cases}
 \end{equation}
-where $\mu_{k,\cdot}$ and $\sigma_{k,\cdot}$ are the mean and standard deviation of a half-octave window centered at $Y_{k,\cdot}$, respectively.
+where $\mu_{k,\cdot}$ and $\sigma_{k,\cdot}$ are the mean and standard deviation of a half-octave window centered at $Y_{k,\cdot}$, respectively. This is followed by an NNLS method  (equation~\ref{eq:2-nnls}) to extract note activation patterns (84-bin, 1 bin per semitone) \cite{mauch2010approximate}.
 
-This is followed by an NNLS method  (equation~\ref{eq:2-nnls}) to extract note activation patterns (84-bin, 1 bin per semitone) \cite{mauch2010approximate}. This matrix is further reduced to a 24-bin per column bass-treble chromagram weighted by the bass and treble profiles (Figure~\ref{fig:3-btprofile}). Each chroma is normalized by its maximum norm. Table~\ref{tab:3-felevels} provides a summary of different levels of features generated by this process. Note that for brevity, in the following notegram is referred to as as ``-ns'', and chromagram (or bass-treble chromagram) as ``-ch''.
+The feature dimension is further reduced before the segmentation process. Particularly, each NNLS chroma is weighted by the bass and treble profiles depicted in Figure~\ref{fig:3-btprofile}. After that the saliences of each pitch class are added together, resulting in a 24-bin bass-treble chromagram. Each column of the bass-treble chromagram is then $L_\infty$ normalized, so that each bin of each chroma is within the range of [0,1].
+
+We mainly make use of two features from above process: the notegram and the bass-treble chromagram (refered to as ``chromagram'' in the following).
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\columnwidth]{3/figures/btp.pdf}
+\includegraphics[width=0.6\columnwidth]{3/figures/btp.pdf}
 \caption{Bass (+) and treble (.) profiles. They are both computed in the shape of Rayleigh distributions with scale parameters 16.8 (for bass) and 42 (for treble) respectively. The horizontal axis stands for MIDI pitch numbers. The vertical axis represents normalized profile amplitudes from 0 to 1.}
 \label{fig:3-btprofile}
 \end{figure}
@@ -88,9 +91,7 @@ This is followed by an NNLS method  (equation~\ref{eq:2-nnls}) to extract note a
 \label{tab:3-felevels}
 \end{table}
 
-Here are some simple showcases of the feature extraction process output at notegram level. All of them are extracted from acoustic piano audio.
-
-Figure~\ref{fig:3-note_C} illustrates the notegram of a middle C note, Figure~\ref{fig:3-interval_CE} a major third interval built upon the middle C, and Figure~\ref{fig:3-chord_Cmaj} a C major chord rooted on the same note. Note the appearance of the harmonics and background noise.
+Here are some simple showcases of the notegrams, all of which are extracted from acoustic piano audio: Figure~\ref{fig:3-note_C} illustrates the notegram of a middle C note, Figure~\ref{fig:3-interval_CE} a major third interval built upon the middle C, and Figure~\ref{fig:3-chord_Cmaj} a C major chord rooted on the same note. Notice the appearance of harmonics and background noise.
 
 \begin{figure}
 \centering
@@ -113,14 +114,15 @@ Figure~\ref{fig:3-note_C} illustrates the notegram of a middle C note, Figure~\r
 \label{fig:3-chord_Cmaj}
 \end{figure}
 
-The above are all simple music elements with pure pitches. Figure~\ref{fig:3-cp} is a notegram example of the intro (first few seconds) of {\it Let it be} . As this is just a piano intro, no vocal melody is involved. Note how it is rhythmically segmented.
+The above are all simple music elements with pure pitches. Figure~\ref{fig:3-cp} is a notegram example of the intro (first few seconds) of {\it Let it be}. As this is just a piano intro, no vocal melody is involved. Notice how it is rhythmically segmented.
 \begin{figure}
 \centering
 \includegraphics[width=0.5\columnwidth]{3/figures/cp.png}
 \caption{Chord progression example - notegram}
 \label{fig:3-cp}
 \end{figure}
-Figure~\ref{fig:3-cpm} showcases a symmetrical example with vocal melody. It is extracted from the first line of the first verse. Note although this is much more corrupted, a rhythmical segmentation is also visually noticeable.
+
+Figure~\ref{fig:3-cpm} showcases another example with vocal melody. It is extracted from the first line of the first verse of {\it Let it be}. Notice that although this is much more corrupted, a rhythmical segmentation is also visually noticeable.
 \begin{figure}
 \centering
 \includegraphics[width=0.5\columnwidth]{3/figures/cpm.png}
@@ -130,17 +132,21 @@ Figure~\ref{fig:3-cpm} showcases a symmetrical example with vocal melody. It is 
 
 \newpage
 \subsection{Segmentation} \label{sec:3-sg}
-Similar to \cite{cannam2013mirex}, the segmentation process is implemented as an expert knowledge driven GMM-HMM (as shown in Figure~\ref{fig:3-hmm1}), which is characterized as follows:
+The segmentation process is implemented using a GMM-HMM, which is characterized as follows:
 \begin{itemize}
-\item The hidden node models discrete states of categorical chord classes. There are totally 217 states (1 state per chord), where 217 equals the number of chord types (18) times the number of chord roots (12) plus the `NC' chord type.
-\item The observable node represents continuous states of a chroma. It is a 24-dimension Gaussian node, connecting to the bass-treble chromagram.
-\item The emission probability of each hidden state is designed as a 24-dimension Gaussian distribution with parameters in Table~\ref{tab:3-gaussian}. These parameters assign different Gaussians to different pitch classes according to their roles in a given chord.
-\item The transition matrix is set with a heavy uniform self-transition weight, which is 99.99 times of the uniform non-self-transition weight. 
-\item The prior probabilities are uniformly distributed.
+	\item The hidden node models the categorical states of chords. In the \textit{SeventhsBass} vocabulary, there are totally 217 states (1 state per chord), where the 217 is found by multiplying the number of chord types (18) with the number of chord roots (12) and adding the number of ``N.C.'' chord types (1).
+	
+	\item The observable node represents a chroma. It is a 24-dimension Gaussian node connecting to the bass-treble chromagram.
+	
+	\item The emission of each hidden state is a 24-dimension Gaussian distribution with parameters specified in Table~\ref{tab:3-gaussian}. These parameters assign different Gaussians to different pitch classes according to their roles in a chord.
+	
+	\item The transition matrix has heavy uniform self-transition weights, which are 99.99 times of the uniform non-self-transition weight.
+	
+	\item The prior probabilities are uniformly distributed.
 \end{itemize}
 
 \begin{table}
-\caption{Segmentation parameters.}
+\caption{GMM-HMM segmentation settings. Different parameters are assigned to different note degree within a chord.}
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
@@ -155,14 +161,14 @@ Similar to \cite{cannam2013mirex}, the segmentation process is implemented as an
 \label{tab:3-gaussian}
 \end{table}
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.4\columnwidth]{3/figures/hmm1.pdf}
-\caption{GMM-HMM Segmentation.}
-\label{fig:3-hmm1}
-\end{figure}
+%\begin{figure}[htb]
+%\centering
+%\includegraphics[width=0.4\columnwidth]{3/figures/hmm1.pdf}
+%\caption{GMM-HMM Segmentation.}
+%\label{fig:3-hmm1}
+%\end{figure}
 
-Figure~\ref{fig:3-cdflow} summarizes the full information flow of the above feature extraction and segmentation process using the first line of {\it Let it be}. Note how representations are enhanced or compressed during this process.
+Figure~\ref{fig:3-cdflow} summarizes the full information flow of the above feature extraction and segmentation process using the first line of {\it Let it be} as input. Note how representations are enhanced or compressed during this process.
 \begin{figure}[h]
 \centering
 \includegraphics[width=1\columnwidth,angle =90]{3/figures/cdflow.pdf}
@@ -172,36 +178,27 @@ Figure~\ref{fig:3-cdflow} summarizes the full information flow of the above feat
 
 \subsection{Segment Tiling Process} \label{sec:3-seg-tile}
 
-The segment tiling process is introduced to equalize the length of every segment, so as to facilitate the use of neural network models with fixed length input. This process divides a segment into $N$ equal-sized sub-segments, and takes the average feature of all sub-segments, resulting in an $N$-frame segment (referred to as $N$seg in the following, where $N$ is a variable). If the original number of frames is not divisible by $N$, the last frame is extended to make it divisible. In a word, this process turns a segment with variable number of frames into a segment with $N$ frames.
+The segment tiling process is introduced to equalize the length of every segment, so as to enable neural networks with fixed-length input. This process divides a segment into $N$ equal-sized sub-segments, and takes a frame-average within each sub-segment, resulting in an $N$-frame segment (referred to as $N$seg in the following, where $N$ is a variable). If the original number of frames is not divisible by $N$, the last frame is extended to make it divisible, i.e. this process turns a segment with a variable number of frames into a segment with a fixed number of $N$ frames.
 
 \subsection{Deep Learning Models} \label{sec:3-dlmodel}
 
-Each $N$seg segment is classified as a chord label through a deep neural net. Three types of models are considered in this chapter: deep belief network, fully-connected neural network (FCNN), and recurrent neural network.
-
-\subsubsection{Deep Belief Network}
-
-The DBN, as shown in Figure~\ref{fig:3-dbn}, is built upon a fully connected feedforward neural network. It has an $N$seg feature input with multiple hidden layers with sigmoid activations.
-
-In the pre-training phase, every two adjacent layers (except the output layer) are trained one pair at a time as restricted Boltzmann machine (RBM) \cite{hinton2006fast}. In the proposed implementation, the RBM formed by the input layer and the first hidden layer is a Gaussian-Bernoulli RBM because the input feature is in a continuous-valued space. The RBMs formed by hidden layer pairs are Bernoulli-Bernoulli RBMs, since each neuron is stochastic binary \cite{hinton2006reducing}.
-
-In the fine-tuning phase, the network is regarded as a feedforward neural network and trained via stochastic gradient descent with back-propagation.
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.4\columnwidth]{3/figures/dbn.pdf}
-\caption{The deep belief network architecture used in the proposed system. All layers are fully connected. The input is N-frame of features.}
-\label{fig:3-dbn}
-\end{figure}
+Each $N$seg will be classified as a chord label through a deep neural net. There are three types of deep neural nets used here:  FCNN, DBN, and RNN.
 
 \subsubsection{Fully-connected Neural Network}
 
-The FCNN has the same bottom-up topology as the DBN, but it does not have the top-down generative connections. Unlike the DBN, it applies the rectified linear unit (ReLU) as activation at each of its neuron. It is trained via stochastic gradient descent with back-propagation.
+The FCNN is a vanilla neural network with the most basic settings. It is a feedforward neural network, and each layer is fully-connected to the next layer. It applies rectified linear units (ReLUs) as hidden layer activations. It is trained via stochastic gradient descent with back-propagation.
+
+\subsubsection{Deep Belief Network}
+
+The DBN is implemented based on the FCNN. Its multiple hidden layers have sigmoid activations instead of ReLUs.
+
+In the pre-training phase, every pair of adjacent layers (except for the output layer) are trained one pair at a time as restricted Boltzmann machines (RBMs) \cite{hinton2006fast}. In our implementation, the RBM formed by the input layer and the first hidden layer is a Gaussian-Bernoulli RBM, because the input $N$seg feature contains real numbers. The RBMs formed by the hidden layer pairs are Bernoulli-Bernoulli RBMs, because each neuron is stochastic binary \cite{hinton2006reducing}.
+
+In the fine-tuning phase, the network is regarded as a feedforward neural network and trained via stochastic gradient descent with back-propagation.
 
 \subsubsection{Recurrent Neural Network}
 
-The RNN shown in Figure~\ref{fig:3-rnn} is bidirectional with long-short-term-memory (LSTM) hidden units \cite{hochreiter1997long}, or a BLSTM-RNN. LSTM is incorporated in order to relieve gradient vanishing/exploding problem for long sequence training \cite{bengio2009learning}. In the proposed implementation, all LSTM gates employ sigmoid activations, while both the LSTM cell and output neuron use hyperbolic tangent activations.
-
-For a fixed length $N$seg input, the RNN is also expanded to $N$ frames, each taking one frame of input. A mean pooling operation \cite{maas2011learning} is inserted before the output layer to summarize the LSTM activations of all frames.
+The RNN shown in Figure~\ref{fig:3-rnn} is bidirectional with long-short-term-memory (LSTM) hidden units \cite{hochreiter1997long}, or a BLSTM-RNN. LSTM is incorporated in order to relieve gradient vanishing/exploding problem for long sequence training \cite{bengio2009learning}. In our LSTM implementation, all gates employ sigmoid activations, while both the cell and output neuron use hyperbolic tangent activations. For a fixed-length $N$seg input, the RNN is unrolled into $N$ slices, each handling one input frame. A mean pooling operation is added before the output layer to summarize the LSTM outputs.
 
 \begin{figure}[h]
 \centering
@@ -211,876 +208,264 @@ For a fixed length $N$seg input, the RNN is also expanded to $N$ frames, each ta
 \end{figure}
 
 \section{Experiments} \label{sec:3-exper}
-This section describes a systematic approach to explore and evaluate different system variants built upon the proposed LVACE framework. The section first introduces the datasets, then elaborate the experimental setup, and finally discuss the concrete training and cross-validation process.
+In this section, we describe a systematic approach to explore and evaluate different system variants of the LVACE framework. We first introduce the datasets, then elaborate the experimental setup, and finally discuss the training and cross-validation (CV) process.
 
 \subsection{Datasets}
 
-For training/cross-validation, six datasets of 546 tracks in total are used. They contain both eastern and western pop/rock songs. They are:
+For training/cross-validation, we use six datasets of 546 tracks in total. They contain both eastern and western pop/rock songs. They are:
 \begin{itemize}
 	\item 29 tracks from the JayChou dataset (JayChou29, or J) \cite{dengmirex};
-	\item 20 tracks from the Chinese pop song dataset (CNPop20, or C) \footnote{20 songs from Chinese background singer-songwriters};
+	\item 20 tracks from a Chinese pop song dataset (CNPop20, or C) \footnote{\url{http://www.tangkk.net/label/}};
 	\item 26 tracks from the Carole King + Queen dataset (K) dataset \footnote{\url{http://isophonics.net/datasets}};
 	\item 191 songs from the USPop dataset (U) \footnote{\url{https://github.com/tmc323/Chord-Annotations}};
 	\item 100 tracks from the RWC dataset (R) \footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}};
-	\item 180 tracks from the TheBeatles180 dataset (B) \cite{harte2010towards}. 
+	\item 180 tracks from the TheBeatles180 (B) dataset \cite{harte2010towards}. 
 \end{itemize}
-The combination of datasets is notated by concatenating their letter codes. For example, a combination of all datasets is denoted as ``CJKURB''.
+The datasets are notated by their letter codes. For example, the combination of all datasets is denoted as ``CJKURB''.
 
-Both bass-treble chromagram (-ch) and notegram (-ns) level are extracted from each track. The features at these two levels can be transposed to all 12 different keys by circular pitch shifting (for -ch) or pitch shifting with zero padding (for -ns). For example, for a piece of treble chromagram in key of $C$, the original treble pitch class profile $PCP_C$ = ($C'$,$C\#'$, $D'$, $D\#'$, $E'$, $F'$, $F\#'$, $G'$, $G\#'$, $A'$, $A\#'$, $B'$), where $X'$ stands for the salience of the pitch class $X$, can be circularly shifted to represent an equivalent PCP in other keys, such as key of $D$: $PCP_D$ = ($D'$, $D\#'$, $E'$, $F'$, $F\#'$, $G'$, $G\#'$, $A'$, $A\#'$, $B'$, $C'$,$C\#'$). The same process can also be conducted for bass chromagrams. As for notegram, since the saliences are presented in terms of pitches rather than in pitch classes, the same ``pitch shifting'' ideas can be applied to make equivalent features in other keys, only that the out-shifted positions are filled by zeros rather than the circulated saliences.
+Both chromagram (-ch) and notegram (-ns) are extracted from each track. Both of them can be transposed to all 12 different keys by circular pitch shifting (for -ch) or pitch shifting with zero paddings (for -ns). For example, a piece of treble chromagram in key of $C$ can be represented as:
+\begin{equation}
+PCP_C = (C',C\#', D', D\#', E', F', F\#', G', G\#', A', A\#', B'),
+\end{equation}
+where $X'$ stands for the salience of pitch class $X$. It can be circularly shifted to represent an equivalent PCP in other keys, such as key of $D$:
+\begin{equation}
+PCP_D = ( D', D\#', E', F', F\#', G', G\#', A', A\#', B', C',C\#').
+\end{equation}
+As for notegram, although we have pitch saliences instead of pitch class saliences, the same ``pitch shifting'' ideas can still be applied, given that the out-shifted saliences are filled by zeros.
 
-In practice, the original key is considered as a pivot, and the features are circularly shifted by from -6 to 5 semitones to all other 11 keys. Adjusting the ground truth labels accordingly, this results in a 12-time data augmentation, which helps in reducing over-fitting \cite{cho2014improved,humphrey2015exploration}. This is considered as a type of regularization.
+In practice, the original key is considered as a pivot, and the features are circularly shifted to all 12 keys (the amount of transpositions ranging from -6 to 5 semitones). Adjusting the ground truth chord labels accordingly, this results in a 12-time data augmentation, which helps in reducing over-fitting \cite{cho2014improved,humphrey2015exploration}.
 
-%\subsection{Design Space Sampling}
 \subsection{Experimental Setup}
-Under the proposed LVACE system framework, possible design dimensions are:
+Under the proposed LVACE framework, possible design choices are:
 \begin{itemize}
-	\item choice of deep neural nets
+	\item type of deep neural nets
 	\item depth and width of hidden layers (network configurations)
 	\item number of frames in segment tiling
-	\item input feature representation level
-	\item training data size
+	\item input feature representations
+	\item amount of training data
 \end{itemize}
 
-\begin{table}
+\begin{table}[h!]
 	\caption{Variations considered in this study}
 	\centering
 	\footnotesize
 	\begin{tabular}{|c|c|c|} \hline
 		Dimension & Variation \\ \hline
-		neural net architecture & FCNN; DBN; BLSTM-RNN \\ \hline
+		neural net & FCNN; DBN; BLSTM-RNN \\ \hline
 		segment tiling & 1; 2; 3; 6; 9; 12 (seg) \\ \hline
 		layer depth & 2; 3; 4 \\ \hline
 		layer width & 500; 800; 1000 \\ \hline
-		input representation & notegram (-ns); chromagram (-ch) \\ \hline
-		training data size & JK; JKU; JKUR; JKURB \\ \hline
+		input feature & notegram (-ns); chromagram (-ch) \\ \hline
+		amount of training data & JK; JKU; JKUR; JKURB \\ \hline
 	\end{tabular}
 	\label{tab:3-varexplore}
 \end{table}
 
-This study is based on the settings depicted in Table~\ref{tab:3-varexplore}. For naming conventions: a combination of layer width and depth is denoted as [$width$*$depth$], such as [800*2]; a segmentation tiling scheme is denoted as $N$seg, such as 6seg; a point in this six dimensional design space is denoted by concatenating parameters with ``-'', such as FCNN-6seg-[800*2]-ch-JKU. The space can be explored by parameter sweeping along a given dimension.
+Our study is based on the settings depicted in Table~\ref{tab:3-varexplore}. For naming conventions: a combination of layer width and depth is denoted as [$width$*$depth$], such as [800*2]; a segmentation tiling scheme is denoted as $N$seg, such as 6seg; a point in this six dimensional hyper-parameter space is denoted by concatenating each parameter with ``-'', such as FCNN-6seg-[800*2]-ch-JKU. The space can be explored by parameter sweeping along a given dimension. Particularly, we will first explore along the {\it layer width} and {\it layer depth}. We then explore the \textit{segment tiling} scheme with fixed {\it layer width} and {\it layer depth}. Following the same strategy, we explore all factors in Table~\ref{tab:3-varexplore}. This process does not search the whole hyper-parameter space. However, it could gain us some insights of the proposed LVACE framework and produce some good system variants as well.
 
-It is impractical to explore all combinations. A more practical yet systematic scheme is used, which explores one dimension at a time with all other dimensions fixed at a previously explored point. If a dimension is not yet explored, a reasonable choice of value within Table~\ref{tab:3-varexplore} is used. Specifically, it will first explore along the {\it layer width} and {\it layer depth}. it then explores the \textit{segment tiling} scheme with fixed {\it layer width} and {\it layer depth}. Following the same strategy, it explores all factors in Table~\ref{tab:3-varexplore}. It is important to note that neither does this process lead to a full picture of the design space, nor does it lead to optimality, but it gains us some significant insights of the proposed LVACE system framework.
+In this context we regard a ``model'' as a crossing point of all dimensions in Table~\ref{tab:3-varexplore}, including training data size. We regard a ``system'' as a full implementation of the LVACE framework, including the feature extraction, segmentation and deep neural nets. However, since all models share the same feature extraction and segmentation processes, we sometimes use the terms ``model'' and ``system'' interchangeably.
 
 
-\subsection{Training and Cross-validation}\label{sec:traintest}
+\subsection{Training and Cross-validation}\label{sec:3-traintest}
 
 The following training procedures are applied throughout the experiments: 
 \begin{itemize}
-	\item Each FCNN is trained using mini-batch stochastic gradient descent regularized with dropout \cite{srivastava2014dropout} and early-stopping \cite{prechelt1998automatic}. 
-	\item Each DBN is pre-trained using contrastive-divergence \cite{hinton2006fast} (CD-10), for 30 epochs with learning rate 0.001. It is fine-tuned using mini-batch stochastic gradient descent regularized with dropout and early-stopping.
+	\item Each FCNN is trained using mini-batch stochastic gradient descent, and regularized with dropout \cite{srivastava2014dropout} and early-stopping \cite{prechelt1998automatic}. 
+	\item Each DBN is pre-trained using contrastive-divergence \cite{hinton2006fast} (CD-10), for 30 epochs with a learning rate of 0.001. It is fine-tuned using the FCNN's training procedure.
 	\item Each BLSTM-RNN is trained using an Adadelta optimizer \cite{zeiler2012adadelta}, regularized with dropout and early-stopping. 
 	\item All mini-batch stochastic gradient descents use a learning rate of 0.01 and a batch size of 100. 
-	\item All early-stopping criteria are monitored using the validation error of CNPop20 dataset, which is not in any training set. The validation cycle equals to the number of training batches. The model with the lowest validation loss will be saved, and if the current validation loss is smaller than 0.996 of the best one, the early-stopping patience will increase by the amount of the current number of iterations. Training stops when the patience is less than the current number of iterations.
-	\item All dropout probabilities are set to 0.5. 
+	\item All early-stopping criteria are monitored using the validation error of the CNPop20 dataset, which is not in any training set. The model with the lowest validation loss will be saved, and if the current validation loss is 0.996 times smaller than the lowest one, the early-stopping patience will increase by the value of the current number of iterations. Training stops when the patience is less than the current number of iterations.
+	\item All dropout rates are set to 0.5. 
 \end{itemize}
-For evaluation, five-fold cross-validation (CV) is performed throughout all experiments. Each fold is a combination of approximately 1/5 tracks of each dataset. Every model is trained on four folds and cross validated on the remaining fold, resulting in a total number five training/cross-validation scores, the average of which will be the final score to be reported.
+Five-fold cross-validation (CV) is performed throughout all experiments. Each fold is a combination of approximately 1/5 tracks of each dataset. Every model is trained on four folds and cross validated on the remaining fold, resulting in a total number of five training/cross-validation scores, the average of which will be the final score to be reported.
 
-The author provides all implementation details including the training and cross-validation scripts online \footnote{\url{https://github.com/tangkk/tangkk-mirex-ace}} so that interested readers can repeat the experiments given that they have access to the raw audio datasets.
+We provide all implementation details including the training and cross-validation scripts online \footnote{\url{https://github.com/tangkk/tangkk-mirex-ace}}, so that interested readers can repeat the experiments when they have access to the raw audio datasets.
 
 \section{Results and Discussions} \label{sec:3-res}
+Throughout this section, we use the MIREX ACE standard evaluation metrics, already introduced in Section~\ref{sec:2-eval}, to report system performances. We report all \textit{WCSR} scores under the \textit{SeventhsBass} evaluation, where a correct classification does {\it not} involve any chord mapping scheme beyond the \textit{SeventhsBass} vocabulary \cite{pauwels2013evaluating}. We use the MusOOEvaluator tool \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}} to generate these scores from all the ground truth and predicted chord sequences. Note that we do not report the segmentation score for every system, because they all share the same GMM-HMM process described in Section~\ref{sec:3-sg}. This process has a segmentation score of 83\% on the JKURB dataset.
 
-Throughout this section, the MIREX ACE standard evaluation metric weighted chord symbol recall (\textit{WCSR}) is used to report system performances (or scores), where ``chord symbol recall'' (\textit{CSR}) is defined in Chapter~\ref{cp:background} Section~\ref{subsec:2-metrics} and recapped as follows:
+In the following discussion, we will analyze the experiment results from a bias-variance perspective \cite{geman1992neural}. Assuming that a model is trained for multiple times over different samples of the same population, with other settings remain unchanged, the model's prediction for a given input will become a random variable. The model's prediction error can thus be expressed as \cite{friedman2001elements}:
 \begin{equation}
-	\mathit{CSR = {|S\cap S^*|\over|S^*|},}
-	\label{eq:3-csr}
+Prediction\ Error = Bias^2 + Variance + Irreducible\ Error
 \end{equation}
-where $S$ stands for automatic estimated segments, $S^*$ stands for ground truth annotated segments, and the intersection of $S$ and $S^*$ is the parts where they overlap and have equal chord annotations. A segment is usually represented as a tuple of ``(start time, end time)''. Thus, \textit{WCSR} is the weighted average of all tracks' \textit{CSR}s by the lengths of these tracks, which is recapped as follows:
+Concretely, a model's bias is defined as the expected difference between its prediction and the ground truth. It measures how much a model's predictions are consistently deviating from the true value, and it indicates whether a model contains fundamentally incorrect assumptions. A model's variance, on the other hand, measures the variance (i.e. the statistical variance, which equals the square of the standard deviation) of the model's prediction. It indicates how much a model's predictions will vary across its different realizations with different training samples, or equivalently, how much inconsistencies are there within the predictions. Finally, the irreducible error term could be seen as collection of everything that is not bias or variance, such as the noise or inconsistencies in the data itself.
 
-\begin{equation}
-	\mathit{WCSR = {\sum{Length(Track_i)*CSR_i} \over \sum{Length(Track_i)}}},
-	\label{eq:3-wcsr}
-\end{equation}
-
-where the subscript $i$ denotes the track number. Unless otherwise specified, the following \textit{WCSR} scores are all reported under \textit{SeventhsBass} evaluation, where a correct classification does {\it not} involve any chord mapping scheme beyond \textit{SeventhsBass} vocabulary \cite{pauwels2013evaluating}. All the scores in this section are reported through the MusOOEvaluator tool \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}}. Since all system variations have the same segmentation process, they all have similar segmentation scores, and thus they will not be discussed in this section.
-
-Besides, the proposed framework is also compared with Chordino. It should be emphasized that Chordino represents the best suited baseline because: (1) The framework resembles Chordino's in terms of segmentation and feature extraction; (2) Chordino is the only other system that supports \textit{SeventhsBass} vocabulary as well as chord inversions.
-
-In this context a ``model'' is regarded as a crossing point of all dimensions in Table~\ref{tab:3-varexplore}, including the dimension of training data size. A ``system'' is regarded as a full implementation of the framework proposed in Section~\ref{sec:3-sysframe}, including the feature extraction, segmentation and deep neural nets. But since all models share the same feature extraction and segmentation path, the terms ``model'' and ``system'' are sometimes used interchangeably.
-
-Throughout the following discussion, the model behaviors are analyzed from a bias-variance perspective \cite{geman1992neural}. A model's ``bias'' could be approximately understood as its training error, and ``variance'' could be regarded as the difference between training and validation error.
+Bias and variance is highly correlated with over-fitting and under-fitting. A high bias model tends to under-fit the data, while a high variance model tends to over-fit the data. A model that neither over-fits nor under-fits, will have low bias and low variance. The amount of bias-variance can be approximated from a model's training and validation (or cross-validation) score:
 \begin{itemize}
-	\item A model with high bias and low variance has very close training and validation scores, but none of the scores are high. In this case, either the model under-fits the data, or the data itself contains too much noise or inconsistencies that the model finds very difficult to fit.
-	\item A model with low bias and high variance has a high training score and low validation score. In this case, the model over-fits the data.
-	\item A good model has low bias and low variance.
+	\item A model with high bias (under-fitting) has similar training and validation scores, but none of them is high.
+	\item A model with high variance (over-fitting) has a high training score and a low validation score.
 \end{itemize}
+In other words, a model's bias can be approximated as the value of its training or validation error if the two errors are close to each other, and a model's variance can be approximated as the difference between its training and validation errors. Note that the irreducible error could either appear as bias or variance.
+
+In the following, we will examine how each design choice in Table~\ref{tab:3-varexplore} actually affects the systems' biases and variances. Moreover, we also compare among different types of deep neural nets and a baseline model, and see which one performs the best in the LVACE task.
 
 \subsection{Network configurations} \label{sec:3-p2}
 
-\Hsection{-ch level}
-Figure~\ref{fig:dbn-ch-configs} shows the scores of a set of 6seg-ch models with different neural nets and network configurations. As shown in the top Figure, FCNN models peaks when the network has two layers, and its performance downgrades as the network becomes deeper. Note that its activations are ReLUs, but somehow they are not able to boost or at least stabilize the performance with a deeper network.
-
-As for DBN models in the bottom Figure, due to strong regularization imposed by the pre-training process, the curves are almost unchanged. In this group of experiments, the training and validation scores are very close to each other.
-
-\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-\begin{figure}[htb]
+Figure~\ref{fig:3-configs} shows the \textit{WCSR}s of a set of JKU-6seg models with different neural nets, network configurations and input features.
+\begin{figure}[h!]
 	\centering
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={FCNN-JKU-6seg-ch SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={[500*2],[500*3],[500*4],[800*2],[800*3],[800*4],[1000*2],[1000*3],[1000*4]},
-	x tick label style={rotate=45,anchor=east, font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=50, ymax=60,
-	ytick={50,55,60},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	
-	\addplot[
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		([500*2],55.0)([500*3],54.4)([500*4],53.4)([800*2],54.9)([800*3],54.3)([800*4],53.4)([1000*2],55.1)([1000*3],54.3)([1000*4],53.7)
-	};
-	
-	\addplot[
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		([500*2],54.0)([500*3],53.0)([500*4],52.4)([800*2],53.8)([800*3],53.4)([800*4],52.3)([1000*2],54.0)([1000*3],53.0)([1000*4],52.7)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={DBN-JKU-6seg-ch SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={[500*2],[500*3],[500*4],[800*2],[800*3],[800*4],[1000*2],[1000*3],[1000*4]},
-	x tick label style={rotate=45,anchor=east, font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=45, ymax=55,
-	ytick={45,50,55},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	
-	\addplot[
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		([500*2],50.8)([500*3],50.8)([500*4],50.5)([800*2],50.9)([800*3],50.6)([800*4],50.5)([1000*2],50.8)([1000*3],50.9)([1000*4],50.5)
-	};
-	
-	\addplot[
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		([500*2],50.4)([500*3],50.2)([500*4],50.3)([800*2],50.5)([800*3],50.2)([800*4],50.1)([1000*2],50.3)([1000*3],50.5)([1000*4],50.2)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Exploring different network configurations at -ch level. All models are trained with JKU-6seg-ch.}
-	\label{fig:dbn-ch-configs}
+	\includegraphics{3/figures/configs.pdf}
+	\caption{Exploring the effect of different network configurations. All models are trained with JKU-6seg-ch.}
+	\label{fig:3-configs}
 \end{figure}
+\Hsection{-ch models}
+The FCNN has local maximal validation scores when the network has two layers, and it performs worse as  network becomes deeper. The DBN's validation scores are stabilized around 50. In this group of experiments, the training and validation scores are close to each other.
 
-\Hsection{-ns level}
-Figure~\ref{fig:dbn-ns-configs} shows the scores of a set of 6seg-ns models with different neural nets and network configurations. In the case of FCNN, different from the ones shown in the Figure~\ref{fig:dbn-ch-configs}, the validation scores are all focused around 50. As for DBN, there is a trend of performance downgrade along both network width and depth dimensions. In both cases the variances between training and validation scores are very small.
-\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-\begin{figure}[htb]
-	\centering
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={FCNN-JKU-6seg-ns SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={[500*2],[500*3],[500*4],[800*2],[800*3],[800*4],[1000*2],[1000*3],[1000*4]},
-	x tick label style={rotate=45,anchor=east, font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		([500*2],52.4)([500*3],52.5)([500*4],52.3)([800*2],52.7)([800*3],52.6)([800*4],52.6)([1000*2],52.8)([1000*3],52.9)([1000*4],52.9)
-	};
-	
-	\addplot[
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		([500*2],50.0)([500*3],49.6)([500*4],49.6)([800*2],49.7)([800*3],49.4)([800*4],49.1)([1000*2],49.2)([1000*3],49.5)([1000*4],49.8)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={DBN-JKU-6seg-ns SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={[500*2],[500*3],[500*4],[800*2],[800*3],[800*4],[1000*2],[1000*3],[1000*4]},
-	x tick label style={rotate=45,anchor=east, font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		([500*2],54.5)([500*3],54.6)([500*4],54.4)([800*2],54.5)([800*3],54.7)([800*4],53.0)([1000*2],54.4)([1000*3],53.8)([1000*4],51.6)
-	};
-	
-	\addplot[
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		([500*2],53.0)([500*3],53.0)([500*4],52.8)([800*2],52.9)([800*3],53.0)([800*4],51.3)([1000*2],52.7)([1000*3],52.3)([1000*4],50.1)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Exploring different network configurations at -ns level. All models are trained with JKU-6seg-ns.}
-	\label{fig:dbn-ns-configs}
-\end{figure}
+\Hsection{-ns models}
+The FCNN's validation scores are all focused around 50. As for the DBN, there is a trend of performance downgrade along the depth dimension. In both cases the differences between training and validation scores are very small.
 
-\Hsection{remarks}
-There is an implicit message in Figures~\ref{fig:dbn-ch-configs} and ~\ref{fig:dbn-ns-configs} that all FCNN-ch models outperform FCNN-ns models. This is largely due to the feature prior imposed by the bass-treble chromagram, which is specifically handcrafted for chord recognition. That means the model with this feature as input has already been informed some prior knowledge about the chord recognition problem. While notegram is a less biased feature output from a much earlier feature extraction stage.
+\Hsection{Remarks}
+Firstly, all the FCNN-ch models outperform the FCNN-ns models. This could be largely due to the prior imposed by the chromagram feature. It embeds the knowledge about ``pitch classes'', and it is originally designed for chord recognition tasks. On the other hand, because the notegram is several feature transformations away from the chromagram, it contains no such prior information. This could explain why the FCNN-ch models perform worse as they become deeper. Every extra layer will tend to weaken the prior at the input, and at the same time, these layers try to learn some other regularities that map the chromagrams to the chord labels. The results show that, unfortunately, the deeper networks are unable to learn more useful regularities than the prior knowledge already contained in the chromagram.
 
-This observation could be used to explain why FCNN-ch models perform worse as their networks grow deeper, as every extra layer between input and output will tend to weaken the prior at the input. At the same time these layers will learn some other regularities. The results here show that unfortunately the deeper networks are unable to learn more useful regularities than the prior information already conveyed in the bass-treble chromagram.
+Secondly, all the DBN-ns models outperform the DBN-ch models (except for the one at [1000*4]). Note that the only difference between the DBN and the FCNN is the generative pre-training process, which in effect is a strong regularization process that prevents over-fitting. This is sometimes equivalent to increasing the model's bias or decreasing the model's variance. As shown in Figure~\ref{fig:3-configs}, since the variances of the FCNN-ch models are already small, the DBN-ch models perform worse than the FCNN-ch models due to the higher biases. However, since the FCNN-ns models have high variances, the DBN-ns models perform better than the FCNN-ns because of the lower variances.
 
-The FCNN-ns models are unable to outperform FCNN-ch models. It is clear from the low variances of FCNN-ns that the models have already saturated their learning powers. But at the same time they all suffer from high bias. This indicates a number of possibilities: a learning framework with inadequate modeling power, or underrepresented data (insufficiency, imbalanced, or inconsistency), or both of them.
-
-Finally, the performance drop of wider and deeper DBN-ns models is believed to be caused by the vanishing gradients, since the proposed implementation of DBN uses sigmoid activation functions.
+Thirdly, the performance downgrade of the DBN-ns models starting from [800*3] and [1000*2] could be caused by the well-known gradient vanishing problem in deep networks (with sigmoid activations). This could be verified by monitoring the weight updating process. When the gradient vanishing happens, the average amount of weight updates closer to the input will be much less than those closer to the output, resulting in more errors in the earlier layers, which will be aggregated through the feedforward path to the output.
 
 \subsection{Segment tiling} \label{sec:3-p3}
 
-\Hsection{-ch level}
-This subsection explores the effect of segment tiling ($N$seg) at -ch level. A set of models are implemented using JKU-ch-[800*2] with different segment tiling schemes and neural nets. [800*2] in BLSTM-RNN means there are one forward and one backward hidden layer, each having 800 LSTM units.
-
-As shown in Figure~\ref{fig:N-frame}: FCNN is hardly affected by $N$seg; DBN tends to score better with larger $N$; BLSTM-RNN grows gently when $N$ is less than 3, and stays steady afterwards. All models in this set have very small training-validation variances.
-\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-\begin{figure}[htb]
+Figure~\ref{fig:3-nseg} shows the \textit{WCSR}s of a set of JKU-[800*2] models with different neural nets, segment tiling schemes ($N$seg) and input features. Note that [800*2] in BLSTM-RNN means there are a forward and a backward hidden layers, each having 800 LSTM units.
+\begin{figure}[h!]
 	\centering
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={FCNN-JKU-ch-[800*2] SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={1,2,3,6,9,12},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=south west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		(1,54.9)(2,55.3)(3,55.2)(6,54.9)(9,54.6)(12,54.4)
-	};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(1,54.5)(2,54.6)(3,54.5)(6,53.8)(9,54.0)(12,53.4)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={DBN-JKU-ch-[800*2] SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={1,2,3,6,9,12},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=south west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		(1,50.1)(2,50.6)(3,50.5)(6,50.9)(9,52.4)(12,56.1)
-	};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(1,49.7)(2,50.2)(3,50.2)(6,50.5)(9,51.7)(12,55.7)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={BLSTM-RNN-JKU-ch-[800*2] SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={1,2,3,6,9,12},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	xlabel={number of frames in segment tiling},
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=south west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		(1,56.3)(2,57.9)(3,59.0)(6,58.7)(9,58.9)(12,58.6)
-	};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(1,54.8)(2,56.2)(3,57.2)(6,56.7)(9,56.8)(12,56.4)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Exploring effect of segment tiling at -ch level. All models are trained with JKU-ch-[800*2]}
-	\label{fig:N-frame}
+	\includegraphics{3/figures/nseg.pdf}
+	\caption{Exploring the effect of segment tiling. All models are trained with JKU-ch-[800*2]}
+	\label{fig:3-nseg}
 \end{figure}
 
-\Hsection{-ns level}
-A set of models are implemented using JKU-ns-[800*2] with different segment tiling schemes and neural nets. The experiment results are shown in Figure~\ref{fig:N-frame-ns}. All models are quite unaffected by $N$seg, particularly when $N$ is greater than 2. Different from those at -ch level, the variances of these models are larger, especially the BLSTM-RNN models.
+\Hsection{-ch models}
+The FCNN tends to perform worse with larger $N$; The DBN tends to perform better with larger $N$; The BLSTM-RNN grows gently when $N$ is less than 3, and remains relatively constant thereafter. They all have very small variances.
 
-\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-\begin{figure}[htb]
+\Hsection{-ns models}
+Still the FCNN tends to perform worse with larger $N$; Both the DBN and the BLSTM-RNN have the worst performances when $N$ is 1, and they have higher and stable performances when $N$ is greater than 1.
+%All models are quite unaffected by $N$seg, particularly when $N$ is greater than 2. Different from those at -ch level, the variances of these models are larger, especially the BLSTM-RNN models.
+
+\Hsection{Remarks}
+With a large $N$seg, a model becomes more complex because of a less blurry input, so that one could expect either less bias, or more variance. In the FCNN models we could observe a tendency of slight variance increasing. This tendency has possibly offset the trend of bias decreasing, which we could not see from Figure~\ref{fig:3-nseg}.
+
+For the DBN, as discussed in Section~\ref{sec:3-p2}, the generative pre-training processes could reduce the variances or increase the biases. This is clearly reflected in Figure~\ref{fig:3-nseg} if we compare the DBN's \textit{WCSR}s with the FCNN's. On one hand, this could explain why the DBN-ch models have an increasing trend of performances (as well as a decreasing trend of biases) with a larger $N$, because the DBN-ch model has a much higher bias than the FCNN-ch one when $N$ equals 1. On the other hand, it could also explain why there is a performance boost from $N=1$ to $N=2$ in the DBN-ns models, and that the DBN-ns models have consistently lower variances and higher performances than the FCNN-ns models.
+
+For the BLSTM-RNN models, the training and CV curves are much more spread out than those of the FCNN and the DBN. On one hand, the RNN imposes a weight sharing mechanism across the segment tiling frames. This has an effect of regularization by limiting the number of parameters connecting the input layer to the hidden layer, thus limiting the network's ability to recognize arbitrary dependencies across frames. On the other hand, the RNN also introduces a set of recurrent weights that connect each frame to its next frame. This makes the network more flexible in capturing sequential dependencies between frames. This explains why the training and CV curves are so separated. Particularly, the average training scores of the RNN models are much higher than those of the DBN's and the FCNN's, because the RNN is essentially biased towards problems with sequential natures, and the ACE is one of these problems. Still, we have relatively low CV scores in these RNN models, which lead to high variances. As we will see in the following subsection, this can be remedied by more training data.
+
+\subsection{Amount of training data}\label{sec:3-p5}
+Figure~\ref{fig:3-data} shows the \textit{WCSR}s of a set of 6seg-[800*2] models with different neural nets, training data sizes and input features.
+\begin{figure}[h!]
 	\centering
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={FCNN-JKU-ns-[800*2] SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={1,2,3,6,9,12},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		(1,53.0)(2,53.2)(3,53.1)(6,52.7)(9,51.6)(12,52.1)
-	};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(1,50.8)(2,50.1)(3,50.3)(6,49.7)(9,49.0)(12,48.9)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={DBN-JKU-ns-[800*2] SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={1,2,3,6,9,12},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=70,
-	ytick={40,50,60,70},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		(1,49.8)(2,54.2)(3,54.2)(6,54.5)(9,54.0)(12,54.0)
-	};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(1,49.2)(2,53.1)(3,53.2)(6,52.9)(9,52.6)(12,52.6)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={BLSTM-RNN-JKU-ns-[800*2] SeventhsBass Performances},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={1,2,3,6,9,12},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	xlabel={number of frames in segment tiling},
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=50, ymax=80,
-	ytick={50,60,70,80},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {
-		(1,60.4)(2,61.6)(3,64.0)(6,63.4)(9,63.0)(12,62.3)
-	};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(1,53.7)(2,54.0)(3,54.9)(6,54.9)(9,54.5)(12,54.9)
-	};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Exploring effect of segment tiling at -ns level. All models are trained with JKU-ns-[800*2]}
-	\label{fig:N-frame-ns}
+	\includegraphics{3/figures/data.pdf}
+	\caption{Exploring the different training data size. All models are trained with 6seg-ch-[800*2].}
+	\label{fig:3-data}
 \end{figure}
 
-\Hsection{remarks}
-A model becomes more complex with a larger $N$seg. As the model becomes more complex, one could expect either less bias, or more variance. One could observe slight decreases of biases from $N$=1 to 3 in models of DBN-ch, BLSTM-RNN-ch, DBN-ns and BLSTM-RNN-ns, but there is no obvious change beyond $N$=3 except for DBN-ch. The FCNN models are all quite unaffected by $N$seg.
+\Hsection{For both -ch and -ns models}
+In all three plots, there are clear trends that increasing the amount of data boosts the models' performances. While the variances of the FCNN and DBN models remain being small, the variances of the BLSTM-RNN models tend to decrease with the increase of data. Interestingly for the FCNN, the increase of data from JKUR to JKURB leads to larger variances and worse CV scores.
 
-Except for BLSTM-RNN-ns, all other models have large biases and low variances, which indicates that these models are indeed unsuitable for the underlying data, or the data itself contains a lot of noise. The BLSTM-RNN-ns models have much lower biases than the others, and yet they have much larger variances, which indicates that there is extra room for improvement in terms of their generalization ability.
+\Hsection{Remarks}
+Similar to Figure~\ref{fig:3-nseg}, the FCNN's and DBN's training and CV curves as shown in Figure~\ref{fig:3-data} are still very close to each other. It seems that as the amount of data increases, their models have saturated at some point and there is little room for further improvement. On the contrary, the BLSTM-RNN's training and CV curves are much wider apart, and the models tend to generalize better as the data size grows. The results in Figure~\ref{fig:3-data} seem to suggest that we have almost touched a performance ``ceiling'' of the BLSTM-RNN-ch models, but we have yet to reach that of the BLSTM-RNN-ns models.
 
-\subsection{Training data size}\label{sec:3-p5}
+\subsection{Input feature}\label{sec:3-p6}
+From Figure~\ref{fig:3-configs} to~\ref{fig:3-data}, we see that the training and CV curves of the chromagram models are on average much closer than those of the notegram models. This suggests that the prior knowledge contained in the chromagram feature actually introduces bias in the model. On one hand, this may lead to better models if the amount training data is limited (this discussion is not valid for the DBN because of the generative pre-training process). On the other hand, this can also limit the models' improvement when we have sufficient amount of training data. For example in Figure~\ref{fig:3-data}, we see a potential trend that if more data is added to the model, the BLSTM-RNN-ns model will eventually outperform the BLSTM-RNN-ch model, because the BLSTM-RNN-ns has a higher ceiling (the training score) than the BLSTM-RNN-ch.
 
-\Hsection{-ch level}
-Figure~\ref{fig:ch-data} shows the performances of different 6seg-ch-[800*2] models with different neural nets as a function of dataset sizes. In all three plots, there are clear trends that the increments of training data size reduce the models' biases, though the trends are slightly reversed from JKUR to JKURB. While the variances of FCNN's and DBN's models remain being small, the variances of BLSTM-RNN models decrease with the increment of training data, as one would normally expect.
-\begin{figure}[htb]
+\subsection{Balanced performance}\label{sec:3-p7}
+The above discussions are focused on the overall \textit{WCSR}s of different models. Here we are going to examine the models' performances on specific chords. Note that in our datasets (which we believe are good representatives of pop and rock music in general), the chord distributions are highly skewed (as shown in Table~\ref{tab:3-chorddist}), where the $maj$ and $min$ triads make up almost 70\% of the whole sample population, the $maj7$, $min7$ and $7$ chords constitute more than 20\%, and the portion of other chords are less than 10\%. In the following discussion, we refer to ``common chords'' as the $maj$ and $min$ chords, ``uncommon chords'' as the sevenths chords, including the $maj7$, $min7$ and $7$ chords, and ``long-tail chords'' as all the other chords in the \textit{SeventhsBass} vocabulary. Moreover, we use ``chord'' and ``chord type'' interchangeably to refer to a certain type of chords.
+
+Figure~\ref{fig:3-skewed} shows how different deep neural net models perform on different chords. It is surprising to see that the FCNN and the DBN outperform the BLSTM-RNN only in the \textit{maj} chord category, while the BLSTM-RNN outscores the other two by large margins in most long-tail chords and uncommon chords categories.
+\begin{figure}[h!]
 	\centering
-	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={SeventhsBass Performances within FCNN-6seg-ch-[800*2]},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={JK,JKU,JKUR,JKURB},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=30, ymax=60,
-	ytick={30,40,50,60},
-	legend pos=south east,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {(JK,41.7)(JKU,54.9)(JKUR,58.4)(JKURB,56.3)};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {(JK,39.7)(JKU,53.8)(JKUR,57.6)(JKURB,55.5)};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={SeventhsBass Performances within DBN-6seg-ch-[800*2]},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={JK,JKU,JKUR,JKURB},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=30, ymax=60,
-	ytick={30,40,50,60},
-	legend pos=south east,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {(JK,34.8)(JKU,50.9)(JKUR,56.2)(JKURB,55.4)};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {(JK,35.7)(JKU,50.5)(JKUR,56.2)(JKURB,55.0)};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={SeventhsBass Performances within BLSTM-RNN-6seg-ch-[800*2]},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={JK,JKU,JKUR,JKURB},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=50, ymax=70,
-	ytick={50,60,70},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {(JK,58.2)(JKU,58.7)(JKUR,61.7)(JKURB,61.2)};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {(JK,54.7)(JKU,56.7)(JKUR,59.2)(JKURB,59.7)};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Exploring different training data size at -ch level. All models are trained with 6seg-ch-[800*2].}
-	\label{fig:ch-data}
+	\includegraphics[width=\columnwidth]{3/figures/avskewed.pdf}
+	\caption{Performance on different chords in different neural nets. All models are trained with 6seg-[800*2].}
+	\label{fig:3-skewed}
 \end{figure}
 
-\Hsection{-ns level}
-Figure~\ref{fig:ns-data} shows the performances of different 6seg-ns-[800*2] models with different neural nets as a function of dataset sizes. These three set of models have similar behaviors as their -ch counterparts in Figure~\ref{fig:ch-data}. Interestingly for FCNN, the increment of data from JKUR to JKURB does not lead to a smaller variance (but much larger actually). The author currently has no clue why this might have happened, and thus consider this as an outlier. It might be caused by the noise introduced by dataset B, but the other two plots do not seem to support this reasoning.
+Furthermore, we examine the versatilities of different deep neural net models. We measure them using the \textit{ACQA}, which averages the \textit{WCSR}s of all chords with equal weights. Models that over-fit a few chord types tend to give lower \textit{ACQA}s, while those well-balanced ones will have higher \textit{ACQA}s. As shown in Figure~\ref{fig:3-acqa}, the average \textit{ACQA} of the BLSTM-RNN models outscores the average \textit{ACQA}s of the other two types of models by around 10 points.
 
-\begin{figure}[htb]
+\begin{landscape}
+	\thispagestyle{plain}
+	\begin{table*}[h]
+		\scriptsize
+		\caption{Distribution of chords in the datasets. (maj and min: 69.9\%; maj7, min7 and 7: 21.3\%; others: 8.8\%)}
+		\label{tab:3-chorddist}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+			Dataset & Tracks & maj/5 & maj/3 & maj & maj7/5 & maj7/3 & maj7/7 & maj7 & 7/5 & 7/3 & 7/b7 & 7 & min/5 & min/b3 & min & min7/5 & min7/b3 & min7/b7 & min7\\ \hline
+			C & 20 & 3.2 & 4.5 & 38.4 & 0.2 & 0.2 & 0.0 & 10.2 & 0.0 & 0.3 & 1.1 & 9.3 & 2.7 & 0.0 & 20.3 & 0.5 & 0.0 & 0.1 & 9.1\\ \hline
+			J & 29 & 4.1 & 8.1 & 32.3 & 1.2 & 0.2 & 0.1 & 6.9 & 0.4 & 1.5 & 2.3 & 5.0 & 0.7 & 1.3 & 15.1 & 0.7 & 0.0 & 0.3 & 19.8\\ \hline
+			K & 26 & 4.5 & 3.9 & 52.0 & 0.0 & 0.3 & 0.2 & 5.1 & 0.3 & 0.2 & 0.5 & 6.2 & 0.1 & 0.3 & 14.9 & 0.2 & 0.0 & 0.8 & 10.4\\ \hline
+			U & 191 & 2.3 & 3.9 & 54.7 & 0.0 & 0.1 & 0.1 & 3.2 & 0.1 & 0.3 & 0.3 & 8.3 & 0.4 & 0.4 & 15.1 & 0.0 & 0.1 & 0.4 & 10.2\\ \hline
+			R & 100 & 2.5 & 4.6 & 42.8 & 0.3 & 0.1 & 0.1 & 8.9 & 0.0 & 0.2 & 0.3 & 7.9 & 0.4 & 0.5 & 15.3 & 0.0 & 0.1 & 0.2 & 15.7\\ \hline
+			B & 180 & 2.4 & 1.0 & 66.1 & 0.0 & 0.2 & 0.3 & 0.9 & 0.1 & 0.1 & 0.4 & 8.7 & 0.6 & 0.5 & 15.9 & 0.0 & 0.1 & 0.4 & 2.5\\ \hline
+			Weighted Average & & 2.6 & 3.3 & 54.3 & 0.1 & 0.1 & 0.2 & 4.0 & 0.1 & 0.3 & 0.5 & 8.1 & 0.6 & 0.5 & 15.6 & 0.1 & 0.1 & 0.4 & 9.1\\ \hline
+		\end{tabular}
+	\end{table*}
+\end{landscape}
+
+\begin{figure}[h!]
 	\centering
-	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={SeventhsBass Performances within FCNN-6seg-ns-[800*2]},
-	title style = {font=\scriptsize},
-	%xlabel={Network Configuration},
-	x label style={font=\scriptsize},
-	symbolic x coords={JK,JKU,JKUR,JKURB},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=40, ymax=60,
-	ytick={40,50,60},
-	legend pos=south east,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {(JK,48.4)(JKU,52.7)(JKUR,56.7)(JKURB,57.5)};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {(JK,44.9)(JKU,49.7)(JKUR,52.9)(JKURB,49.9)};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={SeventhsBass Performances within DBN-6seg-ns-[800*2]},
-	title style = {font=\scriptsize},
-	%xlabel={Network Configuration},
-	x label style={font=\scriptsize},
-	symbolic x coords={JK,JKU,JKUR,JKURB},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=30, ymax=60,
-	ytick={30,40,50,60},
-	legend pos=south east,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {(JK,33.2)(JKU,54.5)(JKUR,55.9)(JKURB,55.4)};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {(JK,32.6)(JKU,52.9)(JKUR,54.6)(JKURB,54.2)};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={SeventhsBass Performances within BLSTM-RNN-6seg-ns-[800*2]},
-	title style = {font=\scriptsize},
-	x label style={font=\scriptsize},
-	symbolic x coords={JK,JKU,JKUR,JKURB},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	ymin=50, ymax=70,
-	ytick={50,60,70},
-	legend pos=north west,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	\addplot[ % Training
-	color=black,
-	mark=x,
-	]
-	coordinates {(JK,60.6)(JKU,63.4)(JKUR,63.3)(JKURB,64.2)};
-	
-	\addplot[ % validation
-	color=black,
-	mark=square,
-	]
-	coordinates {(JK,50.7)(JKU,54.9)(JKUR,56.9)(JKURB,58.4)};
-	\legend{Training, Validation} 
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Exploring training data size at -ns level. All models are trained with 6seg-ns-[800*2].}
-	\label{fig:ns-data}
-\end{figure}
-
-\Hsection{remarks}
-Both Figure~\ref{fig:ch-data} and ~\ref{fig:ns-data} also show that in this group of experiments BLSTM-RNN-6seg-[800*2] models are having lower biases than FCNN's and DBN's (with the same other configurations).
-
-In Figure~\ref{fig:ch-data}, at large data sizes (e.g. JKUR or JKURB) all three plots' validation scores are very close to each other, and the model' variances are small. It is difficult to tell which neural net has more advantage in representing the data at -ch level. In Figure~\ref{fig:ns-data}, on the contrary, although having larger variances, BLSTM-RNN-ns models are all scoring better than their FCNN and DBN counterparts in terms of validation scores. Since the variance decreases with the increase of training data size, one could expect a BLSTM-RNN-ns model to have an even lower variance when more data is available, which probably leads to a higher validation score.
-
-Compared BLSTM-RNN-ch with BLSTM-RNN-ns at JKURB, one could notice that although the -ch model achieves a slightly better validation score, the -ns model could actually touch a potentially much lower bias. %It is difficult to judge which of them is better if more data is available.
-
-\subsection{Skewed classes}\label{sec:3-p7}
-
-A detail investigation of uncommon chords (chords that constitute the minor population) performances reveals the true potential of BLSTM-RNN that makes us believe it to be a better neural network at handling LVACE under the proposed framework. In short: 1) BLSTM-RNN performs much better than FCNN and DBN on uncommon chords as well as some common chords (chords that constitute the major population); 2) BLSTM-RNN scores much better in a balanced performance metric.
-\begin{figure}[htb]
-	\centering
-    \includegraphics[width=1\columnwidth]{3/res/13-av_skewed.pdf}
-	\caption{Comparison of common and uncommon chords in different neural nets. All models are trained with 6seg-[800*2].}
-	\label{fig:blstm-long-tail}
-\end{figure}
-
-Figure~\ref{fig:blstm-long-tail} shows how different models perform on different chords (or ``chord types'', used interchangeably with ``chords'' in this context). These performances are reported as per chord \textit{WCSR}:
-\begin{equation}
-	\mathit{WCSR_{C} = {\sum{Length(C_i)*CSR_i} \over \sum{Length(C_i)}}},
-	\label{eq:wcsrchord}
-\end{equation}
-where the subscript $i$ denotes the $i^{th}$ instance of the chord $C$ within the dataset. Among all chord types, \textit{maj}, \textit{min}, \textit{maj7}, \textit{min7} and \textit{7} are considered common chords, because they constitute the major population in pop/rock music \cite{burgoyne2011expert}. The other chords are considered as uncommon chords. As demonstrated in Figure~\ref{fig:blstm-long-tail}, the advantage of FCNN and DBN over BLSTM-RNN appears only in \textit{maj}, but BLSTM-RNN outperforms them by large amounts in most uncommon chords as well as other common chords.
-
-\begin{figure}[htb]
-	\centering
-	\pgfplotsset{width=6cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={Average ACQAs from all 6seg-[800*2] models},
-	title style = {font=\scriptsize},
-	ybar=8pt,
-	enlargelimits=0.2,
-	legend style={at={(0.5,-0.2)},
-		anchor=north,legend columns=-1},
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	symbolic x coords={FCNN,DBN,BLSTM-RNN},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ymin=10, ymax=30,
-	nodes near coords,
-	nodes near coords align={vertical},
-	legend style={font=\scriptsize},
-	]
-	\addplot [ybar,fill=black,draw=black] coordinates {(FCNN,14.3)(DBN,10.4)(BLSTM-RNN,23.7)};
-	\end{axis}
-	\end{tikzpicture}
+	\includegraphics{3/figures/avacqa.pdf}
 	\caption{Average ACQAs of \textit{SeventhsBass} Vocabulary. All models are trained with 6seg-[800*2].}
-	\label{fig:acqa}
+	\label{fig:3-acqa}
 \end{figure}
 
-To measure the well-roundedness of a model, ``Average Chord Quality Accuracy''(\textit{ACQA}) \cite{cho2014improved} is used. It is defined in Chapter~\ref{cp:background} Equation~\ref{eq:2-acqa} and recapped as follows
-\begin{equation}
-	\mathit{ACQA = {{\sum{WCSR_{C}}} \over {\#\,of\,chords}}}.
-	\label{eq:3-acqa}
-\end{equation}
-Models that over-fit on a few chord types tend to get lower \textit{ACQA}s, while those well balanced ones will have higher \textit{ACQA}s. As shown in Figure~\ref{fig:acqa}, the average \textit{ACQA} of the BLSTM-RNN models outscores the average \textit{ACQA}s of the other two types of models by around 10 points. This well demonstrates that BLSTM-RNN models perform in a much more balanced way.
-
-Here the author tries to provide a plausible explanation as to why BLSTM-RNN is a better neural network in solving LVACE problem than the other two. It is reasonable to think that BLSTM-RNN regards its input as a {\it sequence of frames}, while fully-connected networks (such as FCNN and DBN) regard their inputs as a \textit{flat vectors}. Therefore, while BLSTM-RNN tries to look for regularities within each pair of consecutive frames along the time direction, FCNN and DBN would search for regularities within every pair of consecutive or nonconsecutive frames as if they are not time related. In many chord recognition cases, the latter approach is more efficient when the input feature is already a good summarization of pitch class saliences (e.g. chromagram), but this approach overlooks the ``sequential order'' of frames, which results in the over-fitting of root position chords and under-fitting of inversion chords.
-
-\subsection{Baseline Comparison} \label{sec:3-p9}
-
-At last the proposed approach is compared with the baseline approach - Chordino. There is one representative for each deep neural net, all trained and cross-validated with JKURB-6seg-ns-[800*2]. They are compared with Chordino in terms of five categories: four \textit{WCSR}s and the \textit{ACQA} score.
-\begin{figure}[htb]
+To compare whether the \textit{ACQA} differences among these system variants are significant, we perform a Friedman test \cite{friedman1937use} with Tukey HSD (honest significant difference) \cite{tukey1949comparing} with a $p$-value of 0.05 on the track-wise \textit{ACQA}s. As shown in Figure~\ref{fig:3-friedmanacqa}, both BLSTM-JKURB-ch-6seg-800 and BLSTM-JKURB-ns-6seg-800 are significantly better (no overlap of confidence intervals) than the other systems, and BLSTM-JKURB-ch-6seg-800 is significantly better than BLSTM-JKURB-ns-6seg-800 as well. This concludes that the BLSTM-RNN models are significantly better than the FCNN and the DBN models in terms of \textit{ACQA}s, or balanced performances.
+\begin{figure}[h!]
 	\centering
-	\pgfplotsset{width=9cm,height=5cm,every node near coord/.append style={font=\tiny}}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={Comparison of WCSRs of all JKURB-6seg-ns-[800*2] and Chordino},
-	title style = {font=\scriptsize},
-	ybar=4pt,
-	bar width=4pt,
-	enlargelimits=0.2,
-	legend style={at={(0.5,-0.2)},
-		anchor=north,legend columns=-1},
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	symbolic x coords={MajMin,MajMinBass,Sevenths,SeventhsBass},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ymin=45, ymax=80,
-	%nodes near coords,
-	%nodes near coords align={vertical},
-	legend style={font=\scriptsize},
-	]
-	\addplot [ybar,fill=white,draw=black] coordinates {(MajMin,62.9)(MajMinBass,61.2)(Sevenths,51.3)(SeventhsBass,49.9)};
-	
-	\addplot [ybar,fill=brown,draw=black] coordinates {(MajMin,67.0)(MajMinBass,65.5)(Sevenths,55.5)(SeventhsBass,54.2)};
-	
-	\addplot [ybar,fill=black,draw=black] coordinates {(MajMin,72.3)(MajMinBass,70.2)(Sevenths,60.2)(SeventhsBass,58.4)};
-	
-	\addplot [ybar,fill=blue,draw=black] coordinates {(MajMin,72.4)(MajMinBass,69.1)(Sevenths,55.8)(SeventhsBass,52.8)};
-	
-	\legend{FCNN, DBN, BLSTM-RNN, Chordino}
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Compare with Chordino. All models are trained with JKURB-6seg-ns-[800*2].}
-	\label{fig:compchordino}
+	\includegraphics[width=0.8\columnwidth]{3/figures/ftestacqa.eps}
+	\caption{Friedman test with Tukey HSD: ACQAs of different system variants}
+	\label{fig:3-friedmanacqa}
 \end{figure}
 
-\begin{figure}[htb]
+Now we have concrete evidence that the BLSTM-RNN is a better neural network in solving the LVACE problem than the other two models. It is reasonable to think that the BLSTM-RNN regards its input as a {\it sequence of frames}, while fully-connected networks (in this context the FCNN and DBN) regard their inputs as \textit{flat vectors}. Therefore, while the BLSTM-RNN tries to look for regularities within \textit{each pair of consecutive frames} along the time direction, the FCNN or DBN would search for regularities within \textit{every point of the flat vector} as if they are not time related at all. In some cases, the latter approach is more efficient given that the input feature has already encoded certain prior information about music (e.g. chromagram contains the information about pitch classes). Nevertheless, it overlooks the ``sequential order of frames'', which probably causes the over-fitting of root position chords and the under-fitting of chord inversions.
+
+\subsection{Baseline comparison} \label{sec:3-p9}
+Finally, we compare our LVACE framework with the Chordino. It should be emphasized that Chordino is the only suitable baseline because: (1) Our framework resembles Chordino in terms of the segmentation and feature extraction processes; (2) Chordino is the only other system that supports seventh chords and chord inversions.
+\begin{figure}[h!]
 	\centering
-	\pgfplotsset{width=8cm,height=4cm,every node near coord/.append style={font=\scriptsize}}
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={ACQAs of JKURB-6seg-ns-[800*2] and Chordino},
-	title style = {font=\scriptsize},
-	ybar=8pt,
-	enlargelimits=0.2,
-	legend style={at={(0.5,-0.2)},
-		anchor=north,legend columns=-1},
-	ylabel={WCSR $\times$ 100},
-	y label style={font=\scriptsize},
-	symbolic x coords={FCNN,DBN,BLSTM-RNN,Chordino},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ymin=10, ymax=25,
-	nodes near coords,
-	nodes near coords align={vertical},
-	legend style={font=\scriptsize},
-	]
-	\addplot [ybar,fill=black,draw=black] coordinates {(FCNN,12.6)(DBN,10.8)(BLSTM-RNN,22.6)(Chordino,20.9)};
-	\end{axis}
-	\end{tikzpicture}
-	\caption{Comparison of ACQAs of JKURB-6seg-ns-[800*2] and Chordino}
-	\label{fig:acqachordino}
+	\includegraphics{3/figures/cpwcsr.pdf}
+	\caption{Performance comparison between system representatives and Chordino on WCSRs. All models are trained with JKURB-6seg-ns-[800*2].}
+	\label{fig:3-compchordino}
 \end{figure}
 
-As shown in Figure~\ref{fig:compchordino}, the best representative BLSTM-RNN outperforms Chordino by a large amount in \textit{Sevenths} and \textit{SeventhsBass}, and it is fairly comparable with Chordino in \textit{MajMin} and \textit{MajMinBass}. The other two representatives are not scoring as good as Chordino in most categories.
+We choose one representative for each type of deep neural net, all trained and cross-validated with JKURB-6seg-ns-[800*2], and compare them with the Chordino using the standard MIREX ACE categories. As shown in Figure~\ref{fig:3-compchordino}, the representative of BLSTM-RNN outperforms the Chordino by large margin in \textit{Sevenths} and \textit{SeventhsBass}, and it scores fairly close to the Chordino in \textit{MajMin} and \textit{MajMinBass}. The other two representatives are not performing as good as the Chordino in most categories.
 
-In terms of versatility (Figure~\ref{fig:acqachordino}), Chordino is not bad at all, outperforming both FCNN's and DBN's representatives largely, but the most balanced system is still the BLSTM-RNN's representative.
+We perform a Friedman test with Tukey HSD ($p=0.05$, using the track-wise results) to test whether the differences in the \textit{SeventhsBass} \textit{WCSR}s are significant. As shown in Figure~\ref{fig:3-friedmanwcsrbl}, BLSTM-JKURB-ns-6seg-[800*2] is significantly better than the other systems as well as the Chordino.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\columnwidth]{3/figures/ftestwcsrbl.eps}
+	\caption{Friedman test with Tukey HSD: WCSRs compared with the baseline}
+	\label{fig:3-friedmanwcsrbl}
+\end{figure}
+
+In terms of \textit{ACQA}, as shown in Figure~\ref{fig:3-acqachordino}, Chordino outperforms both the FCNN's and DBN's representatives, but the most balanced system is the BLSTM-RNN's representative. We again perform a Friedman test with Tukey HSD ($p=0.05$, using the track-wise results) to test whether the differences in \textit{ACQA}s are significant. As shown in Figure~\ref{fig:3-friedmanacqabl}, the BLSTM-JKURB-ns-6seg-[800*2] system is again significantly better than the other systems as well as the Chordino.
+\begin{figure}[h!]
+	\centering
+	\includegraphics{3/figures/cpacqa.pdf}
+	\caption{Performance comparison between system representatives and Chordino on ACQAs. All models are trained with JKURB-6seg-ns-[800*2].}
+	\label{fig:3-acqachordino}
+\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\columnwidth]{3/figures/ftestacqabl.eps}
+	\caption{Friedman test with Tukey HSD: ACQAs compared with the baseline}
+	\label{fig:3-friedmanacqabl}
+\end{figure}
 
 \section{MIREX 2016 Results}
 MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
 \begin{itemize}
 \item CM1: Chordino, from Queen Mary University of London;
 \item DK*: features three variants of the LVACE approach proposed in this chapter \cite{deng2016mirex} (note that DK4, which is from another design approach, is skipped in the following discussion);
-\item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two previous papers \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
+\item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two of their papers \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
 \item KO1: shineChords, a time-frequency reassign approach proposed by Khadkevich and Omologo \cite{khadkevich2011time}.
 \end{itemize}
 
 \subsection{Dataset and Vocabulary}
-It should be noted that except CM3, whose model parameters are all manually specified, all other systems involve extensive training:
-\begin{itemize}
-\item KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be easily spot by simply noticing that, compared with other systems, it has too high a \textit{SeventhsBass} score in Isophonic, while not as high in other test sets.
+It should be noted that except for CM3, whose model parameters are all manually specified, all other systems involve extensive training.
 
-\item FK* are trained with the Isophonic, Robbie Williams \footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard \footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
+KO1's description does not mention its training set, but it is probably trained with the Isophonic dataset (MIREX 2009 set) \cite{burgoyne2014comparative}. This can be inferred by noticing that, compared with other systems, it has too high a \textit{SeventhsBass} score in Isophonic, while not as high in other test sets.
 
-\item DK* are trained with USPop and RWC dataset. Note that they do not contain any test set in MIREX ACE 2016. Note that DK1 is the DBN-6seg-ch-[800,800]-UR system and DK2 is the BLSTM-RNN-6seg-ch-[800,800]-UR system.
-\end{itemize}
+FK* are trained with the Isophonic, Robbie Williams \footnote{\url{https://www.researchgate.net/publication/260399240\_Chord\_and\_Harmony\_annotations\_of\_the\_first\_five\_albums\_by\_Robbie\_Williams}}, RWC and the public part of McGill Billboard \footnote{\url{http://ddmal.music.mcgill.ca/billboard}} dataset.
 
-In terms of chord vocabulary, both DK3, FK* and KO1 only support \textit{majmin}, CM1 supports a large vocabulary including most types in \textit{SeventhsBass}, and DK1\&2 support exactly the \textit{SeventhsBass}.
-\begin{table*}[h]
+DK* are trained with the USPop and RWC dataset, which are not part of MIREX ACE 2016's test sets. Note that DK1 is the DBN-6seg-ch-[800,800]-UR system and DK2 is the BLSTM-RNN-6seg-ch-[800,800]-UR system.
+
+In terms of chord vocabulary, both DK3, FK* and KO1 only support \textit{majmin}; CM1 supports a large vocabulary including most types in \textit{SeventhsBass}; and DK1\&2 support exactly the \textit{SeventhsBass}.
+\thispagestyle{plain}
+\begin{table*}[htbp]
 \centering
 \scriptsize
 \caption{MIREX 2016 Results}
@@ -1137,23 +522,25 @@ KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 
 
 \subsection{Results and Discussions}
-Table~\ref{tab:3-mirex2016} shows the results of MIREX ACE 2016 (for brevity in the tables, B = \textit{Bass}, Mm = \textit{MajMin}, MmB = \textit{MajMinBass}, R = \textit{Root}, S = \textit{Sevenths}, SB = \textit{SeventhsBass}, Seg = \textit{Segmentation Quality}). Within the large vocabulary context of this thesis, the main focus of the results is the \textit{SeventhsBass} column.
+Table~\ref{tab:3-mirex2016} shows the MIREX ACE 2016 results (for brevity, in the tables, B = \textit{Bass}, Mm = \textit{MajMin}, MmB = \textit{MajMinBass}, R = \textit{Root}, S = \textit{Sevenths}, SB = \textit{SeventhsBass}, Seg = \textit{Segmentation Quality}). Within the large vocabulary context of this thesis, the main focus is the \textit{SeventhsBass} column.
 
-In Isophonic test, KO1 gets the highest score. But this is probably because of its over-fitting the data, as explained previously, that it actually scores much lower in tests that it does not previously know, such as JayChou 2015. Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set. Since it is not clear to what extend the systems over-learn the data, the results of this test is not statistically valid to deduce any reasonable conclusions regarding these systems.
+In the Isophonic test, KO1 gets the highest score. This is probably because of its over-fitting of the data, as explained previously. Note that it scores much lower in tests that it has not previously seen, such as JayChou 2015 (The same as the JayChou29). Both FK2 and FK4 come next to KO1, but unfortunately they are all informed with this test set during training. Since it is not clear to what extend the systems over-learn the data, the results of this test is not statistically valid to deduce any reasonable conclusions.
 
-In Billboard 2012 and 2013 tests, the best performances are both from DK1. Although FK* learn from part of the test set, they somehow does not outperform DK1. Moreover, DK1 outscore KO1 by about 3 points in both tests, which demonstrates a better generalization capability in DK1 system.
+In Billboard 2012 and 2013 tests, the best performances are both from DK1. Although FK* learn from part of the test set, they somehow does not outperform DK1. Moreover, DK1 outscores KO1 by about 3 points in both tests.
 
-JayChou 2015 test is probably the most convincing one, since none of the systems are learning this set, and on the other hand it has more than 20\% of chords other than \textit{maj}, \textit{min} and \textit{sevenths}, which is much more than those in other test sets. The performance on this test could well demonstrate the system's vocabulary versatility. This can be noticed by making comparison within the DK* systems, where DK1 and DK2 perform much better than DK3 in \textit{SeventhsBass}. The best two systems in this test are DK1 and DK2, outscoring the FK* systems by around 10 points, and the KO1 system by about 8 points.
+JayChou 2015 test is probably the most convincing one, since none of the systems are learning this set. Moreover, more than 20\% of it are chords other than \textit{maj}, \textit{min} and \textit{sevenths}. This portion is much more than those in the other test sets. The performance on this test could well demonstrate a system's vocabulary versatility. This can be noticed by making comparisons among the DK* systems, where DK1 and DK2 perform much better than DK3 in \textit{SeventhsBass}. The best two systems in this test are DK1 and DK2, outscoring the FK* systems by around 10 points, and the KO1 system by around 8 points.
 
-Robbie Williams test somehow shows the reverse ranking of JayChou 2015. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but unfortunately they might over-learn the data. It is interesting to note that KO1 scores 71.39, slightly less that DK3's 72.55. This strongly indicates that this test is mainly composed of \textit{maj}, \textit{min} and \textit{sevenths} (probably > 90\%), which is very similar to the chord composition of the Isophonic set. Therefore systems that only support a small chord vocabulary will have a huge advantage by not being able to have confusions on long-tail chords.
+Robbie Williams test somehow shows the reverse ranking of JayChou 2015 test. DK3 leads both DK1 and DK2 by about 5 and 10 points. FK* are the best performing ones, but they might as well over-fit the data. It is interesting to note that KO1 scores 71.39, slightly less than DK3's 72.55. This strongly indicates that this test set is mainly composed of \textit{maj}, \textit{min} and \textit{sevenths} (probably > 90\%), which is very similar to the chord composition of the Isophonic set. Therefore systems that only support a small chord vocabulary will have a big advantage by not being able to confuse \textit{maj} and \textit{min} chords with the long-tail chords.
 
 \section{On Smaller Vocabularies}
-This chapter is mainly developed based on large vocabulary, specifically, the \textit{SeventhsBass} vocabulary. In order to do a comparison between the proposed system framework and other approaches, a set of experiments are conducted using two smaller vocabularies: 1, \textit{MajMin}; 2, \textit{Full121} vocabulary introduced by Mauch \cite{mauch2010automatic} (also mentioned in Section~\ref{sec:2-largevocab}). For \textit{MajMin} system implementation, each label in the training set will be mapped to its \textit{MajMin} form following a normal chord mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep learning model will be trained on a dataset with only \textit{MajMin} labels. For \textit{Full121} implementation, a slightly modified version of chord mapping strategy \cite{mauch2010automatic} is followed.
+This chapter is mainly developed for large vocabulary, specifically, the \textit{SeventhsBass} vocabulary. In order to do a thorough comparison between the proposed system framework and other approaches, a set of experiments are also conducted using two smaller vocabularies, i.e., 1, \textit{MajMin} (the same as \textit{majmin}); 2, \textit{Full121} vocabulary (already introduced in Section~\ref{sec:2-largevocab}).
+
+For \textit{MajMin} implementation, each label in the training set will be mapped to its \textit{MajMin} form using a normal chord mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep neural net will be trained on a dataset with only \textit{MajMin} labels. For \textit{Full121} implementation, we use Mauch's chord mapping strategy \cite{mauch2010automatic}.
 
 \subsection{On MajMin}
-Table~\ref{tab:3-overallres} shows a \textit{SeventhsBass} evaluation comparison, where all systems, except for Chordino, only supports \textit{MajMin} vocabulary. The results show that on one hand the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand the \textit{ACQA} of these systems are all much lower because of a much smaller vocabulary than Chordino's.
-\begin{table}[h]
-\footnotesize
+Table~\ref{tab:3-overallres} shows the results, where all systems, except for Chordino, only support the \textit{MajMin} vocabulary. On one hand, the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand, the \textit{ACQA} of these systems are all much lower because of a much smaller vocabulary than Chordino's.
+\begin{table}[h!]
+\scriptsize
 \centering
 \caption{Overall WCSR scores; All systems, besides Chordino, are trained with CJKUR-[800*2], tested on the TheBeatles180 dataset, with only MajMin vocabulary support.}
 \label{tab:3-overallres}
@@ -1169,11 +556,10 @@ BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 8.54\\ \h
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdown. Take DBN-ch as a representative, since it only supports \textit{MajMin}, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the dataset's population, that's why it has a much higher \textit{SeventhsBass} score in Table~\ref{tab:3-overallres}. However, by relaxing the evaluation strength from \textit{SeventhsBass} to \textit{Sevenths} and to \textit{MajMin}, the performance difference between DBN-ch and Chordino becomes less and less.
-
+Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdown. Take DBN-ch as a representative, since it only supports \textit{MajMin}, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the dataset's population, that's why it has a much higher \textit{SeventhsBass} score in Table~\ref{tab:3-overallres}. However, by relaxing the evaluation strength from \textit{SeventhsBass} to \textit{Sevenths} and to \textit{MajMin}, the performance difference between DBN-ch and Chordino becomes much smaller.
 \begin{landscape}
 \thispagestyle{plain}
-\begin{table*}[h]
+\begin{table*}[h!]
 \scriptsize
 \caption{Detail SeventhsBass WCSR scores. All systems, besides Chordino, are trained with CJKUR-[800*2], with only MajMin vocabulary support. M = major, m = minor, N = N.C (no chord). The \%B row shows the composition of chords in the test set.}
 \label{tab:3-detailres}
