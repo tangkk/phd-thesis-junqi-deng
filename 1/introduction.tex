@@ -78,6 +78,17 @@ Now that the motivation for ACE is clear, the motivation for LVACE could be redu
 	\item LV is necessary for an ACE system to pass the Turing test \cite{turing1950computing}.
 \end{itemize}
 
+\section{Research Scope} \label{sec:1-scope}
+\noindent
+It is necessary to firstly define the scope of this study:
+\begin{itemize}
+	\item What types of large vocabularies will be studied?
+	\item What types of music will be studied?
+\end{itemize}
+In Chapter~\ref{cp:background}, we will introduce several vocabularies, including the \textit{SeventhsBass} vocabulary, which is used by the current standard ACE evaluation. This is regarded as a large vocabulary, as oppose to the one only containing \textit{major} and \textit{minor} triads. The \textit{SeventhsBass} will be the main focused of this thesis.
+
+Besides, pop and rock music will be the main focus of this thesis, because almost all ACE datasets are built around these two genres. In Chapter~\ref{cp:jazz} we try to extend it to jazz, but nevertheless, most of the discussions and conclusions in this thesis are only verified under pop and rock music.
+
 \section{Thesis Structure} \label{sec:1-outline}
 This thesis focuses on deep learning solutions to LVACE. The main contributions of this thesis can be found in Chapter~\ref{cp:ghmm},~\ref{cp:endtoend} and \ref{cp:jazz}, where Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} are parallel sections presenting two different LVACE solutions, and Chapter~\ref{cp:jazz} takes one of them and build algorithmic music systems for jazz. Concretely:
 
@@ -102,14 +113,13 @@ The major contributions of this thesis are mainly on the deep learning methods a
 \item A hybrid classical segmentation and deep neural nets chord labeling approach;
 \item A recurrent neural network sequence decoding with an even chance training scheme approach.
 \end{enumerate}
-
 There are also minor contributions in the algorithmic applications of jazz. Particularly, this thesis proposes:
 \begin{enumerate}
 \item A jazz chord-scale estimation system that augments the LVACE framework with a local scale tracking algorithm.
 \item A fully automatic jazz improvisation process that combines the chord-scale estimation system and a note generation process.
 \item Two semi-automatic jazz improvisation platforms that enable users to create melodies based on a chord-scale sequence.
 \end{enumerate}
-
+\noindent
 In correspond to the thesis contributions, the author has published the following articles:
 \begin{itemize}
 \item Deng, J., Kwok, Y. K. Large Vocabulary Automatic Chord Estimation with an Even Chance Training Scheme, In Proceedings of the 18th International Society for Music Information Retrieval Conference, Suzhou, China, 2017

@@ -81,6 +81,7 @@ All the music objects considered in this thesis are assumed to be in 12-tone equ
 \label{fig:2-mi}
 \end{figure}
 
+\noindent
 Figure~\ref{fig:2-mi} shows a list of intervals and their short notations. All intervals are built upon $C4$, denoted by the note on the extra line below the staff. These intervals are:
 
 \begin{enumerate}[label=(\alph*)]
@@ -166,7 +167,7 @@ There are {\it major key} and {\it minor key}, characterized by their own {\it m
 \mathit{minor\,scale=(W,H,W,W,H,W,W)},
 \end{split}
 \end{equation}
-The keys and scales can be named after the starting pitch class, such as ``C major key'' and ``D minor key''; and the scales ``C major scale'' and ``D minor scale''.  These seven-pitch scales, containing two half steps and five whole steps, are called {\it diatonic scales}, regardless of the starting pitch class. Chord progressions that built upon these scales are decisive clues to the underlying keys. A {\it diatonic chord progression} is a sequence of seven chords built on a diatonic scale. For example, in C major key, a diatonic chord progression can be:
+The keys and scales can be named after the starting pitch class, such as ``C major key'' and ``D minor key''; and the scales ``C major scale'' and ``D minor scale''.  These seven-pitch scales, containing two half steps and five whole steps, are called {\it diatonic scales}, regardless of the starting pitch class. Chord progressions that built upon these scales are decisive clues to the underlying keys. A {\it diatonic chord progression} is a sequence of seven chords built on a diatonic scale. For example, in C major key, such progression can be:
 \begin{equation}
 \mathit{Cmaj - Dmin - Emin - Fmaj - Gmaj - Amin - Bdim,}
 \end{equation}
@@ -487,13 +488,14 @@ The gradients of RBM's reconstruction error with respect to the weights can be e
 where ``angle brackets are used to denote expectations under the distribution specified by the subscript that follows'' \cite{hinton2010practical}. But the difficulty of computing the gradients is that $<v_ih_j>_{model}$ is an inherit value of the model itself, which takes a long time to converge.
 
 A practical way to train an RBM is to use SGD with {\it contrastive-divergence} \cite{hinton2010practical} (CD) or {\it persistent-contrastive-divergence} (PCD) \cite{tieleman2008training}. Both methods compute an approximation of $<v_ih_j>_{model}$ by taking only a few steps along the {\it Markov chain} $(v_0\rightarrow h_0\rightarrow v_1\rightarrow h_1\rightarrow...\rightarrow v_t\rightarrow h_t)$, without waiting for convergence.
-
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.7\columnwidth, height=0.35\columnwidth]{2/figures/dbn-pt.pdf}
 \caption{Deep belief network pre-training phase}
 \label{fig:2-dbn-pt}
 \end{figure}
+
+\noindent
 Pre-training the DBN in Figure~\ref{fig:2-dbn-pt} takes the following steps:
 \begin{enumerate}
 \item Regard the network as a stack of RBMs, and order them bottom-up;
@@ -669,7 +671,15 @@ where $*$ stands for element-wise multiplication.
 %, and all ``summation over index'' operations are replaced by matrix multiplications for brevity. 
 
 \Hsection{Deep pattern matching in ACE}
-We now introduce several deep learning techniques for pattern matching in ACE. Since this is highly related to the ``feature learning'', we will refer back to the feature learning techniques when necessary.
+Here we define a few terms that help place each of the following approaches in a tentative ACE taxonomy:
+\begin{itemize}
+\item \textbf{local} means the process sees a window of frames as the input context;
+\item \textbf{global} means the process runs with awareness of the full input;
+\item \textbf{smoothing} means a segmentation process that aims at post-processing or post-filtering the raw classification results.
+\end{itemize}
+By these definitions, we could place the traditional ACE approach pioneered by Fujishima \cite{fujishima1999realtime} and Sheh and Ellis \cite{sheh2003chord} as the ``local feature extraction - global smoothing'' approach.
+
+We now introduce several deep learning techniques for ACE pattern matching. Since this is highly related to the ``feature learning'', we will refer back to the feature learning techniques when necessary.
 
 The first deep learning based pattern matching in ACE is also proposed by Humphrey and Bello \cite{humphrey2012rethinking}. They implement a CNN to classify chords at each constant-Q frame, and then apply median-filtering to smooth the classification results into segments. The CNN outputs a ``probability surface'', which is the posterior chord probabilities conditioned on the input frame, so that it actually performs both feature learning and pattern matching. Consider that the role of CNN here can be replaced by any type of deep neural nets, this is a ``local classification - global smoothing'' approach.
 
@@ -677,16 +687,14 @@ Boulanger et al. \cite{boulanger2013audio} perform feature learning via an STFT-
 
 Zhou and Lerch \cite{zhou2015chord} put forward another system that resembles Boulanger's in terms of the feature learning. They use an SVM to classify the learned features locally, and use an HMM to perform sequence decoding and smoothing. This belongs to the ``local feature learning - local classification - global smoothing'' approach.
 
-Deng and Kwok \cite{deng2016hybrid} considers a system that separates segmentation and classification into two different passes, where classifications are performed within segments using deep neural nets. This is a ``local feature extraction - global segmentation - local classification'' approach.
-
-In the above discussion, there are a few terms worth to be noticed. The term ``\textbf{local}'' means that every time the process runs it sees a window of frames as the context of input; ``\textbf{global}'' means the process runs with awareness of the full input; ``\textbf{smoothing}'' stands for a segmentation process that normally aims at post-processing the raw classification results. To summarize, by far there are four types of deep learning approaches for ACE:
+Therefore, according to our taxonomy, by far there are four types of ACE approaches:
 \begin{itemize}
+	\item local feature extraction - global smoothing \cite{fujishima1999realtime,sheh2003chord}
 	\item local classification - global smoothing \cite{humphrey2012rethinking};
-	\item local feature learning \cite{Korzeniowski2016feature} - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
+	\item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
 	\item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
-	\item local feature extraction - global segmentation - local classification \cite{deng2016hybrid}
 \end{itemize}
-Except for the last one, all of these approaches incorporate a \textbf{``global smoothing''} stage after classification. This is a step that requires the prior domain knowledge which does not belong to the deep learning framework. From a machine learning perspective, prior knowledge is considered suboptimal, because it is imposed by human engineers rather than learned by machines. It could also be suboptimal in terms of performance, if the machine learning model is powerful or the amount of training data is large enough. A machine learning system evolves by reducing the amount of prior knowledge involved while maintaining the overall system performances as much as possible.
+We will refer back to this taxonomy in Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} when we introduce our new approaches.
 
 \subsection{Chord Vocabulary and Output Format} \label{sec:2-vocab}
 Chord vocabulary is a big issue in ACE as it defines the problem domain. The size of a chord vocabulary is denoted by the number of chord classes, which equals to twelve time the number of chord types (a chord type can be rooted at any of the 12 pitch classes in 12-tone equal temperament). In the two pioneering ACE works, Fujishima's system \cite{fujishima1999realtime} supports 324 classes, including many chord types used in jazz; and Sheh and Ellis's system \cite{sheh2003chord} has 84 classes with 7 types, including $maj$, $min$, $maj7$, $min7$, $7$, $aug$ and $dim$.
@@ -696,7 +704,7 @@ Note that a large vocabulary may lead to poor system performance in practice. On
 
 On the other hand, for an expert knowledge driven system, it is also hard to recognize long-tail chords since most of them are slightly {\it extended}, {\it altered} or {\it suspended} upon the ordinary chords. Their sound qualities can be distinguished by human though, their underlying note compositions differ in a very subtle way. If an ACE {\it expert system} tries to capture the common chords as much as possible, it finds difficult to secure the uncommon chords in the same way. Moreover, since the population of uncommon chords is small, even a few misclassification may lead to severe performance drop in those categories.
 
-In this case, if a system tries to support a large vocabulary, it may suffer from low overall chord symbol recall due to confusions between the common and uncommon chords. Specifically, due to the extremely unbalanced population, there will be many common chords misclassified as uncommon, and only a few the other way around. However, if a system only supports common chords (i.e. a small vocabulary), although all the uncommon chords will be misclassified, it guarantees the performance of the majority. \cite{deng2016hybrid}
+In this case, if a system tries to support a large vocabulary, it may suffer from low overall chord symbol recall due to confusions between the common and uncommon chords. Specifically, due to the extremely unbalanced population, there will be many common chords misclassified as uncommon, and only a few the other way around. However, if a system only supports common chords (i.e. a small vocabulary), although all the uncommon chords will be misclassified, it guarantees the performance of the majority.
 
 Su and Jeng \cite{su2001multi}, Maddage et al. \cite{maddage2004content} and Yoshioka et al. \cite{yoshioka2004automatic} are among the first to use a 48 chords vocabulary with four types, including $maj$, $min$, $aug$ and $dim$. This is echoed in many later works \cite{harte2005automatic,catteau2007probabilistic,burgoyne2007cross,su2001multi,papadopoulos2008simultaneous}. Bello and Pickens \cite{bello2005robust} propose an even smaller vocabulary, covering only 24 chords with $maj$ and $min$ (normally called {\it majmin}). This is also adopted in many systems \cite{ryynanen2008automatic,weil2008hmm,khadkevich2009use,weller2009structured,ni2012end,cho2010exploring,humphrey2012rethinking} and thus \textit{majmin} becomes the mainstream in ACE. Note that usually a ``no chord'' with a ``chord symbol'' $N$ or $N.C.$ will also be included in the vocabulary to denote everything that is ``not a chord'', such as silence, speech, natural soundscape or environmental noise.
 
@@ -713,11 +721,8 @@ Pauwel and Peeters \cite{pauwels2013evaluating}, in an effort to introduce a new
 
 Notably, Mauch's popular open source ACE tool, Chordino \cite{cannam2010sonic}, which features NNLS bass-treble chroma with HMM decoding instead of DYBN, features a default vocabulary of 181 chords with some inversions \footnote{$maj$, $min$, $maj/3$, $maj/2$, $maj/5$, $dim$, $aug$, $maj6$, $min6$, $7$, $maj7$, $min7$, $dim7$, $7/3$, $7/b7$}.
 
-%Recently, a preliminary study on ACE's performance on Jazz has been conducted by Deng and Kwok \cite{deng2016hybrid}
-%\footnote{They are: $maj$, $min$, $min6$, $6$, $maj7$, $maj7\#5$, $maj7\#11$, $maj7b5$, $min7$, $minmaj7$, $min7b5$, $min7\#5$, $7$, $7b5$, $7b9$, $7\#9$, $7\#5\#9$, $7\#5b9$, $7b5b9$, $7\#5$, $7sus4$, $aug7$, $dim7$,  $maj9$, $min9$, $9$, $9\#11$, $min11$, $min11b5$, $11$, $min13$, $maj13$, $13$, $13b9$, $69$}
-
 \Hsection{Consideration for Chord Inversions}
-Thus far, there are only a few ACE systems that supports inversions \cite{cannam2010sonic,mauch2010automatic,ni2012end,mcvicar2013machine,deng2016chord,deng2016hybrid}. When a system supports inversions, it's overall performance could be seriously downgraded \cite{deng2016chord}. This is because inversions are easily confused with their root positions, whose population is much larger. Ignoring inversions makes such confusion only possible in one direction (inversions misclassified as root position only), but supporting inversions makes it possible in both directions.
+Thus far, there are only a few ACE systems that supports inversions \cite{cannam2010sonic,mauch2010automatic,ni2012end,mcvicar2013machine}. When a system supports inversions, it's overall performance could be seriously downgraded. This is because inversions are easily confused with their root positions, whose population is much larger. Ignoring inversions makes such confusion only possible in one direction (inversions misclassified as root position only), but supporting inversions makes it possible in both directions.
 
 The sound quality of inversions and root positions are totally different in many musical contexts. For example, in Figure~\ref{fig:2-wdwu}, inversions are introduced to keep bass continuities or to indicate a shift of key. If an ACE system does not support inversions, it definitely could break bass line continuations and, thus, changes the original harmonies.
 \begin{figure}[htb]
@@ -804,7 +809,7 @@ For multiple tracks estimation, the overall performance can be reported as the {
 \end{equation}
 where subscript $i$ denotes the track number. It is the weighted average of all tracks' \textit{CSR}s by the lengths of these tracks. This is equivalent to the {\it total relative correct overlap} (\textit{TRCO}) used by McVicar \cite{mcvicar2013machine}.
 
-ACE researchers also report \textit{WCSR} scores on individual chords \cite{mauch2010automatic,deng2016chord}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music,deng2016hybrid}. The \textit{WCSR} of a specific chord type is:
+ACE researchers also report \textit{WCSR} scores on individual chords \cite{mauch2010automatic}, as well as the confusion tables among chords \cite{mauch2010automatic,oudre2010template,papadopoulos2010joint,khadkevich2011music}. The \textit{WCSR} of a specific chord type is:
 \begin{equation}
 \mathit{WCSR_{C} = {\sum{Length(C_i)*CSR_i} \over \sum{Length(C_i)}}},
 \label{eq:wcsrchord}
@@ -882,7 +887,7 @@ In view of all these issues \cite{humphreyfour,ni2013understanding}, given a tes
 ...qualitative evaluation should play a larger role in the assessment of automatic systems intended for userfacing applications. If nothing else, users studies can help identify objective measures that align well with subjective experience.
 \end{quote}
 
-\section{Summary} \label{sec:2-summary}
+\section{Research Gaps} \label{sec:2-summary}
 This chapter gives a thorough review of ACE, including the musical fundamentals, system design approaches and evaluation methodologies. Through the literature review, we see at least three research gaps.
 
 Firstly, LVACE system is generally overlooked. The concern about disadvantages of LVACE is explained in Section~\ref{sec:2-vocab}. Moreover, the subjectivity issue in Section~\ref{sec:2-subjectivity} also contributes to the negative concern. Nevertheless, the counterarguments against both concerns are also clear that:
@@ -890,9 +895,9 @@ Firstly, LVACE system is generally overlooked. The concern about disadvantages o
 \item to date there are much more training data on uncommon and long-tail chords;
 \item parallel to the subjectivity issue, it is of equal importance to design a system that learns well.
 \end{enumerate}
-Eventually ACE systems should perform comparably with human musicians, hence there is no reason to stop pursuing large vocabulary systems. In addition, it is fully reasonable to design a system to support exactly the vocabulary that is used in the standard evaluation method. Currently the vocabulary used in MIREX ACE is the \textit{SeventhsBass}, which contains \textit{maj}, \textit{min}, \textit{maj7}, \textit{min7}, \textit{7}, and all of their inversions. But unfortunately, except for Chordino \cite{cannam2010sonic}, there is no system that handles large vocabulary with inversions (most MIREX submissions support $majmin$, and some with larger vocabularies without inversions). Therefore, a \textit{SeventhsBass} supportable system that has advantage over Chordino's performance, particularly on the \textit{ACQA}, is very desirable.
+Eventually ACE systems should perform comparably with human musicians, hence there is no reason to stop pursuing large vocabulary systems. In addition, it is fully reasonable to design a system to support exactly the vocabulary that is used in the standard evaluation method. Currently the vocabulary used in MIREX ACE is the \textit{SeventhsBass}. But unfortunately, except for Chordino \cite{cannam2010sonic}, there is no system that handles large vocabulary with inversions (most MIREX submissions support $majmin$, and some with larger vocabularies without inversions). %Therefore, a \textit{SeventhsBass} supportable system that has advantage over Chordino's performance, particularly on the \textit{ACQA}, is very desirable.
 
-Secondly, balanced performance on all chord categories is overlooked. It is no need to mention that systems with small vocabulary, such as $majmin$, do not have a balanced performance over a practical set of vocabulary. Even a system that supports a large vocabulary can also over-fit on ordinary chords \cite{deng2016hybrid}. Under imbalanced datasets, it is necessary to design proper schemes to keep performances on different classes as balanced as possible.
+Secondly, balanced performance on all chord categories is overlooked. It is no need to mention that systems with small vocabulary, such as $majmin$, do not have a balanced performance over a practical set of vocabulary. Even a system that supports a large vocabulary can also over-fit on ordinary chords. Under imbalanced datasets, it is necessary to design proper schemes to keep performances on different classes as balanced as possible.
 
 Thirdly, the chord segmentation information is under-exploited. Evidences have shown that the recent ACE systems have similar segmentation quality performances \cite{burgoyne2014comparative}, while they all perform segmentations and classifications in one single pass. The fact that chords are rhythmically segmented is a fundamental difference between ACE and ASR. Such property should be utilized to build better ACE systems.
 

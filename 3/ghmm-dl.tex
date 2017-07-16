@@ -2,22 +2,22 @@
 % content in this file will be fed into the main document
 
 %: ----------------------- name of chapter  -------------------------
-\chapter{A Hybrid GMM-HMM and Deep Learning Approach}\label{cp:ghmm}
+\chapter{A Hybrid GMM-HMM and Deep Neural Nets Approach}\label{cp:ghmm}
 
-As recapped in Section~\ref{sec:2-rnnpm}, by now there are basically four types of approaches for ACE:
-\begin{itemize}
-\item local feature extraction - global smoothing \cite{fujishima1999realtime,sheh2003chord}
-\item local classification - global smoothing \cite{humphrey2012rethinking};
-\item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
-\item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
-\end{itemize}
-Note that the global smoothing process is actually equivalent to a domain knowledge driven global segmentation process and a global classification process running at the same time.
+%As recapped in Section~\ref{sec:2-rnnpm}, by far there are four types of ACE approaches:
+%\begin{itemize}
+%\item local feature extraction - global smoothing \cite{fujishima1999realtime,sheh2003chord}
+%\item local classification - global smoothing \cite{humphrey2012rethinking};
+%\item local feature learning - global classification - global smoothing \cite{boulanger2013audio,sigtia2015audio};
+%\item local feature learning - local classification - global smoothing \cite{zhou2015chord}.
+%\end{itemize}
+%Note that the global smoothing process is actually equivalent to a domain knowledge driven global segmentation process and a global classification process running at the same time.
 
-All these approaches apply similar methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords sustains much longer than phonemes. This crucial divergence could lead to some different approaches.
+%All these approaches apply similar methodologies in ASR \cite{deng2014deep,bourlard2012connectionist} directly to ACE, but they overlook a fundamental difference, that chords are usually segmented rhythmically and chords sustains much longer than phonemes. This crucial divergence could lead to some different approaches.
 
-%Note that in recent MIREX ACE submissions, systems' segmentation qualities are fairly comparable with each other \cite{burgoyne2014comparative}, while all these systems perform segmentation and classification in one single pass at the same time. which leads to the belief that setting apart the two will bring more benefit to ACE system performance.
+Thus far, we have identified several research gaps. Firstly, the existing works have not considered a fundamental difference between ASR and ACE in regards to segmentation, which may lead to a possible design that considers segmentation and classification as two separate tasks. Secondly, the support for large vocabulary has been largely overlooked, particularly the support for chord inversions. Note that chord inversion is a crucial ingredient for pop and rock music, which is the primary focus of ACE research.
 
-This chapter introduces an LVACE system framework that leverages this property of chords. It can be categorized as ``local feature extraction - global segmentation - local classification'', which isolates the process of segmentation from classification, which is implemented through deep neural nets. We would like to verify whether this approach could benefit the LVACE performance, in particular the performance on the \textit{SeventhsBass} vocabulary.
+This chapter introduces an LVACE system framework that leverages the rhythmic property of chords. It can be categorized as a \textbf{``local feature extraction - global segmentation - local classification''} approach, which isolates the process of segmentation from classification. Specifically, the classification process is implemented via deep neural nets. We would like to verify whether this approach could benefit the LVACE performance, in particular the performance on the \textit{SeventhsBass} vocabulary.
 
 Experimental results show that among the three proposed deep neural nets and a baseline model, the RNN based system has the best average chord quality accuracy that significantly outperforms the other considered models. Furthermore, our bias-variance analysis has identified a glass ceiling as a potential hindrance to future improvements of large vocabulary automatic chord estimation systems.
 
@@ -214,12 +214,12 @@ In this section, we describe a systematic approach to explore and evaluate diffe
 
 For training/cross-validation, we use six datasets of 546 tracks in total. They contain both eastern and western pop/rock songs. They are:
 \begin{itemize}
-	\item 29 tracks from the JayChou dataset (JayChou29, or J) \cite{dengmirex};
-	\item 20 tracks from a Chinese pop song dataset (CNPop20, or C) \footnote{\url{http://www.tangkk.net/label/}};
-	\item 26 tracks from the Carole King + Queen dataset (K) dataset \footnote{\url{http://isophonics.net/datasets}};
+	\item 29 tracks from the JayChou dataset (JayChou29, or J) \footnote{\url{http://www.tangkk.net/label/}\label{f1}};
+	\item 20 tracks from a Chinese pop song dataset (CNPop20, or C) \textsuperscript{\ref{f1}};
+	\item 26 tracks from the Carole King + Queen dataset (K) dataset \footnote{\url{http://isophonics.net/datasets}\label{f2}};
 	\item 191 songs from the USPop dataset (U) \footnote{\url{https://github.com/tmc323/Chord-Annotations}};
 	\item 100 tracks from the RWC dataset (R) \footnote{\url{https://staff.aist.go.jp/m.goto/RWC-MDB/}};
-	\item 180 tracks from the TheBeatles180 (B) dataset \cite{harte2010towards}. 
+	\item 180 tracks from the TheBeatles180 (B) dataset \textsuperscript{\ref{f2}}. 
 \end{itemize}
 The datasets are notated by their letter codes. For example, the combination of all datasets is denoted as ``CJKURB''.
 
@@ -279,7 +279,7 @@ The following training procedures are applied throughout the experiments:
 \end{itemize}
 Five-fold cross-validation (CV) is performed throughout all experiments. Each fold is a combination of approximately 1/5 tracks of each dataset. Every model is trained on four folds and cross validated on the remaining fold, resulting in a total number of five training/cross-validation scores, the average of which will be the final score to be reported.
 
-We provide all implementation details including the training and cross-validation scripts online \footnote{\url{https://github.com/tangkk/tangkk-mirex-ace}}, so that interested readers can repeat the experiments when they have access to the raw audio datasets.
+%We provide all implementation details including the training and cross-validation scripts online \footnote{\url{https://github.com/tangkk/tangkk-mirex-ace}}, so that interested readers can repeat the experiments when they have access to the raw audio datasets.
 
 \section{Results and Discussions} \label{sec:3-res}
 Throughout this section, we use the MIREX ACE standard evaluation metrics, already introduced in Section~\ref{sec:2-eval}, to report system performances. We report all \textit{WCSR} scores under the \textit{SeventhsBass} evaluation, where a correct classification does {\it not} involve any chord mapping scheme beyond the \textit{SeventhsBass} vocabulary \cite{pauwels2013evaluating}. We use the MusOOEvaluator tool \footnote{\url{https://github.com/jpauwels/MusOOEvaluator}} to generate these scores from all the ground truth and predicted chord sequences. Note that we do not report the segmentation score for every system, because they all share the same GMM-HMM process described in Section~\ref{sec:3-sg}. This process has a segmentation score of 83\% on the JKURB dataset.
@@ -378,8 +378,9 @@ Furthermore, we examine the versatilities of different deep neural net models. W
 
 \begin{landscape}
 	\thispagestyle{plain}
+	\vspace*{\fill}
 	\begin{table*}[h]
-		\scriptsize
+		\tiny
 		\caption{Distribution of chords in the datasets. (maj and min: 69.9\%; maj7, min7 and 7: 21.3\%; others: 8.8\%)}
 		\label{tab:3-chorddist}
 		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
@@ -393,6 +394,7 @@ Furthermore, we examine the versatilities of different deep neural net models. W
 			Weighted Average & & 2.6 & 3.3 & 54.3 & 0.1 & 0.1 & 0.2 & 4.0 & 0.1 & 0.3 & 0.5 & 8.1 & 0.6 & 0.5 & 15.6 & 0.1 & 0.1 & 0.4 & 9.1\\ \hline
 		\end{tabular}
 	\end{table*}
+	\vspace*{\fill}
 \end{landscape}
 
 \begin{figure}[h!]
@@ -535,7 +537,7 @@ Robbie Williams test somehow shows the reverse ranking of JayChou 2015 test. DK3
 \section{On Smaller Vocabularies}
 This chapter is mainly developed for large vocabulary, specifically, the \textit{SeventhsBass} vocabulary. In order to do a thorough comparison between the proposed system framework and other approaches, a set of experiments are also conducted using two smaller vocabularies, i.e., 1, \textit{MajMin} (the same as \textit{majmin}); 2, \textit{Full121} vocabulary (already introduced in Section~\ref{sec:2-largevocab}).
 
-For \textit{MajMin} implementation, each label in the training set will be mapped to its \textit{MajMin} form using a normal chord mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep neural net will be trained on a dataset with only \textit{MajMin} labels. For \textit{Full121} implementation, we use Mauch's chord mapping strategy \cite{mauch2010automatic}.
+For \textit{MajMin} implementation, each label in the training set will be mapped to its \textit{MajMin} form using a normal chord mapping scheme \cite{harte2010towards,pauwels2013evaluating}. As a result, each deep neural net will be trained on a dataset with only \textit{MajMin} labels. For \textit{Full121} implementation, we use Mauch's chord mapping strategy \cite{mauch2010automatic}. In the following all systems are implemented to support exactly the \textit{MajMin} or the \textit{Full121}.
 
 \subsection{On MajMin}
 Table~\ref{tab:3-overallres} shows the results, where all systems, except for Chordino, only support the \textit{MajMin} vocabulary. On one hand, the overall performances of these systems are only fairly comparable with those in Section~\ref{sec:3-p9}, on the other hand, the \textit{ACQA} of these systems are all much lower because of a much smaller vocabulary than Chordino's.
@@ -556,11 +558,12 @@ BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 8.54\\ \h
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdown. Take DBN-ch as a representative, since it only supports \textit{MajMin}, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types comprise of the majority of the dataset's population, that's why it has a much higher \textit{SeventhsBass} score in Table~\ref{tab:3-overallres}. However, by relaxing the evaluation strength from \textit{SeventhsBass} to \textit{Sevenths} and to \textit{MajMin}, the performance difference between DBN-ch and Chordino becomes much smaller.
+Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdown. Take DBN-ch as a representative, since it only supports \textit{MajMin}, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types take up the majority of the dataset's population, DBN-ch has a much higher \textit{SeventhsBass} score in Table~\ref{tab:3-overallres}. However, by relaxing the evaluation strength from \textit{SeventhsBass} to \textit{Sevenths} and to \textit{MajMin}, the performance difference between DBN-ch and Chordino becomes much smaller.
 \begin{landscape}
 \thispagestyle{plain}
+\vspace*{\fill}
 \begin{table*}[h!]
-\scriptsize
+\tiny
 \caption{Detail SeventhsBass WCSR scores. All systems, besides Chordino, are trained with CJKUR-[800*2], with only MajMin vocabulary support. M = major, m = minor, N = N.C (no chord). The \%B row shows the composition of chords in the test set.}
 \label{tab:3-detailres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
@@ -575,45 +578,46 @@ DBN-ns & 0.0 & 0.0 & 76.3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 
 BLSTM-RNN-ns & 0.0 & 0.0 & 79.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 74.7 & 0.0 & 0.0 & 0.0 & 0.0 & 2.7\\ \hline
 \end{tabular}
 \end{table*}
+\vspace*{\fill}
 \end{landscape}
 
 \subsection{On Full121}
-Table~\ref{tab:3-full} shows the WCSR results of \textit{Full121} vocabulary with the same test set. Table~\ref{tab:3-fullhp} and ~\ref{tab:3-fullmbk} shows the \textit{Full121} scores by other systems using a slightly larger 216-track Isophonic test set, which is extended from the 180-track TheBeatles test set. Table~\ref{tab:3-fullhp} is reported in a 3-fold cross-validation manner, while Table~\ref{tab:3-fullmbk} is in 5-fold.
+Table~\ref{tab:3-full} shows the \textit{WCSR}s of \textit{Full121} vocabulary with the same TheBeatles180 test set. Table~\ref{tab:3-fullhp} and ~\ref{tab:3-fullmbk} show the \textit{Full121} scores by other systems using a slightly larger 216-track Isophonic test set, which is extended from the TheBeatles180 test set. Table~\ref{tab:3-fullhp} is reported in a 3-fold cross-validation manner, while Table~\ref{tab:3-fullmbk} is in 5-fold.
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on TheBeatles180 dataset. All systems are trained with CJKUR-[800*2]-ch, with Full121 vocabulary support.}
+\caption{Full121 scores. Tested on the TheBeatles180 dataset. All systems are trained with CJKUR-[800*2]-ch, with Full121 vocabulary.}
 \label{tab:3-full}
 \begin{tabular}{|c|c|c|}\hline
-System & \textit{Full121} \textit{WCSR} & \textit{Seg} \\ \hline
+System & WCSR & Seg \\ \hline
 FCNN & 73.43 & 83.77 \\ \hline
 DBN & 75.46 & 83.92 \\ \hline
 BLSTM-RNN & 73.63 & 83.80 \\ \hline
 \end{tabular}
 \end{table}
 
-According to the descriptions \cite{ni2012end,mauch2010automatic}, the computational processes of both \textit{CP} and \textit{RCO} metrics are essentially similar to that of \textit{WCSR}, and they only accept ``exact chord match'' under the vocabulary.
+The computational processes of both \textit{CP} and \textit{RCO} metrics are essentially similar to that of the \textit{WCSR}, and they only accept ``exact chord match'' under the vocabulary \cite{ni2012end,mauch2010automatic}.
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on Isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
+\caption{Full121 scores. Tested on the Isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
 \label{tab:3-fullhp}
 \begin{tabular}{|c|c|c|}\hline
-System & Full121 Chord Precision (CP) & Seg \\ \hline
+System & Chord Precision (CP) & Seg \\ \hline
 CH (Chordino) & 50.31 & N/A \\ \hline
 HP (Harmonic Analyzer) & 70.26 & N/A\\ \hline
 \end{tabular}
 \end{table}
 
-It is difficult to make any conclusive statement out of these three different tables, from slightly different test sets, and reported in different ways. But it is reasonably fair to say that the proposed system framework is not bad at all in handling the \textit{Full121} vocabulary.
+It is difficult to make any conclusive statement out of these three different tables, which are from slightly different test sets, and reported in different ways. But it is reasonably fair to say that the proposed system framework is not bad at all in handling the \textit{Full121} vocabulary.
 
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on Isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
+\caption{Full121 scores. Tested on the Isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
 \label{tab:3-fullmbk}
 \begin{tabular}{|c|c|c|}\hline
-System & Full121 Relative Correct Overlap (RCO) & Seg \\ \hline
+System & Relative Correct Overlap (RCO) & Seg \\ \hline
 trained MBK & 41.8 & N/A \\ \hline
 MBK & 56.7 & 77.9 \\ \hline
 MBK-NNLS & 61.8 & N/A \\ \hline
@@ -622,34 +626,40 @@ MBK-NNLS & 61.8 & N/A \\ \hline
 
 
 \section{Summary} \label{sec:3-concln}
-This chapter presents an in-depth discussion of a hybrid GMM-HMM and deep neural nets ACE approach. The study is motivated by the current research gap in ACE, and a general negligence of segmentation-classification isolation. This serves as the basis for chord inversions supportable segmentation-classification LVACE system implementation. This chapter then introduces the LVACE system framework, which leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural networks to classify the chord within each segment. The design and implementation are guided by systematically sampling and evaluating the design space of the framework.
+This chapter presents an in-depth discussion of a hybrid GMM-HMM and deep neural nets LVACE approach. The study is motivated by a current research gap in ACE, i.e. the general negligence of segmentation-classification separation approach and large vocabulary system. This serves as the basis for the proposed chord inversions supportable segmentation-classification separated LVACE system framework. The system framework leverages handcrafted feature extraction and segmentation processes, and plugs in various deep neural nets to classify the chord within each segment. Experimental results indicate that:
+\begin{itemize}
+	\item The chromagram feature contains prior knowledge about musical pitch class that increases the bias and limits the potential improvement of the models.
+	\item The BLSTM-RNN can learn regularities from the notegram feature that potentially outperforms the chromagram feature.
+	\item The BLSTM-RNN's representative system (with all available training data) has significantly better \textit{WCSR} and \textit{ACQA} than the FCNN's one, the DBN's one, and the Chordino.
+\end{itemize}
 
-Within the range of the experiments in Section~\ref{sec:3-res}, the results indicate that among the three proposed deep learning models, BLSTM-RNN is the most balanced one for LVACE solution, while both FCNN and DBN tend to over-fit the most common chords. The bass-treble chromagram (-ch) feature contains strong prior knowledge about chord classification that could highly affect the performance of the related models. In contrast, the notegram (-ns) feature is more suitable for deep learning tasks. Both FCNN and BLSTM-RNN benefits from more training data at the -ns level.
+Despite the best system variant significantly outperforms the baseline system, all training and CV scores presented in this chapter are still far less than 100\%. This indicates either there is large bias in the LVACE framework itself, or there is irreducible error in the underlying data. We speculate three potential causes as explained in the following.
 
-Despite the best proposed systems outperform the baseline system in large vocabulary, all the testing scores presented in this chapter are far less than 100\%. There are at least three reasons as explained in the following.
+Firstly, the performance of the proposed framework is upper-bounded by the segmentation performance of the GMM-HMM process introduced in Section~\ref{sec:3-sg}, and the performance of this process on the JKURB set is 83\%.
 
+Secondly, the segment tiling process introduces bias to the system, since it assumes a chord can be correctly recognized after we tile its original features into several frames of averaged features. This process could help prevent over-fitting by regularizing the degree of freedom of the input, but at times it scarifies important information conveyed in the original variable-length features.
 
-Firstly, the performance of the proposed framework is upper-bounded by the segmentation performance of the GMM-HMM process introduced in Section~\ref{sec:3-sg}, and the performance of this process on the test set is about 84\%.
+The above two points set a hard performance limit of the proposed LVACE framework: unless the chord segmentation technique is perfect and the segment tiling process is completely excluded, one could not expect a system with very low bias.
 
-Secondly, the segment tiling process introduces bias to the system, since it assumes a chord can be correctly recognized after its original features are tiled into several frames of averaged feature. This process could help prevent over-fitting by regularizing the degree of freedom in the input, but at times it scarifies important information conveyed in the original variable-frame features.
+Thirdly, there is non-negligible amount of noise in the ground truth annotations themselves. Inevitably, due to differences in musical training, human annotators sometimes disagree, particularly on long-tail chords \cite{humphreyfour}. This results in a glass ceiling for LVACE: unless there are more data for uncommon and long-tail chords and they are more consistently labeled, all efforts for improving LVACE will be hindered by the lack of skewed class training and data consistency.
 
-Thirdly, there is non-negligible amount of noise in the ground truth annotations themselves. Inevitably, due to difference in musical training, human annotators sometimes disagree, especially on uncommon chords \cite{humphreyfour}. In a very strict sense, there is not any ``gold standard'' if human might disagree with each other. But in a loose sense, theoretically there could be a ``gold standard'' if:
+In a very strict sense, there is not any ``gold standard'' if human annotators themselves might disagree with each other. But in a loose sense, there could be a ``gold standard'' if:
 \begin{itemize}
 	\item all annotations are done by only one annotator, or
 	\item all annotations are done by multiple annotators (much more than two).
 \end{itemize}
-In the former case, the only annotator ``dictates'' a local ``gold standard'', so that whenever a machine tries to learn from the data, it actually targets at this annotator's ``style''. In the latter case, multiple annotators decide a ``gold standard'' in a way such as majority vote or data fusion \cite{koopsintegration,klein2004sensor}, so that a trained model actually aims at the optimal ``style'' that minimizes the objections within these annotators. Therefore, although the ``gold standard'' is indeed an important issue, designing a system that ``learns well'' remains another big part of the same problem.
+In the former case, the only annotator ``dictates'' a local ``gold standard'', so that whenever a machine tries to learn from the data, it actually targets at this annotator's ``style''. In the latter case, multiple annotators decide a ``gold standard'' in a way such as majority vote or data fusion \cite{koopsintegration,klein2004sensor}, so that a trained model actually aims at the optimal ``style'' that minimizes the objections among these annotators. Therefore, although the ``gold standard'' is indeed an important issue, we still have to design a system that ``learns well''.
 
-The author believes that the next step of ACE research should try to focus more on improving uncommon chords recognition accuracies. That is, instead of considering the overall \textit{WCSR} of a large vocabulary, attention should also be given to the versatility metric, such as \textit{ACQA}. Although the Chapter has pointed out that BLSTM-RNN model is very promising for handling large vocabulary with inversions, it is yet to explore possible ways to train the network under such ``imbalanced class population '' scenario \cite{chawla2004editorial}, which is an important future work.
+We believe that the next step of LVACE research should focus more on improving the recognition accuracies on uncommon and long-tail chords. That is, instead of considering the overall \textit{WCSR} of a large vocabulary, attention should also be given to the balanced metric, such as \textit{ACQA}. Although we have pointed out that the BLSTM-RNN is very promising in handling large vocabulary with inversions, we have yet to explored possible ways to train the network under such ``imbalanced class population '' scenario \cite{chawla2004editorial}. More importantly, we should spend greater efforts on data collection, particularly of long-tail chords, and at the same time ensure the data integrity and consistency, in the future development of LVACE.
 
-Finally, as a potential application scenario, a piece of timed chord sequence output can be combined with the \textit{.lrc} file \footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. Figure~\ref{fig:3-aihenjiandan} shows an example chord-lyrics output \footnote{\url{https://github.com/tangkk/songtranspose}}.
+Finally, as a potential application, a piece of timed chord sequence output can be combined with the \textit{.lrc} file \footnote{\url{https://en.wikipedia.org/wiki/LRC\_(file\_format)}} of the same track to become a chord-lyrics sheet, which is one of the most frequently used pop music sheet formats. Figure~\ref{fig:3-aihenjiandan} shows an example output of this automatic process \footnote{\url{https://github.com/tangkk/songtranspose}}.
 \begin{figure}[h]
     \centering
         \includegraphics[trim={0 6cm 0 0},clip,width=1.2\columnwidth]{3/figures/aihenjiandan.pdf}
     \caption{Chord-lyrics output of \textit{Aihenjiandan} (by Taiwan singer-songwriter David Tao)}
     \label{fig:3-aihenjiandan}
 \end{figure}
-Note that in this case the lyrics might not be perfectly aligned with chords, since an \textit{.lrc} file only has information on the start and end time of each lyrics line, rather than each word. A more sophisticated solution would be to use audio-lyrics alignment tool \cite{mauch2010lyrics} as a preprocessing stage before matching the lyrics and chords.
+Note that in this case the lyrics might not be perfectly aligned with chords, since an \textit{.lrc} file only has information on the start and end time of each line, instead of each word. A more sophisticated solution would be to use the audio-lyrics alignment tool \cite{mauch2010lyrics} as a preprocessing stage before the chord-lyrics matching.
 
 
 % ---------------------------------------------------------------------------
