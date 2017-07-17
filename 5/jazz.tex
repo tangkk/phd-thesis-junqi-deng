@@ -3,16 +3,12 @@
 % content in this file will be fed into the main document
 
 \chapter{A Preliminary Approach to Automate Jazz Chord-Scale Estimation and Jazz Improvisation}\label{cp:jazz} % top level followed by section, subsection
-Features can not only be learned from chord labels, but also from chord templates. Fillip and Gerhard \cite{Korzeniowski2016feature} use binary chord templates as targets to train their feature extractor, i.e. the ``deep chroma extractor'', which is able to obtain highly clean chromagram from the audio.
 
-% ----------------------- paths to graphics ------------------------
-
-
-Previous chapters have explored ACE in \textit{SeventhsBass} vocabulary, which contains a limited amount of sevenths and inversions. This vocabulary is most used in music styles such as pop, rock, and folk songs. But chord types such as sevenths extensions, suspensions and alternations are not included in \textit{SeventhsBass}. This chapter, following the original large vocabulary spirit of Fujishima \cite{fujishima1999realtime} and Sheh \cite{sheh2003chord}, tries a preliminary ACE solution that covers a much larger vocabulary, and beyond that, puts together a ``chord-scale'' estimation system that could be deployed in an automated jazz improvisation platform.
+Previous chapters have explored ACE in the \textit{SeventhsBass} vocabulary. This vocabulary is mostly covered in music genres such as pop, rock, and folk songs. But chord types such as sevenths extensions, suspensions and alterations are not included in \textit{SeventhsBass}. This chapter, following the original large vocabulary spirit of Fujishima \cite{fujishima1999realtime} and Sheh and Ellis \cite{sheh2003chord}, tries a preliminary ACE solution that handles a much larger vocabulary, and beyond that, puts together a ``chord-scale'' estimation system that could be deployed in an automated jazz improvisation platform.
 
 % ----------------------- contents from here ------------------------
 \section{Jazz Fundamentals} \label{sec:5-jazzfund}
-This chapter focuses on a much larger vocabulary, including triads, sixths, sevenths and their extensions, suspensions, and alternations. In particular, it targets at jazz, which is a improvisation based style with complex harmonic structures \cite{hojnackijazz}:
+This chapter focuses on a chord vocabulary of triads, sixths, sevenths and their extensions, suspensions, and alterations. In particular, it targets at jazz, which is an improvisation based style with complex harmonic structures \cite{hojnackijazz}:
 \begin{quote}
 One thing that distinguishes mainstream jazz harmony from other tonal styles is the tremendous amount of harmonic color that arises due to the pervasive use of tertian extensions of the basic chord types.
 \end{quote}
@@ -20,13 +16,13 @@ Different from pop, rock and folk music, which usually have long chord progressi
 \begin{quote}
 in tonal music, the process of changing from one key to another, or the result of such change.
 \end{quote}
-Musical key and chord progression are closely related to each other. Many MIR systems \cite{catteau2007probabilistic,noland2009influences,mauch2010simultaneous,papadopoulos2012modeling} have been attempted to extract both at the same time. But these works are basically all experimented under low modulation rate contexts. While under a jazz context, where modulation rate is much higher, these classical approaches may or may not apply. Hence besides ACE, this chapter will investigate on a different key tracking algorithm in order to also capture the modulations. It should be noted that in {\it modal jazz}, where a piece is constructed horizontally around the melody instead of vertically around the harmonics, the functional role of ``chord progression'' is weaken or eliminated, but there are still harmonic movements, regardless of keys or chords, to support the melody lines.
+Musical key and chord progression are closely related to each other. Many MIR systems \cite{catteau2007probabilistic,noland2009influences,mauch2010simultaneous,papadopoulos2012modeling} have been attempted to extract both at the same time. But these works are all experimented under low modulation rate contexts. While under a jazz context, where modulation rate is much higher, these classical approaches may or may not apply. Hence besides ACE, this chapter will investigate on a different key tracking algorithm in order to also capture the modulations. It should be noted that in {\it modal jazz}, where a piece is constructed horizontally around the melody instead of vertically around the harmonics, the functional role of ``chord progression'' is weaken or eliminated, but there are still harmonic movements, regardless of keys or chords, to support the melody lines.
 
-As jazz is an improvisation based music style, extracting chord progressions and key modulations could help determine/imply {\it chord-scale} candidates to improvise over a given harmonic segment. A {\it chord-scale} is \cite{hojnackijazz}:
+As jazz is an improvisation based music style, extracting the chord progressions and key modulations could help determine/imply the {\it chord-scale} candidates to improvise over a given harmonic segment. A {\it chord-scale} is \cite{hojnackijazz}:
 \begin{quote}
 a linear rendering of a complex chord - an extended chord structure, with tensions and non-chord tones arrayed within an octave.
 \end{quote}
-Each chord-scale is constructed by a root and a scale, where the root is similar to the root of a chord. As for the scale, there are seven commonly used scales in jazz that are derived from the \textit{major} scale, each of those is called a {\it mode} or {\it modal scale}. They are:
+Each chord-scale is constructed by a root and a scale, where the root is similar to the root of a chord. There are seven commonly used scales in jazz that are derived from the \textit{major} scale. They are called {\it mode}s or {\it modal scale}s. They are:
 \begin{enumerate}
 \item Ionian: $WWHWWWH$
 \item Dorian: $WHWWWHW$
@@ -36,9 +32,9 @@ Each chord-scale is constructed by a root and a scale, where the root is similar
 \item Aeolian: $WHWWHWW$
 \item Locrian: $HWWHWWW$
 \end{enumerate}
-The ``W'' and ``H'' indicate the seven sequential whole/half step intervals within the scale (note that $W$ = $2*H$). These modes, from 1 to 7, can be memorized as left-circular shifting the \textit{major} scale ($WWHWWWH$) one note at a time. Similarly, modes can also be built based on {\it harmonic minor scale} ($WHWWHW^+H$, where $+$ means an additional half step) or {\it melodic minor scale} ($WHWWWWH$). Alternatively, there could be other scales out of this construction methodology, such as the {\it whole-half diminished scale} ($WHWHWHWH$), {\it half-whole diminished scale} ($HWHWHWHW$), {\it whole-tone scale} ($WWWWWW$) or {\it chromatic scale} ($HHHHHHHHHHHH$).
+where $W$ is a whole step, and $H$ is a half step (note that $W$ = $2*H$). The sequences indicate the arrangement of whole/half step intervals within the scales. These modes, from 1 to 7, can be memorized as left-circular shifting the \textit{major} scale ($WWHWWWH$) one note at a time. Likewise, modes can also be built based on the {\it harmonic minor scale} ($WHWWHW^+H$, where $+$ means an additional half step) or the {\it melodic minor scale} ($WHWWWWH$). Alternatively, there could be other scales out of this construction methodology, such as the {\it whole-half diminished scale} ($WHWHWHWH$), {\it half-whole diminished scale} ($HWHWHWHW$), {\it whole-tone scale} ($WWWWWW$) or {\it chromatic scale} ($HHHHHHHHHHHH$).
 
-Normally, a chord-scale is chosen based on the current musical key context, which is determined by the underlying {\it harmonic functional group} \cite{hojnackijazz,levine2011jazztheory}. Table~\ref{tab:5-chordscale} show some choices suggested by a jazz guitar tutorial book \cite{jazzguitarbook}. For a specific chord type, there could be multiple choices of scales, but the best picks will be determined by the musical key context, where the scale of choice cannot strongly indicate otherwise.
+Normally, a chord-scale is chosen based on the current musical key context, which is determined by the underlying {\it harmonic functional group} \cite{hojnackijazz,levine2011jazztheory}. Table~\ref{tab:5-chordscale} shows some choices suggested by a jazz guitar tutorial book \cite{jazzguitarbook}. For a specific chord type, there could be multiple choices of scales, but the best picks will be determined by the musical key context, where the scale of choice cannot strongly indicate otherwise.
 \begin{table}
 \centering
 \footnotesize
@@ -57,7 +53,7 @@ Chord & Scale \\ \hline
 \label{tab:5-chordscale}
 \end{table}
 
-Chord-scale system is a good way to analyze jazz harmony and melody. But in real improvisation, jazz musicians seldom think of the chord-scale system. Instead, they memorize all these by heart and improvise using the variations of melody passages and patterns they learn through extensive exercises \cite{jazzguitarimpro}. To be precise, instead of generating notes from the scales, they generate phrases that belong to the chord-scale. Infinity number of note sequences can be created out of the chord-scale, but those phrases, within all these sequences, are among the most acceptable ones to human musical aesthetics. In addition to creating phrases within a single harmonic region, they also pay much attention to the coherence along all different phrases so as to make as much musical sense as possible.
+Chord-scale system is a good way to analyze jazz harmony and melody. But in real improvisation, jazz musicians seldom think of this system. Instead, they memorize all these by heart and improvise using the variations of the passages and patterns they learn through extensive exercises \cite{jazzguitarimpro}. To be precise, instead of generating notes from the scales, they generate phrases that fit the context. Infinite number of note sequences can be created, but those phrases, within all these sequences, are among the most acceptable ones to human musical aesthetics. In addition to creating phrases within a single harmonic region, jazz musicians also pay much attention to the coherence of nearby phrases so as to make the best musical sense possible.
 
 \section{Automatic Jazz Chord Estimation} \label{sec:5-jazzace}
 To do ACE for jazz, the system framework in Chapter~\ref{cp:ghmm} is used. Assuming the segmentation pass can achieve a high output quality, the remaining task is to classify chords independently in each segment. Figure~\ref{fig:5-jazzsys} is a succinct version of the system framework, where the segment tiling process is absorbed in the chord classifier module.

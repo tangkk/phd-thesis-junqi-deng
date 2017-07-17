@@ -15,9 +15,9 @@ All of these approaches incorporate a ``global smoothing'' stage after classific
 
 Moreover, all existing approaches overlook the fact that the chords are distributed in a highly uneven way and that the chord classification problem is actually a skewed classes classification problem. If the similar approaches are used for LVACE, it is very probable that the systems will over-fit the chord types that are highly over-represented.
 
-This Chapter presents an approach that on one hand employs a new neural network training scheme to achieve a more balanced performance on both common and uncommon chords, and on the other hand does not rely on ``global smoothing''.
+This chapter presents an approach that on one hand employs a new neural network training scheme to achieve a more balanced performance on both common and uncommon chords, and on the other hand does not rely on ``global smoothing''.
 
-Under the above taxonomy, the approach presented in this paper belongs to a new \textbf{``local feature extraction - global classification''} category. Instead of feature learning, it employs a normal feature extraction process, and the segmentation and classification processes are all done by one single RNN pass. To accommodate to large vocabulary, the RNN is trained via a skewed class oriented scheme. This scheme is shown to be very effective in improving the system's vocabulary versatility, compared with a scheme which does not attend to the skewed chord distribution.
+Under the above taxonomy, the approach presented in this chapter belongs to a new \textbf{``local feature extraction - global classification''} category. Instead of feature learning, it employs a normal feature extraction process, and the segmentation and classification processes are all done by one single RNN pass. To accommodate to large vocabulary, the RNN is trained via a skewed class oriented scheme. This scheme is shown to be very effective in improving the system's vocabulary versatility, compared with a scheme which does not attend to the skewed chord distribution.
 
 
 %: ----------------------- contents from here ------------------------
@@ -146,7 +146,7 @@ This study evaluates several variants of the proposed approach (as summarized in
 \Hsection{Sevenths, Inversions and ACQA}
 Table~\ref{tab:4-acqa-ns} shows the comparison between CR and EC training schemes on some uncommon (\textit{non-majmin}) \cite{burgoyne2011expert} chords' \textit{WCSR}s as well as the \textit{ACQA}. The six chord types in the table are chosen because they have relatively more weights in pop/rock songs than the more long-tail ones such as \textit{min/5} and \textit{min/b3}. Note that \textit{maj/5} and \textit{maj/3} are also included in two other large vocabularies proposed by Mauch \cite{mauch2010automatic} and Cho \cite{cho2014improved}.
 \begin{table}[htb]
-	\caption{Comparison between CR and EC: seventh chords, inversions and ACQA scores; Dataset: JKURB}
+	\caption{Comparison between CR and EC: seventh chords, inversions and ACQA scores; Dataset: JKURB; Feature: notegram}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
@@ -170,7 +170,7 @@ We perform a Friedman test on the track-wise \textit{ACQA} results of both syste
 \Hsection{Major, Minor and WCSR}
 The EC trained system has a more balanced performance than the CR's, however, it scarifies common chords' \textit{WCSR}s. Table~\ref{tab:4-wcsr-ns} shows the comparison between CR and EC on some common (\textit{majmin}) \cite{burgoyne2011expert} chords' \textit{WCSR}s as well as on the overall \textit{SeventhsBass} \textit{WCSR}.
 \begin{table}[htb]
-	\caption{Comparison between CR and EC: major, minor and WCSR scores; Dataset: JKURB}
+	\caption{Comparison between CR and EC: major, minor and WCSR scores; Dataset: JKURB; Feature: notegram}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|} \hline
@@ -194,7 +194,7 @@ We perform a Friedman test on the track-wise \textit{WCSR} results of both syste
 \Hsection{On Different Datasets}
 For more convincing comparison results, the same experiment is run 4 times using different dataset combinations. Table~\ref{tab:4-datasize-ns} shows the results of JK, JKU, JKUR and JKURB. We only report the \textit{WCSR} and \textit{ACQA} for brevity.
 \begin{table}[htb]
-	\caption{Comparison between CR and EC: WCSR and ACQA on different datasets.}
+	\caption{Comparison between CR and EC: WCSR and ACQA on different datasets; Feature: notegram}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|} \hline
@@ -213,8 +213,9 @@ For both training schemes, the increment of training data will lead to the incre
 
 \subsection{On Chromagram Feature}\label{sec:4-ch}
 \Hsection{Overall Performances}\label{sec:4-over-ch}
+Table~\ref{tab:4-overallres} shows the overall \textit{WCSR}s of systems implemented with both training schemes. Note that the \textit{SeventhsBass} column represents the true evaluation score under the \textit{SeventhsBass} vocabulary, while the other three columns to the left are scores with certain types of chord confusion tolerance.
 \begin{table}[htb]
-	\caption{WCSRs of different system variants.}
+	\caption{WCSRs of different system variants; Feature: chromagram}
 	\label{tab:4-overallres}
 	\centering
 	\scriptsize
@@ -230,15 +231,15 @@ For both training schemes, the increment of training data will lead to the incre
 		EC-JKURB & 70.1 & 68.2 & 57.6 & \textbf{56.0} & 76.8 \\ \hline
 	\end{tabular}
 \end{table}
-Table~\ref{tab:4-overallres} shows the overall \textit{WCSR}s of systems implemented with both training schemes. Note that the \textit{SeventhsBass} column represents the true evaluation score under the \textit{SeventhsBass} vocabulary, while the other three columns to the left are scores with certain types of chord confusion tolerance.
 
 Along the \textit{SeventhsBass} column, there is a trend that for both training schemes, system performances increase with more training data. When the data set is fixed, the EC systems' \textit{SeventhsBass} score are fairly comparable or slightly higher than the CR systems'. The same trend is also observed in columns of \textit{MajMin}, \textit{MajMinBass} and \textit{Sevenths}.
 
 For \textit{segmentation quality}, CR systems are found to be consistently scoring slightly higher than the EC systems. Note that CR draws a training case from a random starting point which could be in the middle of a segment, while EC always draws a case from the start of a segment. We speculate this deviation eventually leads to the CR systems' more exposure to segment boundaries during training, and thus they have a slightly better ``understanding'' of segments.
 
 \Hsection{Balanced performances} \label{sec:4-scper}
+Table~\ref{tab:4-ltres} shows the systems' performances on some important uncommon chords' \textit{WCSR}s and the \textit{ACQA}. These three chord types (i.e. $maj/5$, $maj/3$ and $7/b7$) are most commonly used in pop/rock songs among all uncommon chords in the \textit{SeventhsBass} vocabulary. We could notice obvious performance advantages of EC in all these categories under the same amount of training data sizes.
 \begin{table}[htb]
-	\caption{Some uncommon chords' WCSRs and the ACQAs}
+	\caption{Some uncommon chords' WCSRs and the ACQAs; Feature: chromagram}
 	\label{tab:4-ltres}
 	\centering
 	\scriptsize
@@ -254,95 +255,21 @@ For \textit{segmentation quality}, CR systems are found to be consistently scori
 		EC-JKURB & 18.7 & 42.2 & 24.0 & 18.4\\ \hline
 	\end{tabular}
 \end{table}
-Table~\ref{tab:4-ltres} shows the systems' performances on some important uncommon chords' \textit{WCSR}s and the \textit{ACQA}. These three chord types (i.e. $maj/5$, $maj/3$ and $7/b7$) are most commonly used in pop/rock songs among all uncommon chords in the \textit{SeventhsBass} vocabulary. We could notice obvious performance advantages of EC in all these categories under the same amount of training data sizes.
 
 For \textit{ACQA}, again, we see that all EC systems have clear advantages over CR systems. This demonstrates that the EC training scheme can improve the vocabulary versatility of an ACE system.
 
 It should be pointed out that in Table~\ref{tab:4-ltres} neither the \textit{WCSR} of a specific chord nor the \textit{ACQA} is proportional to the amount of training data. Figure~\ref{fig:4-datavsmaj3} and ~\ref{fig:4-datavsmaj5} show the \textit{WCSR} trends of \textit{maj/3} and \textit{maj/5} chords. They all have local maximum at JK and JKUR and local minimum at JKU and JKURB.
 
-\pgfplotsset{width=10cm,height=6cm,every node near coord/.append style={font=\scriptsize}}
 \begin{figure}[htb]
 	\centering
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={},
-	title style = {font=\scriptsize},
-	xlabel={training data size},
-	x label style={font=\scriptsize},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={CSR},
-	y label style={font=\scriptsize},
-	ymin=0, ymax=40,
-	symbolic x coords={JK, JKU, JKUR, JKURB},
-	ytick={0,20,40},
-	legend pos=north east,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	
-	\addplot[
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(JK,17.9)(JKU,11.9)(JKUR,18.8)(JKURB,11.9)
-	};
-	
-	\addplot[
-	color=red,
-	mark=x,
-	]
-	coordinates {
-		(JK,23.3)(JKU,20.3)(JKUR,23.7)(JKURB,18.7)
-	};
-	\legend{CR, EC} 
-	\end{axis}
-	\end{tikzpicture}
+	\includegraphics{4/figures/datavsmaj3.pdf}
 	\caption{$maj/3$ performance v.s. training data size}
 	\label{fig:4-datavsmaj3}
 \end{figure}
-\pgfplotsset{width=10cm,height=6cm,every node near coord/.append style={font=\scriptsize}}
+
 \begin{figure}[htb]
 	\centering
-	\begin{tikzpicture}
-	\begin{axis}[
-	title={},
-	title style = {font=\scriptsize},
-	xlabel={training data size},
-	x label style={font=\scriptsize},
-	x tick label style={font=\scriptsize},
-	xtick=data,
-	ylabel={CSR},
-	y label style={font=\scriptsize},
-	ymin=35, ymax=55,
-	symbolic x coords={JK, JKU, JKUR, JKURB},
-	ytick={35,45,55},
-	legend pos=north east,
-	legend style={legend columns=-1, font=\scriptsize},
-	ymajorgrids=true,
-	grid style=dashed,
-	]
-	
-	\addplot[
-	color=black,
-	mark=square,
-	]
-	coordinates {
-		(JK,43.2)(JKU,36.5)(JKUR,46.0)(JKURB,38.5)
-	};
-	
-	\addplot[
-	color=red,
-	mark=x,
-	]
-	coordinates {
-		(JK,42.7)(JKU,40.2)(JKUR,50.0)(JKURB,42.2)
-	};
-	\legend{CR, EC} 
-	\end{axis}
-	\end{tikzpicture}
+	\includegraphics{4/figures/datavsmaj5.pdf}
 	\caption{$maj/5$ performance v.s. training data size}
 	\label{fig:4-datavsmaj5}
 \end{figure}
@@ -367,8 +294,8 @@ For EC, each chord type has an even chance to be chosen as the start of a traini
 
 
 \subsection{Baseline Comparison}
-
 \Hsection{SeventhsBass Evaluation}
+Finally, we compare the proposed LVACE approach with the baseline approach - Chordino\cite{cannam2013mirex}. It has a similar feature extraction module as the proposed approach and it supports a similar set of large vocabulary. Chordino is an LVACE system that represents the state-of-the-art in terms of the \textit{ACQA}.
 \begin{table}[htb]
 	\caption{Comparison between our systems and Chordino - overall performance; The systems are trained using JKURB}
 	\label{tab:4-cpcd}
@@ -381,8 +308,6 @@ For EC, each chord type has an even chance to be chosen as the start of a traini
 		Chordino & \textbf{72.4} & \textbf{69.1} & 55.8 & 52.8 & \textbf{83.8}\\ \hline
 	\end{tabular}
 \end{table}
-
-Finally, we compare the proposed LVACE approach with the baseline approach - Chordino\cite{cannam2013mirex}. It has a similar feature extraction module as the proposed approach and it supports a similar set of large vocabulary. Chordino is an LVACE system that represents the state-of-the-art in terms of the \textit{ACQA}.
 
 Table~\ref{tab:4-cpcd} shows the comparison, in which we select two systems trained with the largest possible amount of data with different training schemes. In terms of \textit{WCSR}s, our systems slightly outperform Chordino in \textit{Sevenths} and \textit{SeventhsBass} scores, but underperform Chordino in the more relaxed \textit{MajMin} and \textit{MajMinBass} scores.
 
@@ -421,12 +346,17 @@ We perform a Friedman test on the track-wise \textit{ACQA} results of the three 
 
 \section{Summary}\label{sec:4-concln}
 %This chapter proposes a ``local feature extraction - global classification'' BLSTM-RNN based LVACE system that supports SeventhsBass vocabulary. This system has a handcrafted feature extraction process, and can be compared with Chordino in a statistically fair way. To cater for large vocabulary recognition, an even chance training scheme is designed. Several variants of the system are trained and implemented.
-This Chapter presents a BLSTM-RNN based LVACE system, trained using a skewed class oriented ``even chance'' scheme. Several system variants with different configurations are implemented and evaluated using both notegram and chromagram features as input.
+This chapter presents a BLSTM-RNN based LVACE system, trained using a skewed class oriented ``even chance'' scheme. Several system variants with different configurations are implemented and evaluated using both notegram and chromagram features as input.
 
-According to the notegram's results, the EC training scheme is superior in both the uncommon (\textit{non-majmin}) chords' \textit{WCSR}s and the \textit{ACQA}, at the expense of the common (\textit{majmin}) chords' \textit{WCSR}s and the overall \textit{WCSR}. While according to the chromgram's results the EC training scheme can improve uncommon chords' \textit{WCSR}s as well as the \textit{ACQA}, while still maintaining the overall \textit{WCSR} performance at the level of the CR training scheme.
+According to the notegram's results, the EC training scheme is superior in both the uncommon (\textit{non-majmin}) chords' \textit{WCSR}s and the \textit{ACQA}, at the expense of the common (\textit{majmin}) chords' \textit{WCSR}s and the overall \textit{WCSR}.
 
-When compared with Chordino, the EC system's performance is still very competitive since it significantly outperforms Chordino in \textit{SeventhsBass} \textit{WCSR}, and it does not significantly differ from Chordino in \textit{ACQA}. However, the EC systems suffer from bad \textit{segmentation quality}, which should be well noted as the biggest drawback for the proposed LVACE approach in this paper. Improving the \textit{segmentation quality} may require a more focused learning strategy towards chord segmentation.
+According to the chromgram's results, the EC training scheme can improve uncommon chords' \textit{WCSR}s as well as the \textit{ACQA}, while still maintaining the overall \textit{WCSR} performance at the level of the CR training scheme.
 
+When compared with Chordino, the EC system's performance is still very competitive since it significantly outperforms Chordino in \textit{SeventhsBass} \textit{WCSR}, and it does not significantly differ from Chordino in \textit{ACQA}. However, the EC systems suffer from bad \textit{segmentation quality}, which should be well noted as the biggest drawback of the proposed LVACE approach. Improving the \textit{segmentation quality} may require a more focused learning strategy towards chord segmentation.
+
+A successful LVACE system is marked by both high \textit{WCSR} and high \textit{ACQA}, because human chord recognition experts are able to achieve both of them. The EC training scheme is a technique to improve a system's \textit{ACQA}, thus it is a valuable approach to consider when we design an LVACE system in the future.
+
+\begin{comment}
 Extrapolating from this work, the future LVACE researches, in a deep learning perspective, should focus on at least the following three aspects/challenges:
 \begin{itemize}
 	\item implementing deeper models
@@ -435,7 +365,7 @@ Extrapolating from this work, the future LVACE researches, in a deep learning pe
 \end{itemize}
 
 \Hsection{Deeper Models}
-The first aspect considers using a deeper model for sequence modeling. This is rather a challenge motivated by pure scientific interest than practical interest. This paper describes a BLSTM-RNN that models sequence transformation from chromagram to segmented chord sequence. But as we know, the promise of deep learning is to extract useful features from raw input, and to learn better transformations than handcrafted transformations. Thus this challenge asks for a deep learning model in a truly ``end-to-end'' sense, that captures every transformation from waveform level all the way to segmented chord sequence level. Such a model might not outperform the state-of-the-art at the beginning, but might show promising potentials to achieve the optimal performance in the long run.
+The first aspect considers using a deeper model for sequence modeling. This is rather a challenge motivated by pure scientific interest than practical interest. This chapter describes a BLSTM-RNN that models sequence transformation from chromagram to segmented chord sequence. But as we know, the promise of deep learning is to extract useful features from raw input, and to learn better transformations than handcrafted transformations. Thus this challenge asks for a deep learning model in a truly ``end-to-end'' sense, that captures every transformation from waveform level all the way to segmented chord sequence level. Such a model might not outperform the state-of-the-art at the beginning, but might show promising potentials to achieve the optimal performance in the long run.
 
 \Hsection{Subjectivity Issue}
 The second challenges are fundamental to all kinds of machine learning researches, and it is especially non-neglectable in LVACE research, since human chord annotators may disagree a lot, especially in uncommon and long-tail chords. As a result, some researchers doubt the necessity to estimate uncommon and long-tail chords. Such opinions may have their merit under certain circumstances, particularly when they are referring to an ACE system built for chord learning beginners. However, they are not justified under a more practical scenario, where people need more ``accurate'' chord annotations for busking, practicing or rehearsal.
@@ -446,6 +376,7 @@ But this issue should not overrule another equally important issue: to build a m
 
 \Hsection{Uncommon Chords Accuracy}
 The uncommon chords accuracy is always interleaved with subjectivity issue. But it should be noted that not all instances of all uncommon chord types are subjected to the annotation subjectivity. Although currently there is not any statistics showing the exact relationship between them, musical experience told us that some uncommon chord instances are much easier to be recognized than others, thus they receive less disagreement among annotators.
+\end{comment}
 
 %Evaluation results show some variants largely outperform Chordino in terms of large vocabulary scores, and they are almost as good as Chordino in terms of small vocabulary scores, despite having much worse segmentation qualities. It can be concluded that the proposed BLSTM-RNN architecture is better than the dedicated handcrafted GMM-HMM in terms of large vocabulary sequence modeling, but it suffers from bad sequence segmentation.
 
