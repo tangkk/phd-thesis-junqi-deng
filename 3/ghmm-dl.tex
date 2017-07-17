@@ -403,8 +403,7 @@ Furthermore, we examine the versatilities of different deep neural net models. W
 	\caption{Average ACQAs of \textit{SeventhsBass} Vocabulary. All models are trained with 6seg-[800*2].}
 	\label{fig:3-acqa}
 \end{figure}
-
-To compare whether the \textit{ACQA} differences among these system variants are significant, we perform a Friedman test \cite{friedman1937use} with Tukey HSD (honest significant difference) \cite{tukey1949comparing} with a $p$-value of 0.05 on the track-wise \textit{ACQA}s. As shown in Figure~\ref{fig:3-friedmanacqa}, both BLSTM-JKURB-ch-6seg-800 and BLSTM-JKURB-ns-6seg-800 are significantly better (no overlap of confidence intervals) than the other systems, and BLSTM-JKURB-ch-6seg-800 is significantly better than BLSTM-JKURB-ns-6seg-800 as well. This concludes that the BLSTM-RNN models are significantly better than the FCNN and the DBN models in terms of \textit{ACQA}s, or balanced performances.
+We perform a Friedman test \cite{friedman1937use} on the track-wise \textit{ACQA} results. After that we use the Tukey HSD (honest significant difference) \cite{tukey1949comparing} to perform a multiple comparison test on the Friedman test's statistics with a significance level of 0.05. As shown in Figure~\ref{fig:3-friedmanacqa}, both BLSTM-JKURB-ch-6seg-800 and BLSTM-JKURB-ns-6seg-800 are significantly better (no overlap of confidence intervals) than the other systems, and BLSTM-JKURB-ch-6seg-800 is significantly better than BLSTM-JKURB-ns-6seg-800 as well. This concludes that the BLSTM-RNN models are significantly better than the FCNN and the DBN models in terms of \textit{ACQA}s, or balanced performances.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\columnwidth]{3/figures/ftestacqa.eps}
@@ -425,7 +424,8 @@ Finally, we compare our LVACE framework with the Chordino. It should be emphasiz
 
 We choose one representative for each type of deep neural net, all trained and cross-validated with JKURB-6seg-ns-[800*2], and compare them with the Chordino using the standard MIREX ACE categories. As shown in Figure~\ref{fig:3-compchordino}, the representative of BLSTM-RNN outperforms the Chordino by large margin in \textit{Sevenths} and \textit{SeventhsBass}, and it scores fairly close to the Chordino in \textit{MajMin} and \textit{MajMinBass}. The other two representatives are not performing as good as the Chordino in most categories.
 
-We perform a Friedman test with Tukey HSD ($p=0.05$, using the track-wise results) to test whether the differences in the \textit{SeventhsBass} \textit{WCSR}s are significant. As shown in Figure~\ref{fig:3-friedmanwcsrbl}, BLSTM-JKURB-ns-6seg-[800*2] is significantly better than the other systems as well as the Chordino.
+We perform a Friedman test on the track-wise \textit{SeventhsBass} \textit{WCSR} results. After that we use the Tukey HSD to perform a multiple comparison test on the Friedman test's statistics with a significance level of 0.05. As shown in Figure~\ref{fig:3-friedmanwcsrbl}, BLSTM-JKURB-ns-6seg-[800*2] is significantly better than the other systems as well as the Chordino.
+%We perform a Friedman test with Tukey HSD ($p=0.05$, using the track-wise results) to test whether the differences in the \textit{SeventhsBass} \textit{WCSR}s are significant.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\columnwidth]{3/figures/ftestwcsrbl.eps}
@@ -452,7 +452,7 @@ MIREX ACE 2016 features 4 sets of systems implemented by four different groups:
 \begin{itemize}
 \item CM1: Chordino, from Queen Mary University of London;
 \item DK*: features three variants of the LVACE approach proposed in this chapter \cite{deng2016mirex} (note that DK4, which is from another design approach, is skipped in the following discussion);
-\item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two of their papers \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
+\item FK*: implemented by Korzeniowski and Widmer, featuring the systems in two of their works \cite{Korzeniowski2016feature,Korzeniowski2016convolutional}
 \item KO1: shineChords, a time-frequency reassign approach proposed by Khadkevich and Omologo \cite{khadkevich2011time}.
 \end{itemize}
 
