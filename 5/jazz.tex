@@ -145,27 +145,28 @@ For a given context, the system will decide a list of scale candidates, and then
 \begin{equation}
 scale = \max_k (\text{fitness}_k).
 \end{equation}
-The template-based local scale estimation is implemented during the ISMIR 2016 Hackathon \footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. Figure~\ref{fig:5-chordscale} shows an example output of this chord-scale estimation process with ``Olhos de Gato'', where the labels in red indicate the estimated chord-scales.
-\begin{figure}[h]
+The template-based local scale estimation is implemented during the ISMIR 2016 Hackathon \footnote{\url{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}}. Figure~\ref{fig:5-chordscale} shows an example output of this chord-scale estimation process with ``Olhos de Gato'', where the labels in red indicate the estimated chord-scales.
+\begin{figure}[htbp]
     \centering
-        \includegraphics[trim={0 4cm 0 2cm},clip,width=0.8\columnwidth]{5/figures/chordscale-demo.pdf}
+        \includegraphics[trim={0 4cm 0 2cm},clip,width=\columnwidth]{5/figures/chordscale-demo.pdf}
     \caption{Chord-scale tracking demo output from a leadsheet}
     \label{fig:5-chordscale}
 \end{figure}
 
 However, since this is a relatively new direction in MIR, there is not any well-established labeled dataset available for evaluation. Therefore this system has not been formally evaluated under any objective measure yet.
 
-The jazz chord-scale estimation research has its straightforward application to new interfaces for musical expressions. In the rest of this chapter, two mobile jazz improvisation platforms will be introduced in Section~\ref{sec:5-wijam} and ~\ref{sec:5-akb}. Finally, Section~\ref{sec:5-puttogether} will seek to put the chord-scale estimation system in a fully automatic jazz improvisation context.
+The jazz chord-scale estimation research has its straightforward application to new interfaces for musical expressions. In the following, two mobile jazz improvisation platforms (WIJAM and ArmKeyBoard) will be introduced in Section~\ref{sec:5-wijam} and ~\ref{sec:5-akb}. Finally, Section~\ref{sec:5-puttogether} will seek to put the chord-scale estimation system in a fully automatic jazz improvisation context.
 
 \section{Jazz Improvisation Platform - WIJAM} \label{sec:5-wijam}
-WIJAM is an impromptu iOS mobile application for a group of musical novices to jam along with a music master. The master provides backings, directs the musical flow and gives feedbacks to the players. The players improvise along with the master's guidance.
+WIJAM is an impromptu iOS mobile application for a group of musical novices to jam along with a music master. The master provides the backings, directs the musical flow and gives feedbacks to the players. The players improvise along with the master's guidance.
 
-WIJAM, according to Weinberg\cite{weinberg2005interconnected}, is a ``small-scale local system", which can be characterized as ``collaborative musical network ... that support three to ten players in close proximity, which allows for detailed and subtle interpersonal interactions". Under the ``theoretical framework of musical interconnectivity''\cite{weinberg2005interconnected}, WIJAM can be considered structure-centered and process-centered, where ``structure'' is manifested in the absolute musical arrangement control of WIJAM master, and ``process'' is done when WIJAM players express intuitively their musical feelings within the bounds as defined by the WIJAM master.
+WIJAM, according to Weinberg \cite{weinberg2005interconnected}, is a ``small-scale local system'', which can be characterized as a ``collaborative musical network ... that support three to ten players in close proximity, which allows for detailed and subtle interpersonal interactions''. Under the ``theoretical framework of musical interconnectivity'' \cite{weinberg2005interconnected}, WIJAM is structure-centered and process-centered, where the ``structure'' is in the absolute musical arrangement control of the WIJAM master, and the ``process'' is referring to the WIJAM players' expressing their musical feelings within the bounds defined by the WIJAM master.
 
-In terms of organization and architecture, WIJAM is a ``synchronous centralized network'' with a ``flower topology'', where music is being generated in real-time with a central hub, and the degrees of freedom in terms of the nodes' expression are limited to a level such that the musical outcomes are at least musically harmonious.
+In terms of organization and architecture, WIJAM is a ``synchronous centralized network'' with a ``flower topology'' \cite{weinberg2005interconnected}, where music is being generated in real-time with a central hub, and the degrees of freedom in terms of the nodes' expression are limited to a level such that the musical outcomes are at least harmonious.
 
 \subsection{Design Concepts}
-WIJAM's design follows Blaine's guidance \cite{Blaine2003}:
+\noindent
+WIJAM's design follows Blaine and Fels' guidance \cite{Blaine2003}:
 \begin{quote}
 The underlying premise of most collaborative interface design is that with various design constraints, playing music can be made accessible to non-musicians ... at the expense of limiting the musical range and possible gestures associated with sound in a collective space.
 \end{quote}
@@ -174,23 +175,23 @@ But as pointed out in the same paper, such a guideline has its drawback:
 ... many of the simple-to-use computer interfaces proposed for musical control seem, after even a brief period of use, to have a toy-like
 character and do not invite continued musical evolution.
 \end{quote}
-Although it goes on to argue that this is only true for expert musicians, but ``balancing this trade-off is a key concern for designers", as pointed out in \cite{blaine2003collaborative}. This point is echoed in many other papers\cite{xambo2011multi}, emphasizing that ``provide novices with essential goals and experts with additional goals". Trying to meet this balance, WIJAM equips the players with an easy to learn and easy to play keyboard, while at the same time providing ``a knowledgeable person to stand by and assist the players" \cite{Blaine2003}--the master. The players performance bound is imposed upon by the master, which should give a large enough space for the players to show off their virtuosity.
+Although the authors argue that this is only true for expert musicians, ``balancing this trade-off is a key concern for designers'' \cite{blaine2003collaborative}. This point is echoed in many other papers \cite{xambo2011multi}, emphasizing that ``provide novices with essential goals and experts with additional goals''. Trying to meet this balance, WIJAM equips the players with an easy to learn and easy to play keyboard, while at the same time providing ``a knowledgeable person to stand by and assist the players'' \cite{Blaine2003}--the master. The players performance bound is imposed upon by the master, which should give a large enough space for the expert players to express their virtuosity.
 
 \subsection{System Overview}
-Figure~\ref{fig:5-BigPicture} shows the big picture of WIJAM. There are two types of active entities: the master, who initiates and orchestrates the jamming, and the players who participate in the jamming. There is a passive entity: a loudspeaker system, which is connected to the master.
+Figure~\ref{fig:5-BigPicture} shows the overview of WIJAM. There are two types of active entities: the master, who initiates and orchestrates the jamming, and the players, who participate in the jamming. There is a passive entity: a loudspeaker system, which is connected to the master.
 
 \begin{figure}[htbp]
     \centering
         \includegraphics[width=0.6\columnwidth]{5/figures/BigPicture.png}
-    \caption{The big picture of WIJAM. The music collaboration is achieved under the ``master-players" paradigm.}
+    \caption{The overview of WIJAM. The music collaboration is achieved under the ``master-players'' paradigm.}
     \label{fig:5-BigPicture}
 \end{figure}
 
-Figure~\ref{fig:5-FlowChart} is the flowchart of the WIJAM session process. At the beginning, the master hosts a \textit{MIDINetworkSession} as a jam session service to be discovered and connected to. Then the players join the session. After that the master sends an ``assignment" package to each player. The package contains an instrument ID, and a chord-scale. The master signals the start of the jam by switching on the backing music. When the players start to jam, they send MIDI performance contents to the master via \textit{coreMIDI}. The master monitors all the performance, renders the notes in the chosen instrument sounds and mixes them with the backing into one output stream. While jamming, the master orchestrates everything to fit to the backing music by instantly changing the assignment or providing performance cue feedbacks to the players such as ``good", ``solo", ``fast", ``calm", etc. When they finished jamming a song, the master gives an overall score as well as an individual score to the players.
+Figure~\ref{fig:5-FlowChart} is the flowchart of a WIJAM session. At the beginning, the master hosts a \textit{MIDINetworkSession} as a jam session service to be discovered and connected to. Then the players join the session. The master sends an ``assignment'' package to each player. The package contains an instrument ID, and a chord-scale. The master signals the start of jamming by switching on the backing music. The players jam by sending MIDI performances to the master via \textit{coreMIDI}. The master monitors all the performances, renders the notes in the virtual instruments and mixes them with the backing music into one output stream. While jamming, the master orchestrates everything to fit to the backing music by instantly changing the assignments or providing performance feedbacks to the players such as ``good'', ``solo'', ``fast'', ``calm'', etc. When they finished jamming, the master gives an overall score as well as an individual score to each player.
 \begin{figure}[htbp]
     \centering
-        \includegraphics[width=0.6\columnwidth]{5/figures/Flowchart.png}
-    \caption{The flowchart of WIJAM.}
+        \includegraphics[width=0.5\columnwidth]{5/figures/Flowchart.png}
+    \caption{The flowchart of a WIJAM session.}
     \label{fig:5-FlowChart}
 \end{figure}
 
@@ -198,34 +199,33 @@ Figure~\ref{fig:5-FlowChart} is the flowchart of the WIJAM session process. At t
 
 \begin{figure}[htbp]
     \centering
-        \includegraphics[width=0.6\columnwidth]{5/figures/MasterVC.jpg}
+        \includegraphics[width=0.8\columnwidth]{5/figures/MasterVC.jpg}
     \caption{WIJAM's Master Interface}
     \label{fig:5-MasterVC}
 \end{figure}
 
-The internal structure and layering of the master machine \footnote{https://github.com/tangkk/MasterMachine.git} is shown in the middle part
-of Figure~\ref{fig:5-Layering}. The core modules are detailed below:
+The internal structure of the master machine \footnote{\url{https://github.com/tangkk/MasterMachine.git}} is shown in the middle part of Figure~\ref{fig:5-Layering}. The core modules are described as below:
 \begin{figure*}[htbp]
     \centering
         \includegraphics[width=0.8\textwidth]{5/figures/Layering.png}
-    \caption{The internal layering and structure of WIJAM. The data flows from the master machine (middle) to the player machine (right) through the bidirectional communication channel, and vice versa.}
+    \caption{The internal layering and structure of WIJAM. The data flows between the master machine (middle) to the player machine (right) through the bidirectional communication channel.}
     \label{fig:5-Layering}
 \end{figure*}
 
 \Hsection{Master Interface}
-The master interface is shown in Figure~\ref{fig:5-MasterVC}. In the top left corner there is a backing selector which allows the ``master" to initiate the backing music. Moving downwards there is a chord-scale panels. They are particularly important for orchestrating the musical flow. At the bottom there are six consoles, from A to F, each for an individual player. They provide performance feedback to the players as well as music output level balancing.
+The master interface is shown in Figure~\ref{fig:5-MasterVC}. At the top left corner there is a backing selector which allows the ``master'' to initiate a piece of backing music. Moving downwards there is a chord-scale panel. They are particularly important for orchestrating the musical flow. At the bottom there are six consoles, from A to F, each of which is assigned to a player. These consoles are used together as a mixer.
 
 \Hsection{Arranger}
-This allows the master to manipulate chords, scales, instruments, and feedbacks. These messages are sent via \textit{MIDI sysEx} messages.
+This layer allows the master to manipulate chords, scales, instruments, and feedbacks. These messages are encoded via \textit{MIDI sysEx} messages.
 
 \Hsection{Virtual Instruments}
-It stores a library of digital musical instruments in the form of samplers. The audio samples are managed using \textit{AUPreset} and \textit{AUSampler} technologies\cite{AUSampler}. The \textit{AUPreset} files are used to map audio samples directly to MIDI numbers and velocity ranges.
+It stores a library of digital musical instruments as samplers. The audio samples are managed using \textit{AUPreset} and the \textit{AUSampler} technologies \cite{AUSampler}. The \textit{AUPreset} files are used to map audio samples directly to MIDI numbers and velocity ranges.
 
 \Hsection{Jam Session Host}
-It hosts a service which can be discovered and connected to by the player machines. \textit{MIDINetworkSession} is used to enable a \textit{Bonjour} service. It is to be discovered by the player machines' Bonjour service browsers, and to be connected to by the player machines' \textit{MIDINetworkSessions}.
+It hosts a service which can be discovered and connected to by the player machines. The \textit{MIDINetworkSession} is used to enable a \textit{Bonjour} service. It is to be discovered by the player machines' \textit{Bonjour} service browsers, and to be connected to by the player machines' \textit{MIDINetworkSessions}.
 
 \subsection{Player Machine}
-The player machine's layering is described on the right hand side of Figure~\ref{fig:5-Layering} and its interface on Figure~\ref{fig:5-PlayerMachineVC} with the jam console on the left and the keyboard on the right. \footnote{https://github.com/tangkk/PlayerMachine.git} The jam console is designed to discover and connect to the master machine, and the keyboard is for musical expression. The following items summarize the working mechanism of the keyboard:
+The player machine's layering is described on the right hand side of Figure~\ref{fig:5-Layering} and its interface on Figure~\ref{fig:5-PlayerMachineVC} with the jam console on the left and the keyboard on the right. \footnote{\url{https://github.com/tangkk/PlayerMachine.git}} The jam console is for discovering and connecting to the master machine, and the keyboard is for musical expression.
 \begin{figure}[htbp]
 \begin{center}$
 \begin{array}{cc}
@@ -236,46 +236,47 @@ The player machine's layering is described on the right hand side of Figure~\ref
 \caption{WIJAM's Player Interface}
 \label{fig:5-PlayerMachineVC}
 \end{figure}
+
+\noindent
+The following items summarize the working mechanism of the keyboard:
 \begin{itemize}
 \item
-The y position determines the pitch, where higher position yields higher pitch.
+The \textit{y} position determines the pitch, where higher position yields higher pitch.
 \item
-At any time the keyboard is filled with the chord-scale assigned by the master machine.
+The keyboard is filled with the chord-scale assigned by the master machine.
 \item
-The x position determines the note velocity. A larger x position value gives higher velocity.
+The \textit{x} position determines the note velocity. A larger x position value gives higher velocity;
 \item
-When sketching, a note is generated when the it starts or when the curve comes to a stationary point.
+When sketching on the keyboard, a note is generated when the it starts or when the curve comes to a stationary point.
 \end{itemize}
-This keyboard is easy to use for novice players, by abstracting away most complicated musical context. It allows the players to do a high-level melody improvisation.
+This keyboard is easy to use for novice players. By abstracting away most of the complicated musical context, it allows the players to do a high-level melody improvisation.
 
 \subsection{Demos}
-There are two basic demos \footnote{\url{http://www.youtube.com/watch?v=Y0PnKBrgzgw}} and one advanced demo \footnote{\url{http://www.youtube.com/watch?v=16dWj5G9UKw}} for WIJAM. The basic demo shows how WIJAM works, and provides tips for using the master machine and the player machine. The audio track is an unmodified recording of the original playback. Before the jam starts, the players are told to follow their ``musical feelings" based on the backing. As can be heard in the video, the music outcome is quite pleasing, even at the critical ``key modulation" points: 2:30 and 2:43. Note that as the jam goes on, because the players have little idea about what the exact notes they are playing, the ``avoid note", the most dissonant note within the chord-scale, may be played on downbeat. This may happen, but with a very small chance.
+There are two basic demos \footnote{\url{http://www.youtube.com/watch?v=Y0PnKBrgzgw}} and one advanced demo \footnote{\url{http://www.youtube.com/watch?v=16dWj5G9UKw}} for WIJAM. The basic demo shows how WIJAM works, and provides tips for using the master machine and the player machine. The audio track is an unmodified recording of the original playback. Before the jam starts, the players are told to follow their ``musical feelings'' based on the backing. As can be heard in the video, the music outcome is quite pleasing, even at the critical ``key modulation'' points, i.e., 2:30 and 2:43. Note that as the jam goes on, because the players have little idea about what the exact notes they are playing, the ``avoid note'' (the most dissonant note within the chord-scale) might also be played on downbeats. This may happen, but with a very small chance.
 
-The ``trombone" player and the two ``guitar" players are with zero training in musical instruments. The ``piano" player has some limited
-experience with piano before. Even so, the piano player is able to inject a very beautiful solo during the jam. The ``piano" player apparently plays the best music in this jam session. This somewhat justifies the ``balance" problem in the ``Introduction" section of this Section, in that WIJAM actually allows advanced players to show off their virtuosity while also enabling an acceptable level of performance for the novice players.
+The ``trombone'' player and the two ``guitar'' players are with zero training in musical instruments. The ``piano'' player has some limited
+experience with piano before. Even so, the piano player is able to perform a very beautiful solo during the jam. The ``piano'' player apparently plays the best music in this jam session. This somewhat justifies the ``balance'' problem introduced earlier in this section, that WIJAM actually allows advanced players to demonstrate their musicianship while also enables novice players to perform at an acceptable level.
 
-The advanced demo is a bonus track featuring the designer of WIJAM playing and overdubbing a whole jam session. It shows some advanced features of the PlayerMachine. The audio track is an overdubbing of each instrument track plus the backing track.
+The advanced demo is a bonus track featuring the author's playing and overdubbing a whole jam session. It shows some advanced features of the PlayerMachine. The audio track is an overdubbing of each instrument track plus the backing track.
 
 \section{Jazz Improvisation Platform - ArmKeyBoard} \label{sec:5-akb}
-The piano keyboard, although is versatile and popular, has a lot of drawbacks. The same type of chord or scale in different keys are laid out differently, which adds to the learning difficulty. Additionally, the keyboard has a linear layout of the black and white keys, which works well with music expressions that exhibit certain linearity , but is less effective for modernistic non-linear styles such as that of serialistic and stochastic music \cite{Mitsuko:Schoenberg}.
+The piano keyboard, although is versatile and popular, has a lot of drawbacks. The same type of chord or scale in different keys are laid out differently, which adds to the learning difficulty. Additionally, the keyboard has a linear layout of the black and white keys, which works well with music expressions that exhibit certain linearity, but is less effective for modernistic non-linear styles such as that of serialistic and stochastic music \cite{Mitsuko:Schoenberg}.
 
-Trying to solve the above problems, a new type of keyboard is designed. Based on the NIME design principles \cite{cook2001principles}--specifically the ``Make a piece, not an instrument or controller" and ``Instant music, subtlety later"--the keyboard leverages a chord-octave-scale sequence grid to pack 88 keys into a 15--17 keys-sized screen, and features an almost zero learning curve for the production of beautiful and sophisticated melodies. It offers both linear and non-linear layouts. The non-linear layout is mapped to a user chosen image by an algorithm based on contour separation and tonal hierarchy. This is called ``ArmKeyBoard", where ``ArmKey" means suitable, comfortable, and in-tune, in the author's spoken dialect.
+Trying to solve the above problems, a new type of keyboard is designed. Based on the NIME design principles \cite{cook2001principles}, specifically the ``Make a piece, not an instrument or controller'' and the ``Instant music, subtlety later'', the keyboard leverages a chord-octave-scale sequence grid to pack 88 keys into a 15--17 keys-sized screen, and features an almost zero learning curve for the production of beautiful and sophisticated melodies. It offers both linear and non-linear layouts. The non-linear layout is mapped to a user chosen image by an algorithm based on contour separation and tonal hierarchy. This is called ``ArmKeyBoard'', where ``ArmKey'' means suitable, comfortable, and in-tune, in the author's spoken dialect.
 
 \subsection{Two Types of Keyboard Layout}
-In the remaining discussion, ``keyboard" refers to an instrument implementing a series of key-note pairs and deterministically
-generates a note when a key is pressed. ``Layout" refers to the spatial arrangement of those key-note pairs.
+In the remaining discussion, ``keyboard'' refers to an instrument implementing a series of key-note pairs and deterministically
+generates a note when a key is pressed. ``Layout'' refers to the spatial arrangement of those key-note pairs.
 
-Linear layout is characteristic of a piano. From left to right, each key is mapped to a unique note value. Every next key is mapped to
-a note value exactly 1 (in MIDI terms) higher than the previous one. This has a significant impact on music making, since people naturally feel more comfortable with playing on adjacent keys than non-adjacent keys, leading to smaller intervals appearing more often than larger ones, as can be seen in music literature such as \textit{the Real Book} \cite{therealbook6th}.
+Linear layout is the characteristic of a piano. From left to right, each key is mapped to a unique note value (in MIDI's terms). Every next key is mapped to
+a note value exactly 1 higher than the previous one. This has a significant impact on music making. Because people naturally feel more comfortable with playing on adjacent keys than non-adjacent keys, it leads to smaller intervals' appearing more often than larger ones, as can be seen in music literature such as \textit{the Real Book} \cite{therealbook6th}.
 
-Non-linear layout can have many more possibilities, such as a random note being paired with a random key or one note being paired with
-several keys. Note that in the current discussion, several notes being paired with one key is not valid by the definition of keyboard. Non-linearity may further allow using any key setting other than the traditional setting. For example an image can be divided into several sections, each serving as a key of the keyboard. The idea of non-linear keyboard is not new. There are existing applications such as \cite{kontakts} or papers such as \cite{kruge2011madpad} talking about similar ideas, most of which are built around the idea of sampling. In Armkeyboard, however, the audio content generated by a key is a note.
+Non-linear layout has many more possibilities, such as a random note being paired with a random key or one note being paired with several keys. Pay attention that in the current discussion, several notes being paired with one key is not valid by the definition of keyboard. Non-linearity may further allow using any key setting other than the traditional setting. For example an image can be divided into several regions, each serving as a key of the keyboard. The idea of non-linear keyboard is not new. There are existing applications \cite{kontakts} or papers \cite{kruge2011madpad} talking about similar ideas, most of which are built around the idea of sampling. In Armkeyboard, however, the audio content generated by a key is a note.
 
 \subsection{Chord, Scale and Octave}
-ArmKeyBoard treats the small screen as a cache, caching the currently playing chord-scale in the current octave range, while other
-octaves and chord-scales are waiting to be loaded when needed. In the current design, 15--17 notes---two octaves of a scale, are cached
+ArmKeyBoard treats the small screen as a cache, caching the currently playing chord-scale in the current octave range, while other octaves and chord-scales are waiting to be loaded when needed. In the current design, 15--17 notes, i.e. two octaves of a scale, are cached.
 
-Changing chord-scale or octave on a piano in real time is easy for a pianist, but could be a nightmare for non-pianists. Therefore, ArmKeyBoard needs a special mechanism to load other chord-scales and octaves into the foreground, so that the player can easily switch music expression ranges in real time. To this end, a chord-octave-scale sequence grid as shown in Figure~\ref{fig:5-cosgrid} is designed.
+Changing chord-scales or octaves on a piano in real time is easy for a pianist, but could be a nightmare for non-pianists. Therefore, ArmKeyBoard needs a special mechanism to load other chord-scales and octaves into the foreground, so that the player can easily switch music expression ranges in real time. To this end, a chord-octave-scale sequence grid as shown in Figure~\ref{fig:5-cosgrid} is designed.
 \begin{figure}[htbp]
 \begin{center}$
 \begin{array}{cc}
@@ -283,8 +284,7 @@ Changing chord-scale or octave on a piano in real time is easy for a pianist, bu
     \includegraphics[width=1.2in]{5/figures/ChordScalePreset.PNG}\\
 \end{array}$
 \end{center}
-\caption{On the left is the chord-octave-scale grid, where each square can be set as one chord-octave-scale
-combination (such as C-4-Lydian), and consecutive squares form a sequence which can be saved as preset; The sequence is read from left to right, and when it reaches the rightmost, back to the leftmost square on the next line; On the right is the chord-octave-scale preset browser looking at the already saved chord-octave-scale sequence presets.}
+\caption{The left Figure shows the chord-octave-scale grid, where each square is a chord-octave-scale combination (such as C-4-Lydian), and consecutive squares form a sequence; The sequence is read from left to right, and when it reaches the rightmost square, it goes back to the leftmost square on the next line; The right Figure is the chord-octave-scale preset browser, showing the already saved chord-octave-scale sequence presets.}
 \label{fig:5-cosgrid}
 \end{figure}
 
@@ -295,22 +295,23 @@ combination (such as C-4-Lydian), and consecutive squares form a sequence which 
 \includegraphics[width=1.2in]{5/figures/GravityX.jpg} \\
 \end{array}$
 \end{center}
-\caption{Gravity X gesture, which is used for switching to the next or previous page of notes determined by the chord-octave-scale combination at the next or previous square within the sequence.}
+\caption{Gravity X gesture, which is used for switching to the next or previous page of notes.}
 \label{fig:5-GravityXGesture}
 \end{figure}
 
-Users can switch between different chord-octave-scales using a gravity X gesture (Figure~\ref{fig:5-GravityXGesture}). Meanwhile, users can also flip octaves within the same chord-scale using swipe gestures. To summarize, in Figure~\ref{figChordOctaveScaleControl}, the screen is a cache of the active note space, while the spaces around the active space can be loaded in real-time via gravity X or swipe gestures.
+Users can switch between different chord-octave-scales using the gravity X gesture (Figure~\ref{fig:5-GravityXGesture}). Meanwhile, users can also change octaves within the same chord-scale using the swipe gestures. To summarize, the screen is a cache of the active note space, while the spaces around the active space can be loaded in real-time via the gravity X or swipe gestures, as indicated in Figure~\ref{5-figChordOctaveScaleControl}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width = 3.2in]{5/figures/ChordOctaveScaleControl.png}
-\caption{Chord-octave-scale control. The horizontal arrows indicate changing page of notes according to chord-octave-scale sequence, while the vertical arrows indicate changing page of notes to a higher or lower octave only.}
-\label{figChordOctaveScaleControl}
+\caption{Chord-octave-scale control. The horizontal arrows indicate changing page of notes according to chord-octave-scale sequence, and the vertical arrows indicate changing page of notes to a higher or lower octave.}
+\label{5-figChordOctaveScaleControl}
 \end{figure}
 
 \subsection{Expression Parameters}
 Because the proposed design is based on the piano keyboard, the most dominant expression parameter, velocity, should be implemented. In the
-linear layout, since key-note mapping is 1-to-1 and the position of each key is equally distributed along the y-axis, velocity can be easily controlled by position X. While in the non-linear layout, position X cannot be used because keys can be in any shape and anywhere; thus Gravity Y is used to control the velocity (Figure~\ref{fig:5-GravityYZGesture}). Note that sustain is not considered in the current design, since if a hand gesture were to convey what is originally conveyed by foot, it might make learning difficult for the ordinary users. A gravity Z gesture is to restart the keyboard again (Figure~\ref{fig:5-GravityYZGesture}).
+linear layout, since key-note mapping is 1-to-1 and the position of each key is equally distributed along the y-axis, velocity can be easily controlled by position X. While in the non-linear layout, position X cannot be used because keys can be in any shape and at anywhere; thus the Gravity Y is used to control the velocity (Figure~\ref{fig:5-GravityYZGesture}). Besides, the gravity Z gesture is used to restart the keyboard again (Figure~\ref{fig:5-GravityYZGesture}).
+%Note that sustain is not considered in the current design, since if a hand gesture were to convey what is originally conveyed by foot, it might make learning difficult for the ordinary users.
 \begin{figure}[htbp]
 \begin{center}$
 \begin{array}{cc}
@@ -318,18 +319,18 @@ linear layout, since key-note mapping is 1-to-1 and the position of each key is 
 \includegraphics[width=1.2in]{5/figures/GravityZ.jpg} \\
 \end{array}$
 \end{center}
-\caption{Gravity Y gesture (on the left), which is used for controlling note velocity, leading to a smaller velocity with a larger angle to the horizontal plane; Gravity Z gesture (on the right), which is used for quitting the current keyboard to reset everything again}
+\caption{Gravity Y gesture (on the left) is used to control note velocity: a smaller velocity corresponds to a larger angle to the horizontal plane; Gravity Z gesture (on the right) is used to restart the keyboard}
 \label{fig:5-GravityYZGesture}
 \end{figure}
 
 \subsection{Linear Layout and Mapping}
-ArmKeyBoard has both linear and non-linear keyboard layout, called ``AKB1" and ``AKB2" respectively. The discussion is based on the iOS platform.
+ArmKeyBoard has both linear and non-linear layouts. They are called ``AKB1'' and ``AKB2'' respectively. The implementations are based on the iOS platform.
 
-``AKB1" (Figure~\ref{fig:5-AKB12}) contains 15--17 notes within the active chord-octave-scale and they are mapped linearly to 15--17
+``AKB1'' (Figure~\ref{fig:5-AKB12}) contains 15--17 notes within the active chord-octave-scale and they are mapped linearly to 15--17
 bars equally divided along the y-axis. The velocity is controlled by the X position.
 
 \subsection{Non-linear Layout and Mapping}
-``AKB2" is a user selected image (Figure~\ref{fig:5-AKB12}). The image is algorithmically divided into contours and they are algorithmically mapped to the 15--17 notes within the currently active chord-octave-scale. The algorithms are described below.
+``AKB2'' is a user selected image (Figure~\ref{fig:5-AKB12}). The image is algorithmically divided into contours and they are algorithmically mapped to the 15--17 notes within the currently active chord-octave-scale. The algorithms are described as follows.
 \begin{figure}[htbp]
 \begin{center}$
 \begin{array}{cc}
@@ -337,15 +338,15 @@ bars equally divided along the y-axis. The velocity is controlled by the X posit
 \includegraphics[width=1.2in]{5/figures/AKB2.PNG} \\
 \end{array}$
 \end{center}
-\caption{AKB1 (on the left) is a linear keyboard with a higher pitch at smaller y position value, and larger note velocity at larger x position value, each page contains 15--17 notes; AKB2 (on the right) is a non-linear keyboard mapping the page of 15--17 notes to the detected contours within the user selected image, where the mapping procedure is based on the correlation between the importance of contours (or regions) and the tonal hierarchy of notes.}
+\caption{AKB1 (on the left) is a linear keyboard with a higher pitch at smaller y position, and larger note velocity at larger x position; AKB2 (on the right) is a non-linear keyboard mapping the page of 15--17 notes to the detected contours.}
 \label{fig:5-AKB12}
 \end{figure}
 
 \Hsection{Contour Separation}
-The contour separation is processed using opencv \cite{opencv}. The image is first transformed to opencv \textit{Mat} which is then passed to a contour separation function. The function then: Step 1, turns the \textit{Mat} into gray scale and slightly performs a blur operation on it; Step 2, passes the output of step 1 (a gray scale \textit{Mat}) to an edge detection function (the output is a binary \textit{Mat} with the edge pixels set as step 1); Step 3, passes the output of step 2 to a \textit{findContour} function, which finds contours, stores them in an array and calculates the contour hierarchy (a tree structure describing the inclusion relationship of contours); Step 4, calculates the area of each contour, discards those below a certain size and deletes their nodes in the hierarchy; Step 5, creates an outer contour which is the whole screen subtracted by all the contours output by step 4. The output of all the above steps is an array of valid contours (each contour is itself an array of its vertices), and a hierarchy structure describing the inclusion relationship of these contours.
+The contour separation is processed using OpenCV \cite{opencv}. The image is first transformed to an OpenCV \textit{Mat}, which is then passed to a contour separation function. The function performs the following five steps: Step 1, turns the \textit{Mat} into gray scale and slightly performs a blur operation on it; Step 2, passes the output of step 1 (a gray scale \textit{Mat}) to an edge detection function (the output is a binary \textit{Mat} with the edge pixels set as step 1); Step 3, passes the output of step 2 to a \textit{findContour} function, which finds contours, stores them in an array and calculates the contour hierarchy (a tree structure describing the inclusion relationship of contours); Step 4, calculates the area of each contour, discards those below a certain size and deletes their nodes in the hierarchy; Step 5, creates an outer contour which is the whole screen subtracted by all the contours output by step 4. The output of all the above steps is an array of valid contours (each contour is itself an array of its vertices), and a hierarchy structure describing the inclusion relationship of these contours.
 
 \Hsection{Contour Ranking}
-Next step is to decide which note to map to which contour. The minimal musical concern is, when the keyboard is being played, the notes being generated should at least imply the currently active chord-scale most of the time. Note that it is not necessary that it should ``always" behave this way, but ``most of the time". For example, in \textit{G-Ionian}, the keyboard is supposed to generate notes that form a tonal gravity at G and imply G major chord most of the time, but sometimes it may also sound like \textit{C-Lydian} (tonic at C).
+Next step is to decide which note to map to which contour. The minimal musical concern is, when the keyboard is being played, the notes being generated should at least imply the currently active chord-scale most of the time. Note that it is not necessary that it should ``always'' behave this way, but ``most of the time''. For example, in \textit{G-Ionian}, the keyboard is supposed to generate notes that form a tonal gravity at G and imply G major chord most of the time, but sometimes it may also sound like \textit{C-Lydian} (tonic at C).
 
 More assumptions are needed to connect this musical concern to contours. Assume that most user tends to tap on: 1, a contour with a larger area; 2, a contour closer to the center of the screen; 3, a contour that contains more sub-contours. Based on how often most users will tap on a contour, its importance can be determined. Thus in the implementation, contours are ranked based on the weighted sum of
 the above three indices. This corresponds to how important a note is in implying a certain chord-scale, which will be discussed below.
@@ -353,7 +354,7 @@ the above three indices. This corresponds to how important a note is in implying
 \Hsection{Tonal Hierarchy}
 Similar to ranking contours, if the notes within a chord-scale is also ranked, then what is left is to map the two rankings. According to \cite{jarvinen1995tonal}, there is a certain tonal hierarchy within a chord-scale being played in bebop style jazz music, and this finding actually corresponds to the avoid note issue \cite{nettles1987harmony}. The tonal hierarchy theory says during the performance of a certain chord-scale, some notes are more often heard than others.
 
-If the notes are to be divided into a hierarchy according to how often they appear, the first class contains chord tones (or chord notes), the second class contains those a whole step above the chord notes and finally those half step above, with exceptions. The avoid note issue expresses basically the same idea, but with ``more often heard" replaced by ``more often played".
+If the notes are to be divided into a hierarchy according to how often they appear, the first class contains chord tones (or chord notes), the second class contains those a whole step above the chord notes and finally those half step above, with exceptions. The avoid note issue expresses basically the same idea, but with ``more often heard'' replaced by ``more often played''.
 
 Table~\ref{tab:5-tonalhierarchy} is a result of the tonal hierarchy theory, which lists all the hierarchies \cite{nettles1987harmony} of some of the most frequently used chord-scales \cite{burtonJazzImpro}. The scale degree notation is
 used instead of note names. Note that symmetrical diminished scale and it has no hierarchies in this taxonomy. To deal with hierarchy across octaves, a heuristic rule is that the same pitch-class belongs to the same hierarchy level and a lower octave pitch has a higher priority than a higher octave pitch.
@@ -393,7 +394,7 @@ The final mapping is not so obvious as it may seem. Although there are already a
 4. Map contours to note: pop the contour, pair it up with the first	note. Add $ratio$ to $accum$. If $accum>=1$, clear $accum$ and pop the note. Go back to step 2.
 \end{algorithmic}
 \end{algorithm}
-With this, the most important notes are mapped to the most important contours, and contour with larger areas will contain more notes. But since multiple notes cannot be mapped to a single key, they need to be decoupled  within a contour that has more than one note. Instead of further separating a shape-unpredictable contour into several sub-contours, it should be noted that the real ``key" in question is composed of pixels, and thus a heuristic method is used to decouple the notes is to distribute their keys across the contour according to a formula related to pixels and their RGB value:
+With this, the most important notes are mapped to the most important contours, and contour with larger areas will contain more notes. But since multiple notes cannot be mapped to a single key, they need to be decoupled  within a contour that has more than one note. Instead of further separating a shape-unpredictable contour into several sub-contours, it should be noted that the real ``key'' in question is composed of pixels, and thus a heuristic method is used to decouple the notes is to distribute their keys across the contour according to a formula related to pixels and their RGB value:
 \begin{equation}
 \mathit{noteIdx = ((X + Y) \% 10 + (R + G + B)) \% (15\ or\ 17)}
 \end{equation}
@@ -411,9 +412,9 @@ The modules in Section~\ref{sec:5-jazzace} to ~\ref{sec:5-akb} can be put togeth
 The simplest form would be to only provide the platform with timed chord-scale sequence information, and let players input note sequence. First the jazz backing track is analyzed into segmented chord-scale sequence, then it is programmed into the improvisation platform. These information can automatically guide users with little musical knowledge to improvise jazz with at least the proper choice of chord-scale.
 
 \subsection{Markov model note sequence generation}
-A more intelligent approach is to generate note sequence within a chord-scale context using a Markov model. This model has two sets of parameters: the note prior probability matrix and the note transition matrix. These matrices can be trained from existing jazz solo MIDI datasets such as the Weimar Jazz Dataset \footnote{http://jazzomat.hfm-weimar.de/dbformat/dboverview.html}\cite{abesser2013introducing}.
+A more intelligent approach is to generate note sequence within a chord-scale context using a Markov model. This model has two sets of parameters: the note prior probability matrix and the note transition matrix. These matrices can be trained from existing jazz solo MIDI datasets such as the Weimar Jazz Dataset \footnote{\url{http://jazzomat.hfm-weimar.de/dbformat/dboverview.html}}\cite{abesser2013introducing}.
 
-There is a preliminary implementation of this Markov model based note generator together with the template-based scale tracker during the ``Science of Music Hackathon'' in August 2016 \footnote{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}. In this implementation (Figure~\ref{fig:5-hmm1}), a simplified version of the model is built to generate sequence of ``pitches'' instead of ``notes'', where the former do not have duration information but the latter do. The note sequence generation of the Markov chain is constraint by the chord-scale context, namely, only pitches indicated in the chord-scale are allowed.
+There is a preliminary implementation of this Markov model based note generator together with the template-based scale tracker during the ``Science of Music Hackathon'' in August 2016 \footnote{\url{http://labrosa.ee.columbia.edu/hamr\_ismir2016/}}. In this implementation (Figure~\ref{fig:5-hmm1}), a simplified version of the model is built to generate sequence of ``pitches'' instead of ``notes'', where the former do not have duration information but the latter do. The note sequence generation of the Markov chain is constraint by the chord-scale context, namely, only pitches indicated in the chord-scale are allowed.
 
 \begin{figure}[htb]
     \centering
@@ -422,7 +423,7 @@ There is a preliminary implementation of this Markov model based note generator 
     \label{fig:5-hmm1}
 \end{figure}
 
-The code base of this project is available on-line \footnote{https://github.com/tangkk/chordscale}. It depends on the \textit{pretty-midi} \cite{raffel2014intuitive} library to do MIDI interfacing and perform simple sound synthesis. Several preliminary demos can also be found in the code base, showcasing simple chord-melody outputs from the system.
+The code base of this project is available on-line \footnote{\url{https://github.com/tangkk/chordscale}}. It depends on the \textit{pretty-midi} \cite{raffel2014intuitive} library to do MIDI interfacing and perform simple sound synthesis. Several preliminary demos can also be found in the code base, showcasing simple chord-melody outputs from the system.
 
 \subsection{RNN-DBN automatic note sequence generation}
 To the other extreme, it could be a fully artistically automatic improvisation process if the ``patterns of choices'' from real jazz practice \cite{jazzguitarimpro,pracjazz} are modeled and learned. These are sequences of notes (each of them with both pitch and duration) within the context of chords or chord progressions. They can be well captured by sequential models such as an RNN using the chordal context as the starting cue, with the discriminative objective being whether the sequence of notes are artistically ``acceptable'' or not. This is the discriminative part of the model, and it is similar to the LSTM semantic analysis model by Maas et al.\cite{maas2011learning}.
