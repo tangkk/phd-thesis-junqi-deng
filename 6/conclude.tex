@@ -33,29 +33,25 @@
 This chapter concludes the thesis with some final remarks, and points to some possible future directions in ACE and LVACE related MIR researches. Section~\ref{sec:6-recap} will first briefly review all the contributions in this thesis; and Section~\ref{sec:6-future} will suggest some possible future works that follow up the current state of this thesis.
 %Chapter~\ref{cp:ghmm} to ~\ref{cp:endtoend} each has its own contributions in terms of new approaches to LVACE. Chapter~\ref{cp:jazz} has contribution on the application of ACE technology to jazz domain and its extension to other jazz related issues.
 
-\section{Major Findings Recap} \label{sec:6-recap}
-The major research target of this thesis is large vocabulary automatic chord estimation, or LVACE. The motivation of this research originates from the way musicians approach towards chord annotation, which is well described in Chapter~\ref{cp:intro}, that:
+\section{Major Findings} \label{sec:6-recap}
+The major research focus of this thesis is large vocabulary automatic chord estimation, or LVACE. The motivation of this research originates from the way musicians approach towards chord annotation, which is well described in Chapter~\ref{cp:intro}, that:
 \begin{quote}
-...those chords are often captured in great details, with large vocabulary including the suspensions, extensions, inversions and even the alternations, that try to recover every subtle flavor of the original recordings by means of these handy chord representations.
+...those chords are often captured in great detail, with a very large vocabulary including the suspensions, extensions, inversions and alterations.
 \end{quote}
-Therefore it is necessary for an ACE system to also incorporate such large vocabulary as a presumption to pass the \textit{Turing test}, which is the ultimate goal of any kind of artificial intelligence.
+Therefore it is necessary for an ACE system to incorporate a large vocabulary as a presumption to pass the \textit{Turing test}, which is the ultimate goal of any kind of artificial intelligence.
 
-However, most of the ACE approaches to date do not consider large vocabulary. Instead, they normally take a shortcut \textit{majmin} vocabulary due to various reasons, including the lack of training data for long-tail chords, and the pursuing for higher evaluation scores. In view of this, the thesis tries to devise some novel ways to deal with large vocabulary issues in ACE in order to make up for this gap.
+However, most ACE approaches to date do not support large vocabulary. Instead, they normally use a much smaller \textit{majmin} vocabulary due to various reasons, including the lack of training data for uncommon and long-tail chords, and the pursuing for higher evaluation scores. In order to make up for these gaps, the thesis devises some novel solutions for LVACE. The contributions of this thesis are mainly in Chapter~\ref{cp:ghmm} ~\ref{cp:endtoend} and ~\ref{cp:jazz}.
 
-\Hsection{Chapter~\ref{cp:ghmm}} proposes a hybrid GMM-HMM and deep neural nets system framework to solve the LVACE problem. According to the ACE system taxonomy in this thesis, this approach belongs to the ``local feature extraction - global segmentation - local classification'' class. Particularly, it assigns the segmentation and classification into two different processes. The rationale behind this separation is an observation that most MIREX ACE submissions are with very similar segmentation scores across various test datasets. In this approach, the GMM-HMM is used to perform segmentation, and the DNN is to classify segments into chord labels.
+Chapter~\ref{cp:ghmm} proposes a hybrid GMM-HMM (segmentation) and deep neural nets (classification) LVACE system framework. It assigns the segmentation and classification as two different processes. There are three deep neural nets under consideration: FCNN, DBN and BLSTM-RNN. The key finding from the experiment results is that the BLSTM-RNN implementation has significantly better performance in terms of the \textit{ACQA} than all other considered implementations. Therefore, this model has great potential for a fully chord-performance balanced LVACE system.
 
-There are three different DNN models under discussion: FCNN, DBN and BLSTM-RNN. The major takeaway from the experiment results is that the BLSTM-RNN implementation has the highest score in terms of versatility metrics, and has the greatest potential to handle both ordinary and long-tail chord in a well balanced way, while the FCNN and DBN both tend to over-fit on ordinary/popular/dominating chords.
-
-\Hsection{Chapter~\ref{cp:endtoend}} puts forwards a BLSTM-RNN approach with even chance training scheme as a solution to LVACE. This approach belongs to the ``local feature extraction - global classification'' category. Specifically, frame-wise features are extracted using a set of classical transformations. These features are then segmented and classified at the same time by a BLSTM-RNN.
-
-To cater to long-tail chords, an even chance training scheme is introduced. This scheme tries to give the network equal attention to each target category. Two versions of BLSTM-RNN, with and without the scheme, are compared. Results demonstrate that it has positive effect on more balanced performance, while sacrificing scores in large population chords is the major drawback.
+Chapter~\ref{cp:endtoend} proposes a BLSTM-RNN with an even chance training scheme as another LVACE solution. The BLSTM-RNN performs both segmentation and classification over a piece of notegram or chromagram. The even chance training scheme gives the network much more attention to the uncommon and long-tail chords. Results demonstrate that using the scheme has significantly positive effects on the \textit{ACQA}, and the best implementation of this approach significantly outperforms the baseline system.
 
 %, which is very different from the original common ACE target styles (i.e., pop and rock) in terms of not only chord vocabulary, but also harmonic structures, instrumental rendering styles, and rhythm sessions. Specially, jazz is unique in the way of bass walking and foreground instrument improvisation/soloing.
-\Hsection{Chapter~\ref{cp:jazz}} applies one of the LVACE approaches to jazz. Surprisingly, the preliminary experiment finds that the classical GMM-HMM segmentation still works very well in jazz. Together with the DNN segment-wise classification, the system annotates chords much better than the baseline approach, which performs segmentation and classification in a single pass. Note that this preliminary experiment is conducted using a test dataset of 7 pure jazz backings.
+Chapter~\ref{cp:jazz} applies the GMM-HMM-DNN LVACE approach to jazz. Surprisingly, the preliminary experiment finds that the classical GMM-HMM segmentation still works very well in jazz. Together with the DNN classification, the best proposed jazz ACE system annotates chords much better than the baseline approach. Note that this experiment is conducted using a test set of 7 pure jazz backings.
 
-The jazz ACE system is then extended to become a chord-scale estimator. Concretely, a template-based scale tracking algorithm is implemented on top of the ACE system. Two jazz improvisation platforms are introduced and implemented, both using the idea of chord-scale for jazz soloing. Combined with the chord-scale estimator, these platforms can let musical novice users to easily improvise jazz at a certain level.
+%The jazz ACE system is then extended to become a chord-scale estimator. Concretely, a template-based scale tracking algorithm is implemented on top of the ACE system. Two jazz improvisation platforms are introduced and implemented, both using the idea of chord-scale for jazz soloing. Combined with the chord-scale estimator, these platforms can let musical novice users to easily improvise jazz at a certain level.
 
-Finally, a note sequence generator is implemented through a trained Markov model. An auto jazz improviser can then be achieved by combining this with the chord-scale estimator. Preliminary demo tracks have shown great musical potential of this unified system.
+%Finally, a note sequence generator is implemented through a trained Markov model. An auto jazz improviser can then be achieved by combining this with the chord-scale estimator. Preliminary demo tracks have shown great musical potential of this unified system.
 
 \section{Future Directions} \label{sec:6-future}
 
@@ -64,12 +60,29 @@ Finally, a note sequence generator is implemented through a trained Markov model
 % ground-truth subjectivity issues
 % long-tail issues
 
-Extrapolating from this thesis, the future directions of ACE, in a deep learning oriented point of view, should focus on at least the following three aspects/challenges:
+Extrapolating from this thesis, the future directions of ACE, in a deep learning perspective, should focus on at least the following three challenges:
 \begin{itemize}
-\item implement deeper models
-\item embrace ground-truth subjectivity
-\item improve accuracy on long-tail chords
+	\item implementing deeper models
+	\item embracing ground truth subjectivity
+	\item improving accuracy on uncommon and long-tail chords
 \end{itemize}
+
+\Hsection{Deeper Models}
+The first aspect considers using a deeper model for sequence modeling. This is rather a challenge motivated by pure scientific interest than practical interest. This thesis describes a BLSTM-RNN that models sequence transformation from chromagram to segmented chord sequence. But as we know, the promise of deep learning is to extract useful features from raw input, and to learn better transformations than handcrafted transformations. Thus this challenge asks for a deep learning model in a truly ``end-to-end'' sense, that captures every transformation from waveform level all the way to segmented chord sequence level. Such a model might not outperform the state-of-the-art at the beginning, but might show promising potentials to achieve the optimal performance in the long run.
+
+\Hsection{Subjectivity Issue}
+The second challenges are fundamental to all kinds of machine learning researches, and it is especially non-neglectable in LVACE research, since human chord annotators may disagree a lot, especially in uncommon and long-tail chords. As a result, some researchers doubt the necessity to estimate uncommon and long-tail chords. Such opinions may have their merit under certain circumstances, particularly when they are referring to an ACE system built for chord learning beginners. However, they are not justified under a more practical scenario, where people need more ``accurate'' chord annotations for busking, practicing or rehearsal.
+%and it is definitely a fallacy in an academic perspective, especially when the ultimate goal of ACE is to facilitate a machine musicianship.
+
+Therefore the annotation subjectivity issue needs to be embraced, or resolved, rather than neglected or abandoned. This is a difficult topic that may demand a lot of work and intelligence from data science, statistics, and machine learning. One key observation is that human learns to annotate chords by reading and listening to a lot of different examples, regardless of the annotators. When a person reaches a certain level, s/he may be able to correct the wrong annotations. The more advanced s/he is, the more uncommon and long-tail chords s/he is able to annotate, spot and correct.
+
+But this issue should not overrule another equally important issue: to build a machine that ``learns well''. A 100\% ``golden standard'' ground truth should not be a necessary premise for building any machine learning system. Should there be any chaos or noise, the research community could always regress to use annotations from one single annotator.
+
+\Hsection{Uncommon and Long-tail Chords Accuracy}
+The uncommon chords accuracy is always interleaved with subjectivity issue. But it should be noted that not all instances of all uncommon chord types are subjected to the annotation subjectivity. Although currently there is not any statistics showing the exact relationship between them, musical experience told us that some uncommon chord instances are much easier to be recognized than others, thus they receive less disagreement among annotators.
+
+
+\begin{comment}
 
 \Hsection{Deeper Models}
 The first aspect considers using a deeper model for sequence modeling. This is rather a challenge motivated by pure scientific interest than practical interest. Chapter~\ref{cp:endtoend} describes a BLSTM-RNN that models sequence transformation from notegram level to segmented chord labels level. But as we all know, the promise of deep learning is to extract useful features from raw input, and to learn better transformations than those manually engineered. Thus this challenge asks for a deep learning model in a truly ``end-to-end'' sense, that captures every transformation from waveform level all the way to chord sequence level. Such model might not outperform the state-of-the-art at the beginning, but might show some promising potentials to achieve the optimal performance when certain computation or data requirements are met.
@@ -87,6 +100,7 @@ The long-tail chords accuracy is always involved with subjectivity issue. But it
 This serves as a key argument for LVACE, despite the subjectivity issue has not come to a solution. On the other hand, this is also supported by a Turing test argument, that ACE needs to support a vocabulary that is used by human annotators in order to pass the test.
 
 Both Chapter~\ref{cp:ghmm} and ~\ref{cp:endtoend} point to some possible directions towards building more long-tail friendly systems, by either leveraging LSTM-RNN architecture to model temporal relationship within chord regions, or using an even chance training scheme for all classes. All in all, the future ACE researches should on one hand gradually increase the vocabulary, and on the other hand improve the accuracy of every class.
+\end{comment}
 
 % ---------------------------------------------------------------------------
 %: ----------------------- end of thesis sub-document ------------------------
