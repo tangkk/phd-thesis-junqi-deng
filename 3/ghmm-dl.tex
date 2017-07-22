@@ -79,7 +79,6 @@ We mainly make use of two features from above process: the notegram and the bass
 \end{figure}
 
 \begin{table}[htb]
-\caption{Different levels of feature representations}
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
@@ -88,6 +87,7 @@ We mainly make use of two features from above process: the notegram and the bass
  Tuning & notegram (-ns) & 252 \\ \hline
  Bass-treble Profiling & chromagram (-ch) & 24 \\ \hline
 \end{tabular}
+\caption{Different levels of feature representations}
 \label{tab:3-felevels}
 \end{table}
 
@@ -146,7 +146,6 @@ The segmentation process is implemented using a GMM-HMM, which is characterized 
 \end{itemize}
 
 \begin{table}
-\caption{GMM-HMM segmentation settings. Different parameters are assigned to different note degree within a chord.}
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
@@ -158,6 +157,7 @@ The segmentation process is implemented using a GMM-HMM, which is characterized 
  Treble - not chord note & 0 & 0.2 \\ \hline
  N.C. (for all notes)  & 1 & 0.2  \\ \hline
 \end{tabular}
+\caption{GMM-HMM segmentation settings. Different parameters are assigned to different note degree within a chord.}
 \label{tab:3-gaussian}
 \end{table}
 
@@ -246,7 +246,6 @@ Under the proposed LVACE framework, possible design choices are:
 \end{itemize}
 
 \begin{table}[h!]
-	\caption{Variations considered in this study}
 	\centering
 	\footnotesize
 	\begin{tabular}{|c|c|c|} \hline
@@ -258,6 +257,7 @@ Under the proposed LVACE framework, possible design choices are:
 		input feature & notegram (-ns); chromagram (-ch) \\ \hline
 		amount of training data & JK; JKU; JKUR; JKURB \\ \hline
 	\end{tabular}
+	\caption{Variations considered in this study}
 	\label{tab:3-varexplore}
 \end{table}
 
@@ -381,7 +381,6 @@ Furthermore, we examine the versatilities of different deep neural net models. W
 	\vspace*{\fill}
 	\begin{table*}[h]
 		\tiny
-		\caption{Distribution of chords in the datasets. (maj and min: 69.9\%; maj7, min7 and 7: 21.3\%; others: 8.8\%)}
 		\label{tab:3-chorddist}
 		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
 			Dataset & Tracks & maj/5 & maj/3 & maj & maj7/5 & maj7/3 & maj7/7 & maj7 & 7/5 & 7/3 & 7/b7 & 7 & min/5 & min/b3 & min & min7/5 & min7/b3 & min7/b7 & min7\\ \hline
@@ -393,6 +392,7 @@ Furthermore, we examine the versatilities of different deep neural net models. W
 			B & 180 & 2.4 & 1.0 & 66.1 & 0.0 & 0.2 & 0.3 & 0.9 & 0.1 & 0.1 & 0.4 & 8.7 & 0.6 & 0.5 & 15.9 & 0.0 & 0.1 & 0.4 & 2.5\\ \hline
 			Weighted Average & & 2.6 & 3.3 & 54.3 & 0.1 & 0.1 & 0.2 & 4.0 & 0.1 & 0.3 & 0.5 & 8.1 & 0.6 & 0.5 & 15.6 & 0.1 & 0.1 & 0.4 & 9.1\\ \hline
 		\end{tabular}
+		\caption{Distribution of chords in the datasets. (maj and min: 69.9\%; maj7, min7 and 7: 21.3\%; others: 8.8\%)}
 	\end{table*}
 	\vspace*{\fill}
 \end{landscape}
@@ -470,8 +470,6 @@ In terms of chord vocabulary, both DK3, FK* and KO1 only support \textit{majmin}
 \begin{table*}[htbp]
 \centering
 \scriptsize
-\caption{MIREX 2016 Results}
-\label{tab:3-mirex2016}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
 Algorithm & R & Mm & MmB & S & SB & Seg & UnderSeg & OverSeg \\ \hline
 Isophonics 2009\\ \hline
@@ -520,6 +518,8 @@ FK2 & 88.53 & 87.23 & 84.19 & 82.57 & 79.88 & 90.04 & 88.62 & 91.88\\ \hline
 FK4 & 83.37 & 80.96 & 78.42 & 77.04 & 74.76 & 87.22 & 84.50 & 91.02\\ \hline
 KO1 & 83.55 & 80.33 & 78.16 & 73.54 & 71.39 & 88.04 & 85.39 & 91.68\\ \hline
 \end{tabular}
+\caption{MIREX 2016 Results}
+\label{tab:3-mirex2016}
 \end{table*}
 
 
@@ -544,8 +544,6 @@ Table~\ref{tab:3-overallres} shows the results, where all systems, except for Ch
 \begin{table}[h!]
 \scriptsize
 \centering
-\caption{Overall WCSR scores; All systems, besides Chordino, are trained with CJKUR-[800*2], tested on the TheBeatles180 dataset, with only MajMin vocabulary support.}
-\label{tab:3-overallres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
 System & B & Mm & MmB & R & S & SB & Seg & ACQA \\ \hline
 Chordino & 76.41 & 74.30 & 71.40 & 77.19 & 52.99 & 50.60 & 83.87 & 16.61\\ \hline
@@ -556,6 +554,8 @@ FCNN-ns & 72.65 & 70.00 & 68.14 & 73.35 & 62.72 & 60.98 & 83.59 & 7.81\\ \hline
 DBN-ns & 72.91 & 70.96 & 69.14 & 73.66 & 63.33 & 61.66 & 83.44 & 8.05\\ \hline
 BLSTM-RNN-ns & 76.04 & 73.98 & 71.99 & 76.85 & 65.85 & 64.03 & 83.76 & 8.54\\ \hline
 \end{tabular}
+\caption{Overall WCSR scores; All systems, besides Chordino, are trained with CJKUR-[800*2], tested on the TheBeatles180 dataset, with only MajMin vocabulary support.}
+\label{tab:3-overallres}
 \end{table}
 
 Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdown. Take DBN-ch as a representative, since it only supports \textit{MajMin}, its $maj$ and $min$ scores are much higher than the Chordino's. As the two chord types take up the majority of the dataset's population, DBN-ch has a much higher \textit{SeventhsBass} score in Table~\ref{tab:3-overallres}. However, by relaxing the evaluation strength from \textit{SeventhsBass} to \textit{Sevenths} and to \textit{MajMin}, the performance difference between DBN-ch and Chordino becomes much smaller.
@@ -564,8 +564,6 @@ Table~\ref{tab:3-detailres} shows the \textit{SeventhsBass} categorical breakdow
 \vspace*{\fill}
 \begin{table*}[h!]
 \tiny
-\caption{Detail SeventhsBass WCSR scores. All systems, besides Chordino, are trained with CJKUR-[800*2], with only MajMin vocabulary support. M = major, m = minor, N = N.C (no chord). The \%B row shows the composition of chords in the test set.}
-\label{tab:3-detailres}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
 \%B & 2.01 & 0.95 & 63.31 & 0.02 & 0.17 & 0.27 & 0.82 & 0.08 & 0.06 & 0.39 & 8.33 & 0.61 & 0.44 & 14.99 & 0.01 & 0.06 & 0.41 & 2.37 & 4.63\\ \hline
  & M/5 & M/3 & M & M7/5 & M7/3 & M7/7 & M7 & 7/5 & 7/3 & 7/b7 & 7 & m/5 & m/b3 & m & m7/5 & m7/b3 & m7/b7 & m7 & N\\ \hline
@@ -577,6 +575,8 @@ FCNN-ns & 0.0 & 0.0 & 76.4 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0
 DBN-ns & 0.0 & 0.0 & 76.3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 68.6 & 0.0 & 0.0 & 0.0 & 0.0 & 2.9\\ \hline
 BLSTM-RNN-ns & 0.0 & 0.0 & 79.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 74.7 & 0.0 & 0.0 & 0.0 & 0.0 & 2.7\\ \hline
 \end{tabular}
+\caption{Detail SeventhsBass WCSR scores. All systems, besides Chordino, are trained with CJKUR-[800*2], with only MajMin vocabulary support. M = major, m = minor, N = N.C (no chord). The \%B row shows the composition of chords in the test set.}
+\label{tab:3-detailres}
 \end{table*}
 \vspace*{\fill}
 \end{landscape}
@@ -586,27 +586,27 @@ Table~\ref{tab:3-full} shows the \textit{WCSR}s of \textit{Full121} vocabulary w
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on the TheBeatles180 dataset. All systems are trained with CJKUR-[800*2]-ch, with Full121 vocabulary.}
-\label{tab:3-full}
 \begin{tabular}{|c|c|c|}\hline
 System & WCSR & Seg \\ \hline
 FCNN & 73.43 & 83.77 \\ \hline
 DBN & 75.46 & 83.92 \\ \hline
 BLSTM-RNN & 73.63 & 83.80 \\ \hline
 \end{tabular}
+\caption{Full121 scores. Tested on the TheBeatles180 dataset. All systems are trained with CJKUR-[800*2]-ch, with Full121 vocabulary.}
+\label{tab:3-full}
 \end{table}
 
 The computational processes of both \textit{CP} and \textit{RCO} metrics are essentially similar to that of the \textit{WCSR}, and they only accept ``exact chord match'' under the vocabulary \cite{ni2012end,mauch2010automatic}.
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on the Isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
-\label{tab:3-fullhp}
 \begin{tabular}{|c|c|c|}\hline
 System & Chord Precision (CP) & Seg \\ \hline
 CH (Chordino) & 50.31 & N/A \\ \hline
 HP (Harmonic Analyzer) & 70.26 & N/A\\ \hline
 \end{tabular}
+\caption{Full121 scores. Tested on the Isophonic 2009 dataset with 3-fold cross-validation\cite{ni2012end}}
+\label{tab:3-fullhp}
 \end{table}
 
 It is difficult to make any conclusive statement out of these three different tables, which are from slightly different test sets, and reported in different ways. But it is reasonably fair to say that the proposed system framework is not bad at all in handling the \textit{Full121} vocabulary.
@@ -614,14 +614,14 @@ It is difficult to make any conclusive statement out of these three different ta
 \begin{table}[h]
 \footnotesize
 \centering
-\caption{Full121 scores. Tested on the Isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
-\label{tab:3-fullmbk}
 \begin{tabular}{|c|c|c|}\hline
 System & Relative Correct Overlap (RCO) & Seg \\ \hline
 trained MBK & 41.8 & N/A \\ \hline
 MBK & 56.7 & 77.9 \\ \hline
 MBK-NNLS & 61.8 & N/A \\ \hline
 \end{tabular}
+\caption{Full121 scores. Tested on the Isophonic 2009 dataset with 5-fold cross-validation \cite{mauch2010automatic}}
+\label{tab:3-fullmbk}
 \end{table}
 
 

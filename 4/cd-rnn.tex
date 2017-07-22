@@ -130,7 +130,6 @@ For evaluation, five-fold cross-validation (CV) is performed throughout all expe
 \section{Results and Discussions} \label{sec:4-res}
 This study evaluates several variants of the proposed approach (as summarized in Table~\ref{tab:4-varexplore}) in terms of the MIREX ACE standard metrics as well as the \textit{ACQA}. All the metric in this section are already introduced in Section~\ref{subsec:2-metrics}.
 \begin{table}[htb]
-	\caption{Variants considered in this study.}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|} \hline
@@ -138,6 +137,7 @@ This study evaluates several variants of the proposed approach (as summarized in
 		training scheme & completely random (CR); even chance (EC) \\ \hline
 		data size & JK; JKU; JKUR; JKURB \\ \hline
 	\end{tabular}
+	\caption{Variants considered in this study.}
 	\label{tab:4-varexplore}
 \end{table}
 
@@ -146,7 +146,6 @@ This study evaluates several variants of the proposed approach (as summarized in
 \Hsection{Sevenths, Inversions and ACQA}
 Table~\ref{tab:4-acqa-ns} shows the comparison between CR and EC training schemes on some uncommon (\textit{non-majmin}) \cite{burgoyne2011expert} chords' \textit{WCSR}s as well as the \textit{ACQA}. The six chord types in the table are chosen because they have relatively more weights in pop/rock songs than the more long-tail ones such as \textit{min/5} and \textit{min/b3}. Note that \textit{maj/5} and \textit{maj/3} are also included in two other large vocabularies proposed by Mauch \cite{mauch2010automatic} and Cho \cite{cho2014improved}.
 \begin{table}[htb]
-	\caption{Comparison between CR and EC: seventh chords, inversions and ACQA scores; Dataset: JKURB; Feature: notegram}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
@@ -154,6 +153,7 @@ Table~\ref{tab:4-acqa-ns} shows the comparison between CR and EC training scheme
 		CR & 7.3 & 6.6 & 24.1 & 4.5 & 24.5 & 0.0 & 10.8 \\ \hline
 		EC &  14.6 & 9.9 & 30.9 & 12.0 & 32.4 & 7.8 & 13.2 \\ \hline
 	\end{tabular}
+	\caption{Comparison between CR and EC: seventh chords, inversions and ACQA scores; Dataset: JKURB; Feature: notegram}
 	\label{tab:4-acqa-ns}
 \end{table}
 
@@ -170,7 +170,6 @@ We perform a Friedman test on the track-wise \textit{ACQA} results of both syste
 \Hsection{Major, Minor and WCSR}
 The EC trained system has a more balanced performance than the CR's, however, it scarifies common chords' \textit{WCSR}s. Table~\ref{tab:4-wcsr-ns} shows the comparison between CR and EC on some common (\textit{majmin}) \cite{burgoyne2011expert} chords' \textit{WCSR}s as well as on the overall \textit{SeventhsBass} \textit{WCSR}.
 \begin{table}[htb]
-	\caption{Comparison between CR and EC: major, minor and WCSR scores; Dataset: JKURB; Feature: notegram}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|} \hline
@@ -178,6 +177,7 @@ The EC trained system has a more balanced performance than the CR's, however, it
 		CR & 74.2 & 52.2 & 52.0 \\ \hline
 		EC &  67.8 & 51.4 & 50.6 \\ \hline
 	\end{tabular}
+	\caption{Comparison between CR and EC: major, minor and WCSR scores; Dataset: JKURB; Feature: notegram}
 	\label{tab:4-wcsr-ns}
 \end{table}
 
@@ -194,7 +194,6 @@ We perform a Friedman test on the track-wise \textit{WCSR} results of both syste
 \Hsection{On Different Datasets}
 For more convincing comparison results, the same experiment is run 4 times using different dataset combinations. Table~\ref{tab:4-datasize-ns} shows the results of JK, JKU, JKUR and JKURB. We only report the \textit{WCSR} and \textit{ACQA} for brevity.
 \begin{table}[htb]
-	\caption{Comparison between CR and EC: WCSR and ACQA on different datasets; Feature: notegram}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|} \hline
@@ -204,6 +203,7 @@ For more convincing comparison results, the same experiment is run 4 times using
 		JKUR & 50.1 & 49.6 & 12.8 & 14.5 \\ \hline
 		JKURB & 52.0 & 50.6 & 10.8 & 13.2 \\ \hline
 	\end{tabular}
+	\caption{Comparison between CR and EC: WCSR and ACQA on different datasets; Feature: notegram}
 	\label{tab:4-datasize-ns}
 \end{table}
 
@@ -215,8 +215,6 @@ For both training schemes, the increment of training data will lead to the incre
 \Hsection{Overall Performances}\label{sec:4-over-ch}
 Table~\ref{tab:4-overallres} shows the overall \textit{WCSR}s of systems implemented with both training schemes. Note that the \textit{SeventhsBass} column represents the true evaluation score under the \textit{SeventhsBass} vocabulary, while the other three columns to the left are scores with certain types of chord confusion tolerance.
 \begin{table}[htb]
-	\caption{WCSRs of different system variants; Feature: chromagram}
-	\label{tab:4-overallres}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
@@ -230,6 +228,8 @@ Table~\ref{tab:4-overallres} shows the overall \textit{WCSR}s of systems impleme
 		CR-JKURB & 70.6 & 68.7 & 56.3 & 54.7 & 78.0 \\ \hline
 		EC-JKURB & 70.1 & 68.2 & 57.6 & \textbf{56.0} & 76.8 \\ \hline
 	\end{tabular}
+	\caption{WCSRs of different system variants; Feature: chromagram}
+	\label{tab:4-overallres}
 \end{table}
 
 Along the \textit{SeventhsBass} column, there is a trend that for both training schemes, system performances increase with more training data. When the data set is fixed, the EC systems' \textit{SeventhsBass} score are fairly comparable or slightly higher than the CR systems'. The same trend is also observed in columns of \textit{MajMin}, \textit{MajMinBass} and \textit{Sevenths}.
@@ -239,8 +239,6 @@ For \textit{segmentation quality}, CR systems are found to be consistently scori
 \Hsection{Balanced performances} \label{sec:4-scper}
 Table~\ref{tab:4-ltres} shows the systems' performances on some important uncommon chords' \textit{WCSR}s and the \textit{ACQA}. These three chord types (i.e. $maj/5$, $maj/3$ and $7/b7$) are most commonly used in pop/rock songs among all uncommon chords in the \textit{SeventhsBass} vocabulary. We could notice obvious performance advantages of EC in all these categories under the same amount of training data sizes.
 \begin{table}[htb]
-	\caption{Some uncommon chords' WCSRs and the ACQAs; Feature: chromagram}
-	\label{tab:4-ltres}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|}\hline
@@ -254,6 +252,8 @@ Table~\ref{tab:4-ltres} shows the systems' performances on some important uncomm
 		CR-JKURB & 11.9 & 38.5 & 4.9 & 14.7\\ \hline
 		EC-JKURB & 18.7 & 42.2 & 24.0 & 18.4\\ \hline
 	\end{tabular}
+	\caption{Some uncommon chords' WCSRs and the ACQAs; Feature: chromagram}
+	\label{tab:4-ltres}
 \end{table}
 
 For \textit{ACQA}, again, we see that all EC systems have clear advantages over CR systems. This demonstrates that the EC training scheme can improve the vocabulary versatility of an ACE system.
@@ -278,8 +278,6 @@ Table~\ref{tab:4-chorddist} shows the distribution of common chords (majmin) and
 \begin{table}[h]
 	\centering
 	\scriptsize
-	\caption{Distribution of chords in the datasets}
-	\label{tab:4-chorddist}
 	\begin{tabular}{|c|c|c|c|}\hline
 		Dataset & majmin\% & sevenths\% & inversions\%\\ \hline
 		C & 58.7 &	28.6 & 12.7\\ \hline
@@ -289,6 +287,8 @@ Table~\ref{tab:4-chorddist} shows the distribution of common chords (majmin) and
 		R & 58.1 & 32.5 & 9.4\\ \hline
 		B & 81.9 & 12.1 & 6.0\\ \hline
 	\end{tabular}
+	\caption{Distribution of chords in the datasets}
+	\label{tab:4-chorddist}
 \end{table}
 For EC, each chord type has an even chance to be chosen as the start of a training case. Each training case has 500 frames, which contains multiple chords. Because of this, there is still uneven distribution of common and uncommon chords during the training process. The EC scheme in effect only boosts the exposure of uncommon chords to a certain level, but could not make the chances of common and uncommon chords totally even. Therefore, the same reason for CR also apply to explain EC's curve in Figure~\ref{fig:4-datavsmaj5}.
 
@@ -297,8 +297,6 @@ For EC, each chord type has an even chance to be chosen as the start of a traini
 \Hsection{SeventhsBass Evaluation}
 Finally, we compare the proposed LVACE approach with the baseline approach - Chordino\cite{cannam2013mirex}. It has a similar feature extraction module as the proposed approach and it supports a similar set of large vocabulary. Chordino is an LVACE system that represents the state-of-the-art in terms of the \textit{ACQA}.
 \begin{table}[htb]
-	\caption{Comparison between our systems and Chordino - overall performance; The systems are trained using JKURB}
-	\label{tab:4-cpcd}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
@@ -307,6 +305,8 @@ Finally, we compare the proposed LVACE approach with the baseline approach - Cho
 		EC-ch & 70.1 & 68.2 & \textbf{57.6} & \textbf{56.0} & 76.8\\ \hline
 		Chordino & \textbf{72.4} & \textbf{69.1} & 55.8 & 52.8 & \textbf{83.8}\\ \hline
 	\end{tabular}
+	\caption{Comparison between our systems and Chordino - overall performance; The systems are trained using JKURB}
+	\label{tab:4-cpcd}
 \end{table}
 
 Table~\ref{tab:4-cpcd} shows the comparison, in which we select two systems trained with the largest possible amount of data with different training schemes. In terms of \textit{WCSR}s, our systems slightly outperform Chordino in \textit{Sevenths} and \textit{SeventhsBass} scores, but underperform Chordino in the more relaxed \textit{MajMin} and \textit{MajMinBass} scores.
@@ -323,8 +323,6 @@ A large difference is found in \textit{segmentation quality}, in which Chordino 
 
 \Hsection{Uncommon Chords and ACQA}
 \begin{table}[htb]
-	\caption{Comparison between our systems and Chordino - uncommon and balanced performance; The systems are trained using JKURB}
-	\label{tab:4-cpcd-2}
 	\centering
 	\scriptsize
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
@@ -333,6 +331,8 @@ A large difference is found in \textit{segmentation quality}, in which Chordino 
 		EC-ch & 18.7 & \textbf{42.2} & 24.0 & \textbf{18.4}\\ \hline
 		Chordino & \textbf{ 27.6} & 29.8 & \textbf{24.4} & \textbf{20.9}\\ \hline
 	\end{tabular}
+	\caption{Comparison between our systems and Chordino - uncommon and balanced performance; The systems are trained using JKURB}
+	\label{tab:4-cpcd-2}
 \end{table}
 Table~\ref{tab:4-cpcd-2} shows another set of comparisons in terms of uncommon chords' \textit{WCSR}s and the \textit{ACQA}. The CR system underperforms Chordino in all the categories except for $maj/3$.	The EC system outperforms Chordino in $maj/3$ and is close to Chordino in both $7/b7$ and \textit{ACQA}.
 

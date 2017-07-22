@@ -114,7 +114,6 @@ In the analysis of tonal music, all chords may be regarded as consisting of or d
 
 A chord with three pitches is called a {\it triad}, with four pitches a {\it tetrad}. A triad is composed of two intervals, while a tetrad is composed of three. Assuming octave equivalence, Table~\ref{tab:2-chords} presents five frequently used triads and tetrads with examples shown in terms of pitch classes (chord tones).
 \begin{table}[htb]
-\caption{Chord examples}
 \centering
 \scriptsize
 \begin{tabular}{|c|c|c|c|c|} \hline
@@ -125,6 +124,7 @@ Tetrad  & seventh & 7 & M3 + m3 + m3 & E7: E-G\#-B-D \\ \hline
 Tetrad & major seventh & maj7 & M3 + m3 + M3 & Fmaj7: F-A-C-E \\ \hline
 Tetrad & minor seventh & min7 & m3 + M3 + m3 & Amin7: A-C-E-G \\ \hline
 \end{tabular}
+\caption{Chord examples}
 \label{tab:2-chords}
 \end{table}
 It should be noted that every chord has a {\it root} \cite{randel1999harvard}
@@ -230,7 +230,6 @@ The general work-flow of an ACE system is depicted in Figure~\ref{fig:2-sys}. Si
 
 In order to better understand ACE, we distinguish between the basic problem settings of ASR and ACE, both being roughly recognized as audio-text transcription problems. Table~\ref{tab:2-asrace} presents two fundamental differences between ASR and ACE.
 \begin{table}[htb]
-\caption{I/O of ASR and ACE}
 \centering
 \footnotesize
 \begin{tabular}{|c|c|c|} \hline
@@ -238,6 +237,7 @@ In order to better understand ACE, we distinguish between the basic problem sett
 audio input & speech & tonal music \\ \hline
 text output & word sequence & chord sequence with segmentation \\ \hline
 \end{tabular}
+\caption{I/O of ASR and ACE}
 \label{tab:2-asrace}
 \end{table}
 Note how the ``segmentation'' requirement of ACE fundamentally separates the two otherwise similar problems. Meanwhile, the prior knowledge that the chords are often segmented periodically/rhythmically allows ACE a more flexible system design methodology.
@@ -328,7 +328,7 @@ where $Y_k$ is the final log-frequency spectrum. This approach, albeit not as th
 To model the ``intervals'' instead of ``pitch classes'', and to further reduce the feature dimensions, Harte et al. propose {\it tonal centroid} \cite{harte2006detecting}, which is inspired by Chew's ``Spiral Array'' \cite{chew2000towards}. It is a point in 6-dimension space, so that when a 12-dimension pitch class is mapped onto it, ``close harmonic relations such as fifths and thirds appear as small Euclidean distances''. Technically sound though, only a few authors explore this feature in their ACE systems \cite{lee2008acoustic,humphrey2012learning}.
  
 \Hsection{Noise Removal}
-Another concern is that the noise within an audio will get into the chroma. It can be reduced along the time dimension, such as by smoothing with a mean filter \cite{harte2005automatic,humphrey2012rethinking} or a median filter \cite{khadkevich2009use,mauch2008discrete}, which applies to the feature across a number frames. Perhaps a more intuitive way to reduce noise from a time perspective is by ``beat-averaging''\cite{bello2005robust,mauch2010approximate}, since the onsets and offsets of chords often coincide with beats \cite{goto1999real}. Moreover, structural information can also be leveraged \cite{mauch2009using,cho2011feature,cho2014improved} to reduce noise within the audio feature.
+Another concern is that the noise within an audio will get into the chroma. It can be reduced along the time dimension, such as by smoothing with a mean filter \cite{harte2005automatic,humphrey2012rethinking} or a median filter \cite{khadkevich2009use,mauch2008discrete}, which applies to the features across a number frames. Perhaps a more intuitive way to reduce noise from a time perspective is by ``beat-averaging''\cite{bello2005robust,mauch2010approximate}, since the onsets and offsets of chords often coincide with beats \cite{goto1999real}. Moreover, structural information can also be leveraged \cite{mauch2009using,cho2011feature,cho2014improved} to reduce noise within the audio features.
 
 Noise can also be alleviated along the frequency dimension in several ways. Catteau et al. \cite{catteau2007probabilistic} subtracts from the original log-frequency spectrum a ``background spectrum'', which is computed by convolving the log-frequency spectrum with an one-octave wide Hamming window. Alternatively, Varewyck et al. \cite{varewyck2008novel} computes the background spectrum by ``filtering the amplitude spectrum with a median filter''. Noticing that the noise often comes from percussive instruments, Reed et al. \cite{reed2009minimum} attempts to remove noise by doing harmonic-percussive separation \cite{ono2008separation}. This method is also adopted in later works such as \cite{ni2012end} and \cite{ueda2010hmm}.
 
@@ -510,7 +510,7 @@ Hamel and Eck \cite{hamel2010learning} are among the first to introduce feature 
 
 The first feature learning approach in ACE is proposed by Humphrey and Bello \cite{humphrey2012rethinking}, who use a CNN to extract features. Instead of learning an ``intermediate'' feature representation, the CNN outputs a ``probability surface'', which is actually the posterior probabilities of chords conditioned on the CNN's ``time-pitch'' constant-Q spectra input. In this work, neither the concept of ``chroma'' nor ``pitch class'' is involved. 
 
-Boulanger et al. \cite{boulanger2013audio} apply a DBN based approach similar to Hamel and Eck's. They first perform a PCA on an STFT spectrogram to reduce input dimensionality, and then they train a DBN to predict the output at each frame. The activations of the last hidden layer are used as the learned feature. Again there is neither the concept of ``chroma'' nor ``pitch class'' in this work. Later, Zhou and Lerch \cite{zhou2015chord} augment this process with a time-frequency splicing function inserted between the PCA and the DBN in order to exploit similarities of neighboring frames. Along the same line, Sigtia et al. \cite{sigtia2015audio} use an FCNN to classify the chord label at each frame. They also use the activations of the last hidden layer as the learned features, which will go through a mean pooling process before pattern matching.
+Boulanger et al. \cite{boulanger2013audio} apply a DBN based approach similar to Hamel and Eck's. They first perform a PCA on an STFT spectrogram to reduce input dimensionality, and then they train a DBN to predict the output at each frame. The activations of the last hidden layer are used as the learned features. Again there is neither the concept of ``chroma'' nor ``pitch class'' in this work. Later, Zhou and Lerch \cite{zhou2015chord} augment this process with a time-frequency splicing function inserted between the PCA and the DBN in order to exploit similarities of neighboring frames. Along the same line, Sigtia et al. \cite{sigtia2015audio} use an FCNN to classify the chord label at each frame. They also use the activations of the last hidden layer as the learned features, which will go through a mean pooling process before pattern matching.
 
 Features can not only be learned from chord labels, but also from chord templates. Fillip and Gerhard \cite{Korzeniowski2016feature} use binary chord templates as targets to train their feature extractor, i.e. the ``deep chroma extractor'', which is able to obtain highly clean chromagram from the audio.
 
@@ -683,7 +683,7 @@ We now introduce several deep learning techniques for ACE pattern matching. Sinc
 
 The first deep learning based pattern matching in ACE is also proposed by Humphrey and Bello \cite{humphrey2012rethinking}. They implement a CNN to classify chords at each constant-Q frame, and then apply median-filtering to smooth the classification results into segments. The CNN outputs a ``probability surface'', which is the posterior chord probabilities conditioned on the input frame, so that it actually performs both feature learning and pattern matching. Consider that the role of CNN here can be replaced by any type of deep neural nets, this is a ``local classification - global smoothing'' approach.
 
-Boulanger et al. \cite{boulanger2013audio} perform feature learning via an STFT-PCA-DBN chain, and take the activations of the last DBN hidden layer as the feature. The feature is then classified by an RNN, whose output is further smoothed using an HMM with Viterbi decoding, or beam search with dynamic programming. Sigtia et al. \cite{sigtia2015audio} follow up this work by applying the LSTM-RNN, and augmenting the beam search with a hashed beam search. These can be regarded as the ``local feature learning - global classification - global smoothing'' approaches.
+Boulanger et al. \cite{boulanger2013audio} perform feature learning via an STFT-PCA-DBN chain, and take the activations of the last DBN hidden layer as the features. The features are then classified by an RNN, whose output is further smoothed using an HMM with Viterbi decoding, or beam search with dynamic programming. Sigtia et al. \cite{sigtia2015audio} follow up this work by applying the LSTM-RNN, and augmenting the beam search with a hashed beam search. These can be regarded as the ``local feature learning - global classification - global smoothing'' approaches.
 
 Zhou and Lerch \cite{zhou2015chord} put forward another system that resembles Boulanger's in terms of the feature learning. They use an SVM to classify the learned features locally, and use an HMM to perform sequence decoding and smoothing. This belongs to the ``local feature learning - local classification - global smoothing'' approach.
 
@@ -711,7 +711,7 @@ Su and Jeng \cite{su2001multi}, Maddage et al. \cite{maddage2004content} and Yos
 \Hsection{Consideration for Large Vocabulary} \label{sec:2-largevocab}
 Large vocabulary systems have come to resurgence recently. This may be partly due to the growing complexity of the graphical probabilistic models, and partly due to the use of more complicated machine learning techniques together with much more ground truth annotation data than two decades ago.
 
-%It is worth noting that large vocabulary is necessary for practical usage, such as to transcribe chords for busking or rehearsal. The core of these practical scenarios is that an ACE system needs to perform at the same level as a human chord annotator, who tends to capture chords in great details, including the suspensions, extensions, inversions and alterations, that try to recover every subtle taste of the original recordings. There are numerous such examples on popular chord tabs websites such as UltimateGuitar \footnote{\url{ultimate-guitar.com}}, E-chords \footnote{\url{e-chords.com}} and many others \footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. Regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE is absolutely a significant part of the machine.
+%It is worth noting that large vocabulary is necessary for practical usage, such as to transcribe chords for busking or rehearsal. The core of these practical scenarios is that an ACE system needs to perform at the same level as a human chord annotator, who tends to capture chords in great detail, including the suspensions, extensions, inversions and alterations, that try to recover every subtle taste of the original recordings. There are numerous such examples on popular chord tabs websites such as UltimateGuitar \footnote{\url{ultimate-guitar.com}}, E-chords \footnote{\url{e-chords.com}} and many others \footnote{polygonguitar.blogspot.hk; chords-haven.blogspot.hk; azchords.com}, where the chords of millions of songs can be found. Regarding one of the ultimate goals in music informatics as building a human-like music intelligence system, large vocabulary ACE is absolutely a significant part of the machine.
 
 Besides the vocabularies in two early systems \cite{fujishima1999realtime,sheh2003chord}, there are currently several other types of large vocabularies being used. Mauch \cite{mauch2010automatic} puts forward a vocabulary in his DYBN based system, which he names as ``full''. It contains $maj$, $min$, $maj/3$, $maj/5$, $maj6$, $7$, $maj7$, $min7$, $dim$, $aug$, totally 121 chord types (later on this vocabulary is refereed to as Full121). Note that this is a vocabulary with chord inversions $maj/3$ and $maj/5$. This vocabulary is adopted in several systems \cite{ni2012end,mcvicar2014automatic,boulanger2013audio}.
 
