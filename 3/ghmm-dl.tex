@@ -132,7 +132,14 @@ Figure~\ref{fig:3-cpm} showcases another example with vocal melody. It is extrac
 \label{fig:3-cpm}
 \end{figure}
 
-\newpage
+Figure~\ref{fig:3-cdflow} summarizes the full information flow of the above feature extraction process using the first line of {\it Let it be} as input. Note how representations are enhanced or compressed during this process.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\columnwidth,angle =90]{3/figures/cdflow.pdf}
+	\caption{Information flow of feature extraction process}
+	\label{fig:3-cdflow}
+\end{figure}
+
 \subsection{Segmentation} \label{sec:3-sg}
 The segmentation process is implemented using a GMM-HMM, which is characterized as follows:
 \begin{itemize}
@@ -169,14 +176,6 @@ The segmentation process is implemented using a GMM-HMM, which is characterized 
 %\caption{GMM-HMM Segmentation.}
 %\label{fig:3-hmm1}
 %\end{figure}
-
-Figure~\ref{fig:3-cdflow} summarizes the full information flow of the above feature extraction and segmentation process using the first line of {\it Let it be} as input. Note how representations are enhanced or compressed during this process.
-\begin{figure}[h]
-\centering
-\includegraphics[width=1\columnwidth,angle =90]{3/figures/cdflow.pdf}
-\caption{Information flow of feature extraction and segmentation}
-\label{fig:3-cdflow}
-\end{figure}
 
 \subsection{Segment Tiling Process} \label{sec:3-seg-tile}
 
