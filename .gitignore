@@ -22,6 +22,7 @@
 # *.ps
 # *.eps
 *.pdf
+!junqi-thesis-hku.pdf
 *.jpg
 *.png
 *.fig
