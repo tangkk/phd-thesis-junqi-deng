@@ -1,9 +1,9 @@
 # Bibtex
-@phdthesis{junqi2016large,
-  title={Large Vocabulary Automatic Chord Estimation from Audio Using Deep Learning Approaches},
-  author={Deng, Junqi},
-  year={2016},
-  school={The University of Hong Kong}
+@phdthesis{junqi2016large,<br />
+  title={Large Vocabulary Automatic Chord Estimation from Audio Using Deep Learning Approaches},<br />
+  author={Deng, Junqi},<br />
+  year={2016},<br />
+  school={The University of Hong Kong}<br />
 }
 
 # Thesis Abstract
